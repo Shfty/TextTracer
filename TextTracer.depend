@@ -1,0 +1,117 @@
+# depslib dependency file v1.0
+1369154860 source:e:\codeblocks\texttracer\main.cpp
+	<cmath>
+	<ctime>
+	<vector>
+	<iostream>
+	<glm/glm.hpp>
+	<glm/ext.hpp>
+	"SphereObject.h"
+	"PlaneObject.h"
+	"PolyObject.h"
+	"Framebuffer.h"
+	"Raytracer.h"
+	"Camera.h"
+	"Keyboard.h"
+
+1369148275 source:e:\codeblocks\texttracer\framebuffer.cpp
+	"Framebuffer.h"
+	<cstdlib>
+	<ctime>
+	<iostream>
+	"Colour.h"
+	"ColouredText.h"
+
+1368996173 e:\codeblocks\texttracer\framebuffer.h
+	<vector>
+	"ColouredText.h"
+
+1369154957 source:e:\codeblocks\texttracer\raytracer.cpp
+	<cmath>
+	<iostream>
+	<glm/glm.hpp>
+	"Raytracer.h"
+	"Ray.h"
+
+1369147068 e:\codeblocks\texttracer\raytracer.h
+	"WorldObject.h"
+	"Framebuffer.h"
+	"Camera.h"
+
+1369151674 e:\codeblocks\texttracer\worldobject.h
+	<iostream>
+	<glm/glm.hpp>
+	<glm/ext.hpp>
+	"Colour.h"
+	"Ray.h"
+	"IsectData.h"
+
+1368993242 e:\codeblocks\texttracer\ray.h
+	<glm/glm.hpp>
+	"WorldObject.h"
+
+1368836484 e:\codeblocks\texttracer\vector3d.h
+	<cmath>
+
+1369153774 e:\codeblocks\texttracer\sphereobject.h
+	<sstream>
+	"DebugBox.h"
+	"WorldObject.h"
+
+1369154232 e:\codeblocks\texttracer\planeobject.h
+	"WorldObject.h"
+
+1369151602 e:\codeblocks\texttracer\camera.h
+	<sstream>
+	"DebugBox.h"
+	"SphereObject.h"
+	"Keyboard.h"
+
+1369153966 e:\codeblocks\texttracer\polyobject.h
+	<vector>
+	"WorldObject.h"
+
+1368989276 e:\codeblocks\texttracer\keyboard.h
+	<iostream>
+	<windows.h>
+
+1368994708 e:\codeblocks\texttracer\textel.h
+
+1369007966 e:\codeblocks\texttracer\colouredtext.h
+	<iostream>
+	<windows.h>
+	"Colour.h"
+
+1368996512 e:\codeblocks\texttracer\colour.h
+
+1369008727 e:\codeblocks\texttracer\isectdata.h
+
+1369085828 e:\codeblocks\texttracer\debugbox.h
+	<sstream>
+	<iostream>
+	<windows.h>
+
+1369084238 e:\codeblocks\texttracer\main.cpp
+	<cmath>
+	<ctime>
+	<vector>
+	<iostream>
+	<glm/glm.hpp>
+	<glm/ext.hpp>
+	"SphereObject.h"
+	"PlaneObject.h"
+	"PolyObject.h"
+	"Framebuffer.h"
+	"Raytracer.h"
+	"Camera.h"
+	"Keyboard.h"
+
+1369154078 source:e:\codeblocks\texttracer\sphereobject.cpp
+	"SphereObject.h"
+
+1369153984 source:e:\codeblocks\texttracer\polyobject.cpp
+	"PolyObject.h"
+
+1369154191 source:e:\codeblocks\texttracer\planeobject.cpp
+	"PlaneObject.h"
+

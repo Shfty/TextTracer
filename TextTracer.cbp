@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="TextTracer" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Option virtualFolders="Headers\;" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/TextTracer" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add directory="C:/Program Files (x86)/CodeBlocks/MinGW/bin" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/TextTracer" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="Camera.h" />
+		<Unit filename="Colour.h" />
+		<Unit filename="ColouredText.h" />
+		<Unit filename="DebugBox.h" />
+		<Unit filename="Framebuffer.cpp" />
+		<Unit filename="Framebuffer.h" />
+		<Unit filename="IsectData.h" />
+		<Unit filename="Keyboard.h" />
+		<Unit filename="PlaneObject.h" />
+		<Unit filename="PolyObject.h" />
+		<Unit filename="Ray.h" />
+		<Unit filename="Raytracer.cpp" />
+		<Unit filename="Raytracer.h" />
+		<Unit filename="SphereObject.h" />
+		<Unit filename="Vector3D.h" />
+		<Unit filename="WorldObject.h" />
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
