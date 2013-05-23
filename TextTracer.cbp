@@ -13,9 +13,11 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-pg" />
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
+					<Add option="-pg -lgmon" />
 					<Add directory="C:/Program Files (x86)/CodeBlocks/MinGW/bin" />
 				</Linker>
 			</Target>
@@ -44,11 +46,14 @@
 		<Unit filename="Framebuffer.h" />
 		<Unit filename="IsectData.h" />
 		<Unit filename="Keyboard.h" />
+		<Unit filename="PlaneObject.cpp" />
 		<Unit filename="PlaneObject.h" />
+		<Unit filename="PolyObject.cpp" />
 		<Unit filename="PolyObject.h" />
 		<Unit filename="Ray.h" />
 		<Unit filename="Raytracer.cpp" />
 		<Unit filename="Raytracer.h" />
+		<Unit filename="SphereObject.cpp" />
 		<Unit filename="SphereObject.h" />
 		<Unit filename="Vector3D.h" />
 		<Unit filename="WorldObject.h" />

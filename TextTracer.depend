@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1369154860 source:e:\codeblocks\texttracer\main.cpp
+1369334266 source:e:\codeblocks\texttracer\main.cpp
 	<cmath>
 	<ctime>
 	<vector>
@@ -9,40 +9,39 @@
 	"SphereObject.h"
 	"PlaneObject.h"
 	"PolyObject.h"
-	"Framebuffer.h"
+	"ConsoleFramebuffer.h"
 	"Raytracer.h"
 	"Camera.h"
 	"Keyboard.h"
 
-1369148275 source:e:\codeblocks\texttracer\framebuffer.cpp
-	"Framebuffer.h"
+1369326016 source:e:\codeblocks\texttracer\framebuffer.cpp
+	"ConsoleFramebuffer.h"
 	<cstdlib>
 	<ctime>
 	<iostream>
 	"Colour.h"
 	"ColouredText.h"
 
-1368996173 e:\codeblocks\texttracer\framebuffer.h
+1369327439 e:\codeblocks\texttracer\framebuffer.h
+	<glm/glm.hpp>
 	<vector>
-	"ColouredText.h"
 
-1369154957 source:e:\codeblocks\texttracer\raytracer.cpp
+1369334195 source:e:\codeblocks\texttracer\raytracer.cpp
 	<cmath>
 	<iostream>
 	<glm/glm.hpp>
 	"Raytracer.h"
 	"Ray.h"
 
-1369147068 e:\codeblocks\texttracer\raytracer.h
+1369334793 e:\codeblocks\texttracer\raytracer.h
 	"WorldObject.h"
 	"Framebuffer.h"
 	"Camera.h"
 
-1369151674 e:\codeblocks\texttracer\worldobject.h
+1369327596 e:\codeblocks\texttracer\worldobject.h
 	<iostream>
 	<glm/glm.hpp>
 	<glm/ext.hpp>
-	"Colour.h"
 	"Ray.h"
 	"IsectData.h"
 
@@ -61,7 +60,7 @@
 1369154232 e:\codeblocks\texttracer\planeobject.h
 	"WorldObject.h"
 
-1369151602 e:\codeblocks\texttracer\camera.h
+1369327612 e:\codeblocks\texttracer\camera.h
 	<sstream>
 	"DebugBox.h"
 	"SphereObject.h"
@@ -77,10 +76,9 @@
 
 1368994708 e:\codeblocks\texttracer\textel.h
 
-1369007966 e:\codeblocks\texttracer\colouredtext.h
+1369327196 e:\codeblocks\texttracer\colouredtext.h
 	<iostream>
 	<windows.h>
-	"Colour.h"
 
 1368996512 e:\codeblocks\texttracer\colour.h
 
@@ -106,12 +104,23 @@
 	"Camera.h"
 	"Keyboard.h"
 
-1369154078 source:e:\codeblocks\texttracer\sphereobject.cpp
+1369327878 source:e:\codeblocks\texttracer\sphereobject.cpp
 	"SphereObject.h"
 
-1369153984 source:e:\codeblocks\texttracer\polyobject.cpp
+1369334117 source:e:\codeblocks\texttracer\polyobject.cpp
 	"PolyObject.h"
 
-1369154191 source:e:\codeblocks\texttracer\planeobject.cpp
+1369334134 source:e:\codeblocks\texttracer\planeobject.cpp
 	"PlaneObject.h"
+
+1369332486 e:\codeblocks\texttracer\consoleframebuffer.h
+	<vector>
+	"Framebuffer.h"
+
+1369332513 source:e:\codeblocks\texttracer\consoleframebuffer.cpp
+	"ConsoleFramebuffer.h"
+	<cstdlib>
+	<ctime>
+	<iostream>
+	<windows.h>
 

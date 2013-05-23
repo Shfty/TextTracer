@@ -7,7 +7,7 @@ PolyObject::PolyObject(glm::vec3 position, glm::mat4 rotation, float scale, int 
     genObjectVertices(sides);
     SetPosition(position);
     SetRotation(rotation);
-    ObjectColour = Colours::Red;
+    ObjectColour = glm::vec4(1, 0, 0, 1);
 }
 
 bool PolyObject::Intersects(Ray& ray, IsectData& isectData)

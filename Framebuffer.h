@@ -1,27 +1,25 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
+#include <glm/glm.hpp>
 #include <vector>
-
-#include "ColouredText.h"
 
 class Framebuffer
 {
 public:
-    Framebuffer(int width, int height);
-    ~Framebuffer();
+    Framebuffer(int width, int height) { m_width = width; m_height = height; };
+    ~Framebuffer() {};
 
     int Width() const { return m_width; }
     int Height() const { return m_height; }
 
-    void Clear(Colour colour);
-    void PaintCell(int x, int y, Colour colour);
-    void Draw();
+    virtual void Clear(glm::vec4 colour) = 0;
+    virtual void PaintCell(int x, int y, glm::vec4 colour) = 0;
+    virtual void Draw() = 0;
 
-private:
+protected:
     int m_width;
     int m_height;
-    std::vector<Colour> m_buffer;
 };
 
 #endif // FRAMEBUFFER_H

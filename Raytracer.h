@@ -13,7 +13,7 @@ public:
     const int CELL_SIZE_X = 8;
     const int CELL_SIZE_Y = 8;
 
-    Raytracer(Camera& camera, Framebuffer& framebuffer);
+    Raytracer(Camera* camera, Framebuffer* framebuffer);
     ~Raytracer();
 
     void Trace(std::vector<WorldObject*> worldObjects);
@@ -21,10 +21,11 @@ public:
 private:
     int m_width;
     int m_height;
-    Camera& m_camera;
-    Framebuffer& m_framebuffer;
+    Camera* m_camera;
+    Framebuffer* m_framebuffer;
 
-    bool traceRay(glm::vec3 origin, glm::vec3 direction, std::vector<WorldObject*> worldObjects, WorldObject* parentObject, int maxRecursion, Colour& rayColour);
+    bool traceViewRay(glm::vec3 origin, glm::vec3 direction, std::vector<WorldObject*> worldObjects, WorldObject* parentObject, int maxRecursion, glm::vec4& rayColour);
+    bool traceHitRay(glm::vec3 origin, glm::vec3 direction, std::vector<WorldObject*> worldObjects, WorldObject* parentObject);
 };
 
 #endif // RAYTRACER_H

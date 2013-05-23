@@ -7,7 +7,7 @@ SphereObject::SphereObject(glm::vec3 position, glm::mat4 rotation, float radius,
 {
     SetPosition(position);
     SetRotation(rotation);
-    ObjectColour = Colours::Red;
+    ObjectColour = glm::vec4(1, 0, 0, 1);
 }
 
 bool SphereObject::Intersects(Ray& ray, IsectData& isectData)

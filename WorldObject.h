@@ -5,14 +5,13 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-#include "Colour.h"
 #include "Ray.h"
 #include "IsectData.h"
 
 class WorldObject
 {
 public:
-    Colour ObjectColour = Colours::Black;
+    glm::vec4 ObjectColour = glm::vec4(0, 0, 0, 1);
     bool Portal = false;
     WorldObject* ExitPortal = NULL;
     WorldObject* ExitDecoration = NULL;

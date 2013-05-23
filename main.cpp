@@ -13,7 +13,7 @@
 #include "SphereObject.h"
 #include "PlaneObject.h"
 #include "PolyObject.h"
-#include "Framebuffer.h"
+#include "ConsoleFramebuffer.h"
 #include "Raytracer.h"
 #include "Camera.h"
 #include "Keyboard.h"
@@ -31,9 +31,9 @@ const int HUD_HEIGHT = 5;
 const float FOV = 3.141f / 4; // 45 Degrees
 const int UPDATE_FPS = 60;
 
-Framebuffer framebuffer(WIDTH, HEIGHT);
-Camera camera(framebuffer.Width(), framebuffer.Height(), glm::vec3(0, 0, 0), glm::mat4(), FOV);
-Raytracer raytracer(camera, framebuffer);
+ConsoleFramebuffer* framebuffer;
+Camera* camera;
+Raytracer* raytracer;
 
 int worldClock = 0;
 int prevRenderTicks = 0;
@@ -59,21 +59,26 @@ void Init()
     SetConsoleTitle("Text Tracer");
 #endif // _WIN32
 
+    //Instantiate Framebuffer
+    framebuffer = new ConsoleFramebuffer(WIDTH, HEIGHT);
+    camera = new Camera(framebuffer->Width(), framebuffer->Height(), glm::vec3(0, 0, 0), glm::mat4(), FOV);
+    raytracer = new Raytracer(camera, framebuffer);
+
     // Instantiate world objects
     // Floor
     PlaneObject* testFloor = new PlaneObject(glm::vec3(0, 5, 0), glm::rotate(90.0f, glm::vec3(1, 0, 0)), false);
-    testFloor->ObjectColour = Colours::Black;
+    testFloor->ObjectColour = glm::vec4(0.5, 0.5, 0.5, 1);
 
 
     // Walls
     PlaneObject* testWallN = new PlaneObject(glm::vec3(0, 0, 40), glm::rotate(180.0f, glm::vec3(0, 1, 0)), true);
-    testWallN->ObjectColour = Colours::Yellow;
+    testWallN->ObjectColour = glm::vec4(0, 1, 1, 1);
     PlaneObject* testWallE = new PlaneObject(glm::vec3(40, 0, 0), glm::rotate(-90.0f, glm::vec3(0, 1, 0)), true);
-    testWallE->ObjectColour = Colours::Cyan;
+    testWallE->ObjectColour = glm::vec4(1, 1, 0, 1);
     PlaneObject* testWallS = new PlaneObject(glm::vec3(0, 0, -80), glm::rotate(0.0f, glm::vec3(0, 1, 0)), true);
-    testWallS->ObjectColour = Colours::White;
+    testWallS->ObjectColour = glm::vec4(1, 1, 1, 1);
     PlaneObject* testWallW = new PlaneObject(glm::vec3(-40, 0, 0), glm::rotate(90.0f, glm::vec3(0, 1, 0)), true);
-    testWallW->ObjectColour = Colours::Pink;
+    testWallW->ObjectColour = glm::vec4(1, 0, 1, 1);
 
     // Poly Portal
     PolyObject* polyPortalIn = new PolyObject(glm::vec3(-10, 0, -50), glm::rotate(-90.0f, glm::vec3(0, 1, 0)), 4.0f, 5, true);
@@ -81,12 +86,12 @@ void Init()
     PolyObject* polyPortalOut = new PolyObject(glm::vec3(10, 0, -50), glm::rotate(90.0f, glm::vec3(0, 1, 0)), 4.0f, 5, true);
     PolyObject* polyPortalOutOutline = new PolyObject(glm::vec3(10, 0, -50), glm::rotate(90.0f, glm::vec3(0, 1, 0)), 5.0f, 5, true);
 
-    polyPortalIn->ObjectColour = Colours::Black;
+    polyPortalIn->ObjectColour = glm::vec4(0, 0, 0, 1);
     polyPortalIn->Portal = true;
     polyPortalIn->ExitPortal = polyPortalOut;
     polyPortalIn->ExitDecoration = polyPortalInOutline;
 
-    polyPortalOut->ObjectColour = Colours::Black;
+    polyPortalOut->ObjectColour = glm::vec4(0, 0, 0, 1);
     polyPortalOut->Portal = true;
     polyPortalOut->ExitPortal = polyPortalIn;
     polyPortalOut->ExitDecoration = polyPortalOutOutline;
@@ -97,30 +102,30 @@ void Init()
     SphereObject* spherePortalOut = new SphereObject(glm::vec3(-20, 0, -20), glm::rotate(180.0f, glm::vec3(0, 1, 0)), 9.0f, false);
     SphereObject* spherePortalOutOutline = new SphereObject(glm::vec3(-20, 0, -20), glm::mat4(), 10.0f, true);
 
-    spherePortalIn->ObjectColour = Colours::Black;
+    spherePortalIn->ObjectColour = glm::vec4(0, 0, 0, 1);
     spherePortalIn->Portal = true;
     spherePortalIn->ExitPortal = spherePortalOut;
     spherePortalIn->ExitDecoration = spherePortalInOutline;
 
-    spherePortalOut->ObjectColour = Colours::Black;
+    spherePortalOut->ObjectColour = glm::vec4(0, 0, 0, 1);
     spherePortalOut->Portal = true;
     spherePortalOut->ExitPortal = spherePortalIn;
     spherePortalOut->ExitDecoration = spherePortalOutOutline;
 
     // Triangle
     PolyObject* testTri = new PolyObject(glm::vec3(-20, 0, 20), glm::rotate(135.0f, glm::vec3(0, 1, 0)), 7.5f, 3, true);
-    testTri->ObjectColour = Colours::Blue;
+    testTri->ObjectColour = glm::vec4(0, 0, 1, 1);
 
     // Floating Pentagon
     PolyObject* testPent = new PolyObject(glm::vec3(0, -2.5, -12.5), glm::rotate(-90.0f, glm::vec3(1, 0, 0)), 5.0f, 5, true);
-    testPent->ObjectColour = Colours::Yellow;
+    testPent->ObjectColour = glm::vec4(1, 1, 0, 1);
 
     // Moving Sphere
     floatSphere = new SphereObject(glm::vec3(20, 0, 20), glm::mat4(), 2.0f, false);
-    floatSphere->ObjectColour = Colours::Green;
+    floatSphere->ObjectColour = glm::vec4(0, 1, 0, 1);
 
     // Add camera to worldObjects
-    worldObjects.push_back(&camera);
+    worldObjects.push_back(camera);
 
     // Add other objects to worldObjects
     worldObjects.push_back(floatSphere);
@@ -150,7 +155,7 @@ void Init()
 void Update()
 {
     // Controls
-    camera.Update(worldObjects);
+    camera->Update(worldObjects);
 
     // Quit
     if(Keyboard::IsKeyDown(0x1B)) // Esc
@@ -166,9 +171,9 @@ void Update()
 
 void Draw()
 {
-    framebuffer.Clear(Colours::Cyan);
-    raytracer.Trace(worldObjects);
-    framebuffer.Draw();
+    framebuffer->Clear(glm::vec4(0, 1, 1, 1));
+    raytracer->Trace(worldObjects);
+    framebuffer->Draw();
 }
 
 void Cleanup()
@@ -177,6 +182,10 @@ void Cleanup()
     {
         delete worldObjects[i];
     }
+
+    delete framebuffer;
+    delete camera;
+    delete raytracer;
 }
 
 int main()

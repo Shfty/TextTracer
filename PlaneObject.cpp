@@ -6,7 +6,7 @@ PlaneObject::PlaneObject(glm::vec3 position, glm::mat4 rotation, bool twoSided)
 {
     SetPosition(position);
     SetRotation(rotation);
-    ObjectColour = Colours::White;
+    ObjectColour = glm::vec4(1, 1, 1, 1);
 }
 
 bool PlaneObject::Intersects(Ray& ray, IsectData& isectData)

@@ -1,0 +1,117 @@
+#include "ConsoleFramebuffer.h"
+
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+#include <windows.h>
+
+ConsoleFramebuffer::ConsoleFramebuffer(int width, int height)
+    :Framebuffer(width, height)
+{
+    #ifdef _WIN32
+    // Dark Colours
+    m_colourPalette.push_back(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f)); // Black
+    m_colourPalette.push_back(glm::vec4(0.0f, 0.0f, 0.5f, 0.0f)); // Blue
+    m_colourPalette.push_back(glm::vec4(0.0f, 0.5f, 0.0f, 0.0f)); // Green
+    m_colourPalette.push_back(glm::vec4(0.0f, 0.5f, 0.5f, 0.0f)); // Cyan
+    m_colourPalette.push_back(glm::vec4(0.5f, 0.0f, 0.0f, 0.0f)); // Red
+    m_colourPalette.push_back(glm::vec4(0.5f, 0.0f, 0.5f, 0.0f)); // Pink
+    m_colourPalette.push_back(glm::vec4(0.5f, 0.5f, 0.0f, 0.0f)); // Yellow
+    m_colourPalette.push_back(glm::vec4(0.75f, 0.75f, 0.75f, 0.0f)); // White
+    // Bright Colours
+    m_colourPalette.push_back(glm::vec4(0.5f, 0.5f, 0.5f, 0.0f)); // Black
+    m_colourPalette.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f)); // Blue
+    m_colourPalette.push_back(glm::vec4(0.0f, 1.0f, 0.0f, 0.0f)); // Green
+    m_colourPalette.push_back(glm::vec4(0.0f, 1.0f, 1.0f, 0.0f)); // Cyan
+    m_colourPalette.push_back(glm::vec4(1.0f, 0.0f, 0.0f, 0.0f)); // Red
+    m_colourPalette.push_back(glm::vec4(1.0f, 0.0f, 1.0f, 0.0f)); // Pink
+    m_colourPalette.push_back(glm::vec4(1.0f, 1.0f, 0.0f, 0.0f)); // Yellow
+    m_colourPalette.push_back(glm::vec4(1.0f, 1.0f, 1.0f, 0.0f)); // White
+    #endif // _WIN32
+
+    //Populate with blank cells to ensure sanity
+    Clear(glm::vec4(0, 0, 0, 1));
+}
+
+ConsoleFramebuffer::~ConsoleFramebuffer()
+{
+}
+
+void ConsoleFramebuffer::Clear(glm::vec4 colour)
+{
+    // Reset cursor position
+#ifdef _WIN32
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD coord = {0, 0};
+
+    SetConsoleCursorPosition(hConsole, coord);
+#endif // _WIN32
+
+    // Fill with clear colour
+    m_buffer.assign(m_width * m_height, colour);
+}
+
+void ConsoleFramebuffer::PaintCell(int x, int y, glm::vec4 colour)
+{
+    m_buffer[m_width * y + x] = colour;
+}
+
+void ConsoleFramebuffer::Draw()
+{
+    for(int i = 0; i < m_width * m_height; i++)
+    {
+        setColour(m_buffer[i]);
+
+        std::cout << ' ';
+        if(i % m_width == m_width - 1)
+        {
+            std::cout << std::endl;
+        }
+    }
+}
+
+void ConsoleFramebuffer::setColour(glm::vec4 colour)
+{
+#ifdef _WIN32
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, nearestWinConsoleColour(colour));
+#endif // _WIN32
+}
+
+#ifdef _WIN32
+int ConsoleFramebuffer::nearestWinConsoleColour(glm::vec4 colour)
+{
+    float currentDistance = 2.0f;
+    int nearestColour;
+
+    for(int i = 0; i < m_colourPalette.size(); i++)
+    {
+        float distance = colourDistance(colour, m_colourPalette[i]);
+        if(distance < currentDistance)
+        {
+            currentDistance = distance;
+            nearestColour = i;
+        }
+    }
+
+    return nearestColour * 16;
+}
+#endif // _WIN32
+
+float ConsoleFramebuffer::colourDistance(glm::vec4 c0, glm::vec4 c1)
+{
+    float distance = 0.0f;
+
+    distance += glm::abs(c0.r - c1.r);
+    distance += glm::abs(c0.g - c1.g);
+    distance += glm::abs(c0.b - c1.b);
+
+    if(distance == 0)
+    {
+        return 0;
+    }
+    else
+    {
+        return distance / 3;
+    }
+}

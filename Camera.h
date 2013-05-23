@@ -25,7 +25,7 @@ public:
     Camera(int width, int height, glm::vec3 position, glm::mat4 rotation, float fov)
         :SphereObject(position, rotation, 2.0f, false), Width(width), Height(height)
     {
-        ObjectColour = Colours::White;
+        ObjectColour = glm::vec4(1, 1, 1, 1);
         FOV.x = fov;
         FOV.y = ((float)Height / (float)Width) * FOV.x;
     }
