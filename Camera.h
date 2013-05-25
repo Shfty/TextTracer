@@ -7,6 +7,9 @@
 #include "SphereObject.h"
 #include "Keyboard.h"
 
+const float TRANS_UNITS_PER_MS = 20.0f / 1000.0f;
+const float ROT_UNITS_PER_MS = 135.0f / 1000.0f;
+
 struct Camera : SphereObject
 {
 public:
@@ -30,47 +33,51 @@ public:
         FOV.y = ((float)Height / (float)Width) * FOV.x;
     }
 
-    void Update(std::vector<WorldObject*> worldObjects)
+    void Update(std::vector<WorldObject*> worldObjects, int elapsedTime)
     {
         // Movement
+        float positionChange = TRANS_UNITS_PER_MS * elapsedTime;
+
         if(Keyboard::IsKeyDown('A'))
         {
-            m_position += glm::vec3(xRotMat * glm::vec4(-1.0f, 0, 0, 1.0f));
+            m_position += glm::vec3(xRotMat * glm::vec4(-positionChange, 0, 0, 1.0f));
         }
 
         if(Keyboard::IsKeyDown('D'))
         {
-            m_position += glm::vec3(xRotMat * glm::vec4(1.0f, 0, 0, 1.0f));
+            m_position += glm::vec3(xRotMat * glm::vec4(positionChange, 0, 0, 1.0f));
         }
         if(Keyboard::IsKeyDown('W'))
         {
-            m_position += glm::vec3(xRotMat * glm::vec4(0, 0, -1.0f, 1.0f));
+            m_position += glm::vec3(xRotMat * glm::vec4(0, 0, -positionChange, 1.0f));
         }
 
         if(Keyboard::IsKeyDown('S'))
         {
-            m_position += glm::vec3(xRotMat * glm::vec4(0, 0, 1.0f, 1.0f));
+            m_position += glm::vec3(xRotMat * glm::vec4(0, 0, positionChange, 1.0f));
         }
 
         // Rotation
+        float rotationChange = ROT_UNITS_PER_MS * elapsedTime;
+
         if(Keyboard::IsKeyDown('J'))
         {
-            xRotMat *= glm::rotate(glm::mat4(), 5.0f, glm::vec3(0, 1, 0));
+            xRotMat *= glm::rotate(glm::mat4(), rotationChange, glm::vec3(0, 1, 0));
         }
 
         if(Keyboard::IsKeyDown('L'))
         {
-            xRotMat *= glm::rotate(glm::mat4(), -5.0f, glm::vec3(0, 1, 0));
+            xRotMat *= glm::rotate(glm::mat4(), -rotationChange, glm::vec3(0, 1, 0));
         }
 
         if(Keyboard::IsKeyDown('I'))
         {
-            yRotMat *= glm::rotate(glm::mat4(), -5.0f, glm::vec3(1, 0, 0));
+            yRotMat *= glm::rotate(glm::mat4(), -rotationChange, glm::vec3(1, 0, 0));
         }
 
         if(Keyboard::IsKeyDown('K'))
         {
-            yRotMat *= glm::rotate(glm::mat4(), 5.0f, glm::vec3(1, 0, 0));
+            yRotMat *= glm::rotate(glm::mat4(), rotationChange, glm::vec3(1, 0, 0));
         }
 
         //Portal Intersection

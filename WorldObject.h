@@ -11,10 +11,14 @@
 class WorldObject
 {
 public:
-    glm::vec4 ObjectColour = glm::vec4(0, 0, 0, 1);
-    bool Portal = false;
     WorldObject* ExitPortal = NULL;
     WorldObject* ExitDecoration = NULL;
+
+    glm::vec4 ObjectColour = glm::vec4(0, 0, 0, 1);
+
+    bool Portal = false;
+    bool CastShadow = true;
+    bool Fullbright = false;
 
     WorldObject() {}
 

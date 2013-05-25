@@ -5,9 +5,6 @@
 #include "Raytracer.h"
 #include "Ray.h"
 
-glm::vec4 ambientLightColour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-glm::vec3 ambientLightDirection = glm::vec3(0, 1, 0);
-
 Raytracer::Raytracer(Camera* camera, Framebuffer* framebuffer)
     :m_camera(camera),
     m_framebuffer(framebuffer)
@@ -100,24 +97,52 @@ bool Raytracer::traceViewRay(glm::vec3 origin, glm::vec3 direction, std::vector<
         }
         else
         {
-            glm::vec4 objectColour = worldObjects[nearestObjectIdx]->ObjectColour;
-            bool occluded = traceHitRay(isectData.Entry, -ambientLightDirection, worldObjects, worldObjects[nearestObjectIdx]);
-
-
-            if(occluded)
+            rayColour = worldObjects[nearestObjectIdx]->ObjectColour;
+#ifndef DISABLE_LIGHTING
+            if(!worldObjects[nearestObjectIdx]->Fullbright)
             {
-                rayColour = objectColour * 0.5f;
+                bool occluded = traceShadowRay(isectData.Entry, -glm::normalize(SkyLightDirection), worldObjects, worldObjects[nearestObjectIdx]);
+                float diffuseFactor = glm::max(0.0f, glm::dot(ray.Direction, glm::normalize(SkyLightDirection)));
+
+                float brightness;
+                if(occluded)
+                {
+                    brightness = AmbientIntensity;
+                }
+                else
+                {
+                    brightness = diffuseFactor + AmbientIntensity;
+                }
+
+                rayColour *= SkyLightColour;
+                rayColour *= AmbientLightColour;
+                rayColour *= brightness;
             }
-            else
-            {
-                rayColour = objectColour * ambientLightColour;
-            }
+#endif // DISABLE_LIGHTING
             return true;
         }
     }
     else
     {
         return false;
+    }
+}
+
+bool Raytracer::traceShadowRay(glm::vec3 origin, glm::vec3 direction, std::vector<WorldObject*> worldObjects, WorldObject* parentObject)
+{
+    Ray ray(origin, direction, NEAR_PLANE, FAR_PLANE);
+    IsectData isectData;
+
+    for(int i = 0; i < worldObjects.size(); i++)
+    {
+        if(worldObjects[i] == parentObject) continue;
+
+        if(!worldObjects[i]->CastShadow) continue;
+
+        if(worldObjects[i]->Intersects(ray, isectData))
+        {
+            return true;
+        }
     }
 }
 

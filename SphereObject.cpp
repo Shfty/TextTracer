@@ -44,12 +44,6 @@ bool SphereObject::Intersects(Ray& ray, IsectData& isectData)
 
 bool SphereObject::IntersectsPortal(Ray& ray, IsectData& isectData, const glm::mat4& cameraRotation)
 {
-        IsectData dummy;
-        return IntersectsPlane(ray, isectData, cameraRotation) && Intersects(ray, dummy);
-}
-
-bool SphereObject::IntersectsPlane(Ray& ray, IsectData& isectData, const glm::mat4& cameraRotation)
-{
     glm::vec3 rNormal = glm::vec3(cameraRotation * glm::vec4(0, 0, 1, 1.0f));
 
     float nDotRay = glm::dot(rNormal, ray.Direction);
@@ -59,9 +53,17 @@ bool SphereObject::IntersectsPlane(Ray& ray, IsectData& isectData, const glm::ma
     float t = - (glm::dot(rNormal, ray.Origin) - D) / glm::dot(rNormal, ray.Direction);
 
     if(t <= ray.NearPlane || t > ray.FarPlane) return false;
-    else ray.FarPlane = t;
 
-    isectData.Entry = ray.Origin + ray.Direction * t;
+    glm::vec3 pointOnPlane = ray.Origin + ray.Direction * t;
+
+    // Step 2: Circle intersection test
+    glm::vec3 pointOnPlaneLocal = pointOnPlane - m_position;
+    float distance = glm::dot(pointOnPlaneLocal, pointOnPlaneLocal);
+    if(distance > Radius * Radius) return false;
+
+    //Offset portal intersection by a small amount to fake volume
+    ray.FarPlane = t - (Portal ? 0.1f : 0.0f);
+    isectData.Entry = ray.Origin + ray.Direction * (t - (Portal ? 0.1f : 0.0f));
     return true;
 }
 

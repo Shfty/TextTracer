@@ -1,7 +1,7 @@
-#include "PolyObject.h"
+#include "ConvexPolyObject.h"
 
 // PUBLIC
-PolyObject::PolyObject(glm::vec3 position, glm::mat4 rotation, float scale, int sides, bool twoSided)
+ConvexPolyObject::ConvexPolyObject(glm::vec3 position, glm::mat4 rotation, float scale, int sides, bool twoSided)
 :TwoSided(twoSided), Scale(scale)
 {
     genObjectVertices(sides);
@@ -10,7 +10,16 @@ PolyObject::PolyObject(glm::vec3 position, glm::mat4 rotation, float scale, int 
     ObjectColour = glm::vec4(1, 0, 0, 1);
 }
 
-bool PolyObject::Intersects(Ray& ray, IsectData& isectData)
+ConvexPolyObject::ConvexPolyObject(glm::vec3 position, glm::mat4 rotation, float scale, std::vector<glm::vec3> vertices, bool twoSided)
+:TwoSided(twoSided), Scale(scale)
+{
+    m_objectVertices = vertices;
+    SetPosition(position);
+    SetRotation(rotation);
+    ObjectColour = glm::vec4(1, 0, 0, 1);
+}
+
+bool ConvexPolyObject::Intersects(Ray& ray, IsectData& isectData)
 {
     // Step 1: Plane intersection test
     float nDotRay = glm::dot(m_worldNormal, ray.Direction);
@@ -37,12 +46,12 @@ bool PolyObject::Intersects(Ray& ray, IsectData& isectData)
     return true;
 }
 
-bool PolyObject::IntersectsPortal(Ray& ray, IsectData& isectData, const glm::mat4& cameraRotation)
+bool ConvexPolyObject::IntersectsPortal(Ray& ray, IsectData& isectData, const glm::mat4& cameraRotation)
 {
     return Intersects(ray, isectData);
 }
 
-void PolyObject::SetPosition(glm::vec3 position)
+void ConvexPolyObject::SetPosition(glm::vec3 position)
 {
     m_position = position;
     calculateWorldNormalDotPosition();
@@ -50,7 +59,7 @@ void PolyObject::SetPosition(glm::vec3 position)
     genWorldEdges();
 }
 
-void PolyObject::SetRotation(glm::mat4 rotation)
+void ConvexPolyObject::SetRotation(glm::mat4 rotation)
 {
     m_rotation = rotation;
     m_worldNormal = glm::normalize(glm::vec3(m_rotation * glm::vec4(m_objectNormal, 1.0f)));
@@ -60,13 +69,13 @@ void PolyObject::SetRotation(glm::mat4 rotation)
 }
 
 // PRIVATE
-void PolyObject::genObjectVertices(int sides)
+void ConvexPolyObject::genObjectVertices(int sides)
 {
     //Clamp sides to prevent <2D objects
     sides = glm::max(sides, 3);
 
     //Create radius and rotate so bottom edge is perpendicular to 1, 0, 0
-    glm::vec3 vertex(0, Scale, 0);
+    glm::vec3 vertex(0, 1, 0);
     vertex = glm::rotateZ(vertex, 180.0f / (float)sides);
 
     //For each side, add a vertex and rotate
@@ -77,16 +86,16 @@ void PolyObject::genObjectVertices(int sides)
     }
 }
 
-void PolyObject::genWorldVertices()
+void ConvexPolyObject::genWorldVertices()
 {
     m_worldVertices.clear();
     for(int i = 0; i < m_objectVertices.size(); i++)
     {
-        m_worldVertices.push_back(glm::vec3(m_rotation * glm::vec4(m_objectVertices[i], 1.0f)) + m_position);
+        m_worldVertices.push_back(glm::vec3(m_rotation * glm::vec4(m_objectVertices[i] * Scale, 1.0f)) + m_position);
     }
 }
 
-void PolyObject::genWorldEdges()
+void ConvexPolyObject::genWorldEdges()
 {
     m_worldEdges.clear();
     for(uint16_t i = 0; i < m_worldVertices.size(); i++)
@@ -98,7 +107,7 @@ void PolyObject::genWorldEdges()
     }
 }
 
-void PolyObject::calculateWorldNormalDotPosition()
+void ConvexPolyObject::calculateWorldNormalDotPosition()
 {
     m_worldNormalDotPosition = glm::dot(m_worldNormal, m_position);
 }
