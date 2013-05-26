@@ -5,9 +5,9 @@
 #include "Raytracer.h"
 #include "Ray.h"
 
-Raytracer::Raytracer(Camera* camera, Framebuffer* framebuffer)
-    :m_camera(camera),
-    m_framebuffer(framebuffer)
+Raytracer::Raytracer(const Camera* camera, const Framebuffer* framebuffer)
+    :m_camera((Camera*)camera),
+    m_framebuffer((Framebuffer*)framebuffer)
 {
 }
 
@@ -15,7 +15,7 @@ Raytracer::~Raytracer()
 {
 }
 
-void Raytracer::Trace(std::vector<WorldObject*> worldObjects)
+void Raytracer::Trace(const std::vector<WorldObject*>& worldObjects)
 {
     for(int x = 0; x < m_camera->Width; x += CELL_SIZE_X)
     {
@@ -29,10 +29,12 @@ void Raytracer::Trace(std::vector<WorldObject*> worldObjects)
                     float yMag = ((((float)(y + cy) * 2.0f) - (float)m_camera->Height) / (float)m_camera->Height) * tan(m_camera->FOV.y);
                     glm::vec3 direction = glm::vec3(m_camera->GetRotation() * glm::vec4(glm::normalize(glm::vec3(xMag, yMag, -1.0f)), 0.0f));
 
-                    glm::vec4 rayColour;
-                    if(traceViewRay(m_camera->GetPosition(), direction, worldObjects, m_camera, 5, rayColour))
+                    Ray ray(m_camera->GetPosition(), direction);
+                    ray.ParentObject = m_camera;
+                    ray.FarPlane = FAR_PLANE;
+                    if(traceViewRay(ray, worldObjects, 5))
                     {
-                        m_framebuffer->PaintCell(x + cx, y + cy, rayColour);
+                        m_framebuffer->PaintCell(x + cx, y + cy, ray.Colour);
                     }
                 }
             }
@@ -40,21 +42,19 @@ void Raytracer::Trace(std::vector<WorldObject*> worldObjects)
     }
 }
 
-// parentObject = object that the ray originates from
-bool Raytracer::traceViewRay(glm::vec3 origin, glm::vec3 direction, std::vector<WorldObject*> worldObjects, WorldObject* parentObject, int maxRecursion, glm::vec4& rayColour)
+bool Raytracer::traceViewRay(Ray& ray, const std::vector<WorldObject*>& worldObjects, const int maxRecursion)
 {
-    Ray ray(origin, direction, NEAR_PLANE, FAR_PLANE);
     int nearestObjectIdx = -1;
     IsectData isectData;
 
-    for(int i = 0; i < worldObjects.size(); i++)
+    for(uint16_t i = 0; i < worldObjects.size(); i++)
     {
-        if(worldObjects[i] == parentObject)
+        if(worldObjects[i] == ray.ParentObject)
         {
             continue;
         }
 
-        if(parentObject != NULL && worldObjects[i] == parentObject->ExitDecoration)
+        if(ray.ParentObject != NULL && worldObjects[i] == ray.ParentObject->ExitDecoration)
         {
             continue;
         }
@@ -86,22 +86,22 @@ bool Raytracer::traceViewRay(glm::vec3 origin, glm::vec3 direction, std::vector<
             glm::vec3 axis = glm::normalize(glm::cross(entryPortalNormal, exitPortalNormal));
             glm::mat4 rayOrientation = glm::rotate(180.0f, axis) * glm::rotate(glm::degrees(angle), axis);
 
-            return traceViewRay(
-                            rayOrigin,
-                            glm::vec3(rayOrientation * glm::vec4(direction, 1.0f)),
-                            worldObjects,
-                            worldObjects[nearestObjectIdx]->ExitPortal,
-                            maxRecursion - 1,
-                            rayColour
-                            );
+            ray.Origin = rayOrigin;
+            ray.Direction = glm::vec3(rayOrientation * glm::vec4(ray.Direction, 1.0f));
+            ray.ParentObject = worldObjects[nearestObjectIdx]->ExitPortal;
+            ray.FarPlane = FAR_PLANE;
+            return traceViewRay(ray, worldObjects, maxRecursion - 1);
         }
         else
         {
-            rayColour = worldObjects[nearestObjectIdx]->ObjectColour;
+            ray.Colour = worldObjects[nearestObjectIdx]->ObjectColour;
 #ifndef DISABLE_LIGHTING
             if(!worldObjects[nearestObjectIdx]->Fullbright)
             {
-                bool occluded = traceShadowRay(isectData.Entry, -glm::normalize(SkyLightDirection), worldObjects, worldObjects[nearestObjectIdx]);
+                Ray shadowRay(isectData.Entry, -glm::normalize(SkyLightDirection));
+                shadowRay.FarPlane = FAR_PLANE;
+                shadowRay.ParentObject = worldObjects[nearestObjectIdx];
+                bool occluded = traceShadowRay(shadowRay, worldObjects);
                 float diffuseFactor = glm::max(0.0f, glm::dot(ray.Direction, glm::normalize(SkyLightDirection)));
 
                 float brightness;
@@ -114,9 +114,9 @@ bool Raytracer::traceViewRay(glm::vec3 origin, glm::vec3 direction, std::vector<
                     brightness = diffuseFactor + AmbientIntensity;
                 }
 
-                rayColour *= SkyLightColour;
-                rayColour *= AmbientLightColour;
-                rayColour *= brightness;
+                ray.Colour *= SkyLightColour;
+                ray.Colour *= AmbientLightColour;
+                ray.Colour *= brightness;
             }
 #endif // DISABLE_LIGHTING
             return true;
@@ -128,14 +128,13 @@ bool Raytracer::traceViewRay(glm::vec3 origin, glm::vec3 direction, std::vector<
     }
 }
 
-bool Raytracer::traceShadowRay(glm::vec3 origin, glm::vec3 direction, std::vector<WorldObject*> worldObjects, WorldObject* parentObject)
+bool Raytracer::traceShadowRay(Ray& ray, const std::vector<WorldObject*>& worldObjects)
 {
-    Ray ray(origin, direction, NEAR_PLANE, FAR_PLANE);
     IsectData isectData;
 
-    for(int i = 0; i < worldObjects.size(); i++)
+    for(uint16_t i = 0; i < worldObjects.size(); i++)
     {
-        if(worldObjects[i] == parentObject) continue;
+        if(worldObjects[i] == ray.ParentObject) continue;
 
         if(!worldObjects[i]->CastShadow) continue;
 
@@ -144,20 +143,23 @@ bool Raytracer::traceShadowRay(glm::vec3 origin, glm::vec3 direction, std::vecto
             return true;
         }
     }
+
+    return false;
 }
 
-bool Raytracer::traceHitRay(glm::vec3 origin, glm::vec3 direction, std::vector<WorldObject*> worldObjects, WorldObject* parentObject)
+bool Raytracer::traceHitRay(Ray& ray, const std::vector<WorldObject*>& worldObjects)
 {
-    Ray ray(origin, direction, NEAR_PLANE, FAR_PLANE);
     IsectData isectData;
 
-    for(int i = 0; i < worldObjects.size(); i++)
+    for(uint16_t i = 0; i < worldObjects.size(); i++)
     {
-        if(worldObjects[i] == parentObject) continue;
+        if(worldObjects[i] == ray.ParentObject) continue;
 
         if(worldObjects[i]->Intersects(ray, isectData))
         {
             return true;
         }
     }
+
+    return false;
 }

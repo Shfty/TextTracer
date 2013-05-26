@@ -1,7 +1,8 @@
 #include "SphereObject.h"
+#include "Ray.h"
 
 // PUBLIC
-SphereObject::SphereObject(glm::vec3 position, glm::mat4 rotation, float radius, bool backface)
+SphereObject::SphereObject(const glm::vec3& position, const glm::mat4& rotation, const float radius, const bool backface)
     : Radius(radius),
     Backface(backface)
 {
@@ -47,7 +48,7 @@ bool SphereObject::IntersectsPortal(Ray& ray, IsectData& isectData, const glm::m
     glm::vec3 rNormal = glm::vec3(cameraRotation * glm::vec4(0, 0, 1, 1.0f));
 
     float nDotRay = glm::dot(rNormal, ray.Direction);
-    if(nDotRay = 0) return false;
+    if(nDotRay == 0) return false;
 
     float D = glm::dot(rNormal, m_position);
     float t = - (glm::dot(rNormal, ray.Origin) - D) / glm::dot(rNormal, ray.Direction);

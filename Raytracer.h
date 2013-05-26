@@ -19,10 +19,10 @@ public:
     glm::vec4 SkyLightColour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     glm::vec3 SkyLightDirection = glm::vec3(0, 1, 0);
 
-    Raytracer(Camera* camera, Framebuffer* framebuffer);
+    Raytracer(const Camera* camera, const Framebuffer* framebuffer);
     ~Raytracer();
 
-    void Trace(std::vector<WorldObject*> worldObjects);
+    void Trace(const std::vector<WorldObject*>& worldObjects);
 
 private:
     int m_width;
@@ -30,9 +30,9 @@ private:
     Camera* m_camera;
     Framebuffer* m_framebuffer;
 
-    bool traceViewRay(glm::vec3 origin, glm::vec3 direction, std::vector<WorldObject*> worldObjects, WorldObject* parentObject, int maxRecursion, glm::vec4& rayColour);
-    bool traceShadowRay(glm::vec3 origin, glm::vec3 direction, std::vector<WorldObject*> worldObjects, WorldObject* parentObject);
-    bool traceHitRay(glm::vec3 origin, glm::vec3 direction, std::vector<WorldObject*> worldObjects, WorldObject* parentObject);
+    bool traceViewRay(Ray& ray, const std::vector<WorldObject*>& worldObjects, const int maxRecursion);
+    bool traceShadowRay(Ray& ray, const std::vector<WorldObject*>& worldObjects);
+    bool traceHitRay(Ray& ray, const std::vector<WorldObject*>& worldObjects);
 };
 
 #endif // RAYTRACER_H

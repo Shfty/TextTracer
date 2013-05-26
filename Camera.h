@@ -6,6 +6,7 @@
 #include "DebugBox.h"
 #include "SphereObject.h"
 #include "Keyboard.h"
+#include "Ray.h"
 
 const float TRANS_UNITS_PER_MS = 20.0f / 1000.0f;
 const float ROT_UNITS_PER_MS = 135.0f / 1000.0f;
@@ -25,7 +26,7 @@ private:
     bool intersectPortal = false;
 
 public:
-    Camera(int width, int height, glm::vec3 position, glm::mat4 rotation, float fov)
+    Camera(const int width, const int height, const glm::vec3& position, const glm::mat4& rotation, const float fov)
         :SphereObject(position, rotation, 2.0f, false), Width(width), Height(height)
     {
         ObjectColour = glm::vec4(1, 1, 1, 1);
@@ -33,8 +34,10 @@ public:
         FOV.y = ((float)Height / (float)Width) * FOV.x;
     }
 
-    void Update(std::vector<WorldObject*> worldObjects, int elapsedTime)
+    void Update(const std::vector<WorldObject*>& worldObjects, const int elapsedTime)
     {
+        prevPos = m_position;
+
         // Movement
         float positionChange = TRANS_UNITS_PER_MS * elapsedTime;
 
@@ -84,18 +87,18 @@ public:
         if(m_position != prevPos)
         {
             glm::vec3 heading = m_position - prevPos;
-            Ray ray(prevPos, glm::normalize(heading), 0.0f, heading.length());
+            Ray ray(prevPos, glm::normalize(heading));
+            ray.FarPlane = heading.length();
             IsectData isectData;
             int nearestPortalIdx = -1;
 
-            for(int i = 0; i < worldObjects.size(); i++)
+            for(uint16_t i = 0; i < worldObjects.size(); i++)
             {
-                if(worldObjects[i] == this)
+                if(!worldObjects[i]->Portal)
                 {
                     continue;
                 }
-
-                if(worldObjects[i]->Portal)
+                else
                 {
                     if(worldObjects[i]->IntersectsPortal(ray, isectData, m_rotation))
                     {
@@ -104,7 +107,7 @@ public:
                 }
             }
 
-            if(nearestPortalIdx != -1 && !intersectPortal)
+            if(nearestPortalIdx != -1)
             {
                 // Compute new rotation
                 glm::vec3 backward = glm::vec3(0, 0, 1);
@@ -117,28 +120,24 @@ public:
                 xRotMat *= newRotation;
 
                 // Compute new position
-                glm::vec3 inIntersectionRelative = isectData.Entry - worldObjects[nearestPortalIdx]->GetPosition();
-                glm::vec3 outIntersection = inIntersectionRelative + worldObjects[nearestPortalIdx]->ExitPortal->GetPosition();
-                glm::vec3 outPositionRelative = isectData.Entry - m_position;
-                glm::vec3 outPositionRelativeRotated = glm::vec3(newRotation * glm::vec4(outPositionRelative, 1.0f));
+                glm::vec3 entryPointLocal = isectData.Entry - worldObjects[nearestPortalIdx]->GetPosition();
+                glm::vec3 entryPointLocalRotated = glm::vec3(newRotation * glm::vec4(entryPointLocal, 1.0f));
+                glm::vec3 exitPoint = entryPointLocalRotated + worldObjects[nearestPortalIdx]->ExitPortal->GetPosition();
 
-                SetPosition(outIntersection + outPositionRelativeRotated);
+                glm::vec3 distanceThroughPortal = m_position - isectData.Entry;
+                glm::vec3 distanceThroughPortalRotated = glm::vec3(newRotation * glm::vec4(distanceThroughPortal, 1.0f));
 
-                intersectPortal = true;
+                glm::vec3 outPosition = exitPoint + distanceThroughPortalRotated;
+
+                SetPosition(outPosition);
             }
-            else
-            {
-                intersectPortal = false;
-            }
-
-            prevPos = m_position;
         }
 
         SetRotation(xRotMat * yRotMat);
     }
 
-    virtual void SetPosition(glm::vec3 position) { m_position = position; }
-    virtual void SetRotation(glm::mat4 rotation) { m_rotation = rotation; }
+    virtual void SetPosition(const glm::vec3& position) { m_position = position; }
+    virtual void SetRotation(const glm::mat4& rotation) { m_rotation = rotation; }
 };
 
 #endif // CAMERA_H

@@ -1,8 +1,9 @@
 #include "PlaneObject.h"
+#include "Ray.h"
 
 // PUBLIC
-PlaneObject::PlaneObject(glm::vec3 position, glm::mat4 rotation, bool twoSided)
-    :TwoSided(twoSided)
+PlaneObject::PlaneObject(const glm::vec3& position, const glm::mat4& rotation, const bool twoSided)
+    :TwoSided((bool)twoSided)
 {
     SetPosition(position);
     SetRotation(rotation);
@@ -29,13 +30,13 @@ bool PlaneObject::IntersectsPortal(Ray& ray, IsectData& isectData, const glm::ma
     return Intersects(ray, isectData);
 }
 
-void PlaneObject::SetPosition(glm::vec3 position)
+void PlaneObject::SetPosition(const glm::vec3& position)
 {
     m_position = position;
     calculateWorldNormalDotPosition();
 }
 
-void PlaneObject::SetRotation(glm::mat4 rotation)
+void PlaneObject::SetRotation(const glm::mat4& rotation)
 {
     m_rotation = rotation;
     m_worldNormal = glm::normalize(glm::vec3(m_rotation * glm::vec4(m_objectNormal, 1.0f)));

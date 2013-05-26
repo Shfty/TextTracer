@@ -1,8 +1,9 @@
 #include "DiscObject.h"
+#include "Ray.h"
 
 // PUBLIC
-DiscObject::DiscObject(glm::vec3 position, glm::mat4 rotation, float scale, bool twoSided)
-:TwoSided(twoSided), Scale(scale)
+DiscObject::DiscObject(const glm::vec3& position, const glm::mat4& rotation, float scale, bool twoSided)
+:Scale(scale), TwoSided(twoSided)
 {
     SetPosition(position);
     SetRotation(rotation);
@@ -37,13 +38,13 @@ bool DiscObject::IntersectsPortal(Ray& ray, IsectData& isectData, const glm::mat
     return Intersects(ray, isectData);
 }
 
-void DiscObject::SetPosition(glm::vec3 position)
+void DiscObject::SetPosition(const glm::vec3& position)
 {
     m_position = position;
     calculateWorldNormalDotPosition();
 }
 
-void DiscObject::SetRotation(glm::mat4 rotation)
+void DiscObject::SetRotation(const glm::mat4& rotation)
 {
     m_rotation = rotation;
     m_worldNormal = glm::normalize(glm::vec3(m_rotation * glm::vec4(m_objectNormal, 1.0f)));

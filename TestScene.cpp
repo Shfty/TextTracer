@@ -145,7 +145,7 @@ TestScene::~TestScene()
     delete m_dynamicTree;
 }
 
-void TestScene::Update(int elapsedTime)
+void TestScene::Update(const int elapsedTime)
 {
     // Move celestial bodies
     float sunRotation = SUN_ROTATION_PER_MS * elapsedTime;

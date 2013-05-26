@@ -4,7 +4,7 @@ Text Tracer - A real-time raytracer
 TODO:
 Ray Refactoring
     -Move ray-shape intersection tests into Raytracer
-    -Move rayColour into Ray to facilitate cumulativee colour/alpha blending
+    -Cumulative Ray colour (transparency)
     -Should IsectData be a member of Ray?
 kD Tree Visualisation w/transparent planes
 kD Tree Nearest Neighbour
@@ -48,6 +48,7 @@ int main()
 {
     // Initialization
     TextTracer textTracer;
+    textTracer.Update(0);
 
 #ifdef REALTIME
     while(!quit)

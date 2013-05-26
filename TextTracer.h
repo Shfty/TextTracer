@@ -11,10 +11,8 @@ public:
     TextTracer();
     ~TextTracer();
 
-    void Update(int worldClock);
+    void Update(const int worldClock);
     void Draw();
-
-    static int WorldClock;
 
 private:
     ConsoleFramebuffer* m_framebuffer;

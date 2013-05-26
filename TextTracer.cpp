@@ -46,11 +46,20 @@ TextTracer::TextTracer()
     // Add scenes to world vector
     testScene = new TestScene();
     world.push_back(testScene);
+
+    worldObjects.clear();
+    for(uint16_t i = 0; i < world.size(); i++)
+    {
+        const std::vector<WorldObject*>* staticObjects = world[i]->GetStaticObjects();
+        const std::vector<WorldObject*>* dynamicObjects = world[i]->GetDynamicObjects();
+        worldObjects.insert(worldObjects.end(), staticObjects->begin(), staticObjects->end());
+        worldObjects.insert(worldObjects.end(), dynamicObjects->begin(), dynamicObjects->end());
+    }
 }
 
 TextTracer::~TextTracer()
 {
-    for(int i = 0; i < world.size(); i++)
+    for(uint16_t i = 0; i < world.size(); i++)
     {
         delete world[i];
     }
@@ -61,22 +70,16 @@ TextTracer::~TextTracer()
     delete m_raytracer;
 }
 
-void TextTracer::Update(int worldClock)
+void TextTracer::Update(const int worldClock)
 {
     // Calculate elapsed time
     int elapsedTime = worldClock - m_prevWorldClock;
     m_prevWorldClock = worldClock;
 
     // Update world and aggregate into worldObjects
-    worldObjects.clear();
-    for(int i = 0; i < world.size(); i++)
+    for(uint16_t i = 0; i < world.size(); i++)
     {
         world[i]->Update(elapsedTime);
-
-        const std::vector<WorldObject*>* staticObjects = world[i]->GetStaticObjects();
-        const std::vector<WorldObject*>* dynamicObjects = world[i]->GetDynamicObjects();
-        worldObjects.insert(worldObjects.end(), staticObjects->begin(), staticObjects->end());
-        worldObjects.insert(worldObjects.end(), dynamicObjects->begin(), dynamicObjects->end());
     }
 
     // Controls

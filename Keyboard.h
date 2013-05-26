@@ -9,7 +9,7 @@
 
 struct Keyboard
 {
-    static bool IsKeyDown(char key)
+    static bool IsKeyDown(const char key)
     {
 #ifdef _WIN32
         return GetAsyncKeyState(key);

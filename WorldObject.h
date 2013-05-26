@@ -5,8 +5,9 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-#include "Ray.h"
 #include "IsectData.h"
+
+class Ray;
 
 class WorldObject
 {
@@ -21,12 +22,13 @@ public:
     bool Fullbright = false;
 
     WorldObject() {}
+    virtual ~WorldObject() {};
 
     glm::vec3 GetPosition() const { return m_position; }
     glm::mat4 GetRotation() const { return m_rotation; }
 
-    virtual void SetPosition(glm::vec3 position) = 0;
-    virtual void SetRotation(glm::mat4 rotation) = 0;
+    virtual void SetPosition(const glm::vec3& position) = 0;
+    virtual void SetRotation(const glm::mat4& rotation) = 0;
 
     virtual bool Intersects(Ray& ray, IsectData& isectData) = 0;
     virtual bool IntersectsPortal(Ray& ray, IsectData& isectData, const glm::mat4& cameraRotation) = 0;

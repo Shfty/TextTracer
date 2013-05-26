@@ -5,7 +5,7 @@
 #include <iostream>
 #include <windows.h>
 
-ConsoleFramebuffer::ConsoleFramebuffer(int width, int height)
+ConsoleFramebuffer::ConsoleFramebuffer(const int width, const int height)
     :Framebuffer(width, height)
 {
     #ifdef _WIN32
@@ -37,7 +37,7 @@ ConsoleFramebuffer::~ConsoleFramebuffer()
 {
 }
 
-void ConsoleFramebuffer::Clear(glm::vec4 colour)
+void ConsoleFramebuffer::Clear(const glm::vec4& colour)
 {
     // Reset cursor position
 #ifdef _WIN32
@@ -51,7 +51,7 @@ void ConsoleFramebuffer::Clear(glm::vec4 colour)
     m_buffer.assign(m_width * m_height, colour);
 }
 
-void ConsoleFramebuffer::PaintCell(int x, int y, glm::vec4 colour)
+void ConsoleFramebuffer::PaintCell(const int x, const int y, const glm::vec4& colour)
 {
     m_buffer[m_width * y + x] = colour;
 }
@@ -70,7 +70,7 @@ void ConsoleFramebuffer::Draw()
     }
 }
 
-void ConsoleFramebuffer::setColour(glm::vec4 colour)
+void ConsoleFramebuffer::setColour(const glm::vec4& colour)
 {
 #ifdef _WIN32
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -84,7 +84,7 @@ int ConsoleFramebuffer::nearestWinConsoleColour(glm::vec4 colour)
     float currentDistance = 2.0f;
     int nearestColour;
 
-    for(int i = 0; i < m_colourPalette.size(); i++)
+    for(uint16_t i = 0; i < m_colourPalette.size(); i++)
     {
         float distance = colourDistance(colour, m_colourPalette[i]);
         if(distance < currentDistance)
@@ -98,7 +98,7 @@ int ConsoleFramebuffer::nearestWinConsoleColour(glm::vec4 colour)
 }
 #endif // _WIN32
 
-float ConsoleFramebuffer::colourDistance(glm::vec4 c0, glm::vec4 c1)
+float ConsoleFramebuffer::colourDistance(const glm::vec4& c0, const glm::vec4& c1)
 {
     float distance = 0.0f;
 

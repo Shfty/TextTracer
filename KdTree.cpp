@@ -2,7 +2,7 @@
 
 #include "KdTree.h"
 
-KdTree::KdTree(std::vector<WorldObject*> worldObjects)
+KdTree::KdTree(const std::vector<WorldObject*>& worldObjects)
 {
     GenTree(worldObjects);
 }
@@ -12,12 +12,12 @@ KdTree::~KdTree()
     delete m_rootNode;
 }
 
-void KdTree::GenTree(std::vector<WorldObject*> worldObjects)
+void KdTree::GenTree(const std::vector<WorldObject*>& worldObjects)
 {
     m_rootNode = genNode(worldObjects, NULL, 0);
 }
 
-KdNode* KdTree::NearestNeighbour(glm::vec3 position, KdNode* rootNode)
+KdNode* KdTree::NearestNeighbour(const glm::vec3& position, const KdNode* rootNode)
 {
     // Go depth-first to the bottom of the tree to get our initial estimate
     KdNode* bestEstimate = depthFirst(position, rootNode, 0);
@@ -34,7 +34,7 @@ KdNode* KdTree::NearestNeighbour(glm::vec3 position, KdNode* rootNode)
         if(glm::dot(currentDistance, currentDistance) < glm::dot(bestDistance, bestDistance))
         {
             bestEstimate = currentNode;
-            glm::vec3 bestDistance = bestEstimate->Object->GetPosition() - position;
+            //glm::vec3 bestDistance = bestEstimate->Object->GetPosition() - position;
         }
 
         // Check for closer points on the other side of the plane
@@ -47,9 +47,9 @@ KdNode* KdTree::NearestNeighbour(glm::vec3 position, KdNode* rootNode)
     return bestEstimate;
 }
 
-KdNode* KdTree::depthFirst(glm::vec3 position, KdNode* currentNode, int depth)
+KdNode* KdTree::depthFirst(const glm::vec3& position, const KdNode* currentNode, const int depth)
 {
-    if(currentNode->Leaf) return currentNode;
+    if(currentNode->Leaf) return (KdNode*)currentNode;
 
     int axis = depth % 3;
 
@@ -76,25 +76,29 @@ KdNode* KdTree::depthFirst(glm::vec3 position, KdNode* currentNode, int depth)
             return depthFirst(position, currentNode->LeftChild, depth + 1);
         }
     }
+
+    return NULL;
 }
 
 
-KdNode* KdTree::genNode(std::vector<WorldObject*>& worldObjects, KdNode* parentNode, int depth)
+KdNode* KdTree::genNode(const std::vector<WorldObject*>& worldObjects, const KdNode* parentNode, const int depth)
 {
     if(worldObjects.size() == 0) return NULL;
 
     int axis = depth % 3;
 
+    std::vector<WorldObject*> sortedObjects = worldObjects;
+
     switch(axis)
     {
     case 0:
-        std::sort(worldObjects.begin(), worldObjects.end(), xAxisSortPredicate());
+        std::sort(sortedObjects.begin(), sortedObjects.end(), xAxisSortPredicate());
         break;
     case 1:
-        std::sort(worldObjects.begin(), worldObjects.end(), yAxisSortPredicate());
+        std::sort(sortedObjects.begin(), sortedObjects.end(), yAxisSortPredicate());
         break;
     case 2:
-        std::sort(worldObjects.begin(), worldObjects.end(), zAxisSortPredicate());
+        std::sort(sortedObjects.begin(), sortedObjects.end(), zAxisSortPredicate());
         break;
     default:
         break;
@@ -104,7 +108,7 @@ KdNode* KdTree::genNode(std::vector<WorldObject*>& worldObjects, KdNode* parentN
     std::vector<WorldObject*> leftObjects;
     std::vector<WorldObject*> rightObjects;
 
-    for(int i = 0; i < worldObjects.size(); i++)
+    for(uint16_t i = 0; i < worldObjects.size(); i++)
     {
         if(i < medianIdx)
         {

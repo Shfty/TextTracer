@@ -15,10 +15,10 @@ struct KdNode
     bool Root = false;
     bool Leaf = false;
 
-    KdNode(WorldObject* object, KdNode* parent, int axis)
+    KdNode(const WorldObject* object, const KdNode* parent, const int axis)
     {
-        Object = object;
-        Parent = parent;
+        Object = (WorldObject*)object;
+        Parent = (KdNode*)parent;
         Axis = axis;
     }
 
@@ -55,17 +55,17 @@ class KdTree
 {
 public:
     KdTree() {}
-    KdTree(std::vector<WorldObject*> worldObjects);
+    KdTree(const std::vector<WorldObject*>& worldObjects);
     ~KdTree();
 
     KdNode* GetRootNode() const { return m_rootNode; }
 
-    void GenTree(std::vector<WorldObject*> worldObjects);
-    KdNode* NearestNeighbour(glm::vec3 position, KdNode* rootNode);
+    void GenTree(const std::vector<WorldObject*>& worldObjects);
+    KdNode* NearestNeighbour(const glm::vec3& position, const KdNode* rootNode);
 
 private:
-    KdNode* genNode(std::vector<WorldObject*>& worldObjects, KdNode* parentNode, int depth);
-    KdNode* depthFirst(glm::vec3 position, KdNode* currentNode, int depth);
+    KdNode* genNode(const std::vector<WorldObject*>& worldObjects, const KdNode* parentNode, const int depth);
+    KdNode* depthFirst(const glm::vec3& position, const KdNode* currentNode, const int depth);
 
     KdNode* m_rootNode;
 };

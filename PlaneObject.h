@@ -6,13 +6,13 @@
 class PlaneObject : public WorldObject
 {
 public:
-    PlaneObject(glm::vec3 position, glm::mat4 rotation, bool twoSided);
+    PlaneObject(const glm::vec3& position, const glm::mat4& rotation, bool twoSided);
 
     bool Intersects(Ray& ray, IsectData& isectData);
     bool IntersectsPortal(Ray& ray, IsectData& isectData, const glm::mat4& cameraRotation);
 
-    void SetPosition(glm::vec3 position);
-    void SetRotation(glm::mat4 rotation);
+    void SetPosition(const glm::vec3& position);
+    void SetRotation(const glm::mat4& rotation);
 
     bool TwoSided = false;
 

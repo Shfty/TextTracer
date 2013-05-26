@@ -10,14 +10,14 @@ class Scene
 {
 public:
     Scene();
-    ~Scene();
+    virtual ~Scene() = 0;
 
     const std::vector<WorldObject*>* GetStaticObjects() const { return &m_staticObjects; };
     const std::vector<WorldObject*>* GetDynamicObjects() const { return &m_dynamicObjects; };
     KdTree* GetStaticTree() const { return m_staticTree; };
     KdTree* GetDynamicTree() const { return m_dynamicTree; };
 
-    virtual void Update(int elapsedTime);
+    virtual void Update(const int elapsedTime);
 
     glm::vec3 SunNormal = glm::vec3(0, 1, 0);
 

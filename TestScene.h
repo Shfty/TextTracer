@@ -10,7 +10,7 @@ public:
     TestScene();
     ~TestScene();
 
-   void Update(int elapsedTime);
+   void Update(const int elapsedTime);
 };
 
 #endif // TESTSCENE_H
