@@ -8,8 +8,8 @@
 #include "Keyboard.h"
 #include "Ray.h"
 
-const float TRANS_UNITS_PER_MS = 20.0f / 1000.0f;
-const float ROT_UNITS_PER_MS = 135.0f / 1000.0f;
+const float TRANS_UNITS_PER_MS = 20.0f / CLOCKS_PER_SEC;
+const float ROT_UNITS_PER_MS = 135.0f / CLOCKS_PER_SEC;
 
 struct Camera : SphereObject
 {
@@ -87,8 +87,7 @@ public:
         if(m_position != prevPos)
         {
             glm::vec3 heading = m_position - prevPos;
-            Ray ray(prevPos, glm::normalize(heading));
-            ray.FarPlane = heading.length();
+            Ray ray(prevPos, glm::normalize(heading), 0.0f, heading.length(), NULL);
             IsectData isectData;
             int nearestPortalIdx = -1;
 

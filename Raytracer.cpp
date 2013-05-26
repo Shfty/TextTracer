@@ -29,9 +29,7 @@ void Raytracer::Trace(const std::vector<WorldObject*>& worldObjects)
                     float yMag = ((((float)(y + cy) * 2.0f) - (float)m_camera->Height) / (float)m_camera->Height) * tan(m_camera->FOV.y);
                     glm::vec3 direction = glm::vec3(m_camera->GetRotation() * glm::vec4(glm::normalize(glm::vec3(xMag, yMag, -1.0f)), 0.0f));
 
-                    Ray ray(m_camera->GetPosition(), direction);
-                    ray.ParentObject = m_camera;
-                    ray.FarPlane = FAR_PLANE;
+                    Ray ray(m_camera->GetPosition(), direction, NEAR_PLANE, FAR_PLANE, m_camera);
                     if(traceViewRay(ray, worldObjects, 5))
                     {
                         m_framebuffer->PaintCell(x + cx, y + cy, ray.Colour);
@@ -98,9 +96,7 @@ bool Raytracer::traceViewRay(Ray& ray, const std::vector<WorldObject*>& worldObj
 #ifndef DISABLE_LIGHTING
             if(!worldObjects[nearestObjectIdx]->Fullbright)
             {
-                Ray shadowRay(isectData.Entry, -glm::normalize(SkyLightDirection));
-                shadowRay.FarPlane = FAR_PLANE;
-                shadowRay.ParentObject = worldObjects[nearestObjectIdx];
+                Ray shadowRay(isectData.Entry, -glm::normalize(SkyLightDirection), NEAR_PLANE, FAR_PLANE, worldObjects[nearestObjectIdx]);
                 bool occluded = traceShadowRay(shadowRay, worldObjects);
                 float diffuseFactor = glm::max(0.0f, glm::dot(ray.Direction, glm::normalize(SkyLightDirection)));
 

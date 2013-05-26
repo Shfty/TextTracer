@@ -26,6 +26,7 @@ private:
     float m_cameraAngleX = 0;
     float m_cameraAngleY = 0;
 
+    int m_worldClock = 0;
     int m_prevWorldClock = 0;
 };
 

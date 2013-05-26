@@ -73,8 +73,9 @@ TextTracer::~TextTracer()
 void TextTracer::Update(const int worldClock)
 {
     // Calculate elapsed time
-    int elapsedTime = worldClock - m_prevWorldClock;
-    m_prevWorldClock = worldClock;
+    m_worldClock = worldClock;
+    int elapsedTime = m_worldClock - m_prevWorldClock;
+    m_prevWorldClock = m_worldClock;
 
     // Update world and aggregate into worldObjects
     for(uint16_t i = 0; i < world.size(); i++)
@@ -106,4 +107,22 @@ void TextTracer::Draw()
     m_framebuffer->Clear(m_skyColour);
     m_raytracer->Trace(worldObjects);
     m_framebuffer->Draw();
+
+    // Basic FPS Counter
+    static int prevDrawClock = 0;
+    int elapsedTime = m_worldClock - prevDrawClock;
+    static int frames = 0;
+    static int frameTime = 0;
+    frames++;
+    frameTime += elapsedTime;
+    if(frameTime > CLOCKS_PER_SEC)
+    {
+        std::stringstream msg;
+        msg << "FPS: " << frames << "\t";
+        DebugBox::WriteMessage(msg, 0);
+        frames = 0;
+        frameTime = 0;
+    }
+
+    prevDrawClock = m_worldClock;
 }
