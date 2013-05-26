@@ -74,7 +74,7 @@
 
 1369008728 e:\codeblocks\texttracer\isectdata.h
 
-1369537028 e:\codeblocks\texttracer\debugbox.h
+1369537625 e:\codeblocks\texttracer\debugbox.h
 	<sstream>
 	<iostream>
 	<windows.h>
@@ -140,12 +140,12 @@
 	<vector>
 	"WorldObject.h"
 
-1369536097 e:\codeblocks\texttracer\texttracer.h
+1369537521 e:\codeblocks\texttracer\texttracer.h
 	"ConsoleFramebuffer.h"
 	"Camera.h"
 	"Raytracer.h"
 
-1369536998 source:e:\codeblocks\texttracer\texttracer.cpp
+1369537714 source:e:\codeblocks\texttracer\texttracer.cpp
 	"TextTracer.h"
 	<cmath>
 	<vector>

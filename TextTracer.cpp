@@ -10,16 +10,6 @@
 #include "KdTree.h"
 #include "TestScene.h"
 
-#ifdef LOW_RES
-const int WIDTH = 32;
-const int HEIGHT = 24;
-#else
-const int WIDTH = 64;
-const int HEIGHT = 48;
-#endif // LOW_RES
-const float FOV = 3.141f / 4; // 45 Degrees
-const int HUD_HEIGHT = 5;
-
 // Scenes
 TestScene* testScene;
 
@@ -33,7 +23,9 @@ TextTracer::TextTracer()
     // Setup console window size
 #ifdef _WIN32
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    SMALL_RECT windowSize = {0, 0, WIDTH, HEIGHT + HUD_HEIGHT};
+    SHORT width = WIDTH;
+    SHORT height = HEIGHT + HUD_HEIGHT;
+    SMALL_RECT windowSize = {0, 0, width, height};
     SetConsoleWindowInfo(hConsole, TRUE, &windowSize);
     SetConsoleTitle("Text Tracer");
 #endif // _WIN32
@@ -119,7 +111,7 @@ void TextTracer::Draw()
     {
         std::stringstream msg;
         msg << "FPS: " << frames << "\t";
-        DebugBox::WriteMessage(msg, 0);
+        DebugBox::WriteMessage(msg, TextTracer::HEIGHT, 0);
         frames = 0;
         frameTime = 0;
     }

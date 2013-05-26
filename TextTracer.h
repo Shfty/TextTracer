@@ -14,6 +14,16 @@ public:
     void Update(const int worldClock);
     void Draw();
 
+    #ifdef LOW_RES
+    const int WIDTH = 32;
+    const int HEIGHT = 24;
+    #else
+    const int WIDTH = 64;
+    const int HEIGHT = 48;
+    #endif // LOW_RES
+    const float FOV = 3.141f / 4; // 45 Degrees
+    const int HUD_HEIGHT = 5;
+
 private:
     ConsoleFramebuffer* m_framebuffer;
     Camera* m_camera;
