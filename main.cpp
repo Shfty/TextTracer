@@ -29,11 +29,7 @@ Enabled: All objects will be smoothly lit with hard shadows
 #include "TextTracer.h"
 #include "Keyboard.h"
 
-#ifdef LOW_RES
-const int RENDER_FPS = 30;
-#else
-const int RENDER_FPS = 15;
-#endif // LOW_RES
+const int RENDER_FPS = 60;
 const int UPDATE_FPS = 60;
 
 int worldClock = 0;
@@ -48,7 +44,6 @@ int main()
 {
     // Initialization
     TextTracer textTracer;
-    textTracer.Update(0);
 
 #ifdef REALTIME
     while(!quit)
