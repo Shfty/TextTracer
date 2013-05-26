@@ -10,7 +10,7 @@
 
 struct DebugBox
 {
-    static void WriteMessage(const std::stringstream& message, const int line)
+    static void WriteMessage(const std::stringstream& message, const int screenHeight, const int line)
     {
 #ifdef _WIN32
         HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -19,7 +19,7 @@ struct DebugBox
 
         COORD prevCursorPosition = SBInfo.dwCursorPosition;
         int prevTextColour = SBInfo.wAttributes;
-        SHORT offsetLine = line + 32;
+        SHORT offsetLine = screenHeight + line;
         COORD newCursorPosition = {0, offsetLine};
         SetConsoleCursorPosition(hConsole, newCursorPosition);
         SetConsoleTextAttribute(hConsole, 8 * 16);
