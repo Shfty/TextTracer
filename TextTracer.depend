@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1369527988 source:e:\codeblocks\texttracer\main.cpp
+1369537832 source:e:\codeblocks\texttracer\main.cpp
 	<ctime>
 	"TextTracer.h"
 	"Keyboard.h"
@@ -49,7 +49,7 @@
 1369530050 e:\codeblocks\texttracer\planeobject.h
 	"WorldObject.h"
 
-1369536652 e:\codeblocks\texttracer\camera.h
+1369538412 e:\codeblocks\texttracer\camera.h
 	<sstream>
 	"DebugBox.h"
 	"SphereObject.h"
@@ -74,7 +74,7 @@
 
 1369008728 e:\codeblocks\texttracer\isectdata.h
 
-1369537625 e:\codeblocks\texttracer\debugbox.h
+1369539119 e:\codeblocks\texttracer\debugbox.h
 	<sstream>
 	<iostream>
 	<windows.h>
@@ -145,7 +145,7 @@
 	"Camera.h"
 	"Raytracer.h"
 
-1369537714 source:e:\codeblocks\texttracer\texttracer.cpp
+1369538896 source:e:\codeblocks\texttracer\texttracer.cpp
 	"TextTracer.h"
 	<cmath>
 	<vector>
@@ -174,4 +174,15 @@
 1369530336 e:\codeblocks\texttracer\testscene.h
 	"Scene.h"
 	"SphereObject.h"
+
+1369537714 e:\codeblocks\texttracer\texttracer.cpp
+	"TextTracer.h"
+	<cmath>
+	<vector>
+	<iostream>
+	<glm/glm.hpp>
+	<glm/ext.hpp>
+	"WorldObject.h"
+	"KdTree.h"
+	"TestScene.h"
 

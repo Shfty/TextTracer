@@ -109,9 +109,8 @@ void TextTracer::Draw()
     frameTime += elapsedTime;
     if(frameTime > CLOCKS_PER_SEC)
     {
-        std::stringstream msg;
-        msg << "FPS: " << frames << "\t";
-        DebugBox::WriteMessage(msg, TextTracer::HEIGHT, 0);
+        DebugBox::GetInstance().Message << "FPS: " << frames << "\t";
+        DebugBox::GetInstance().WriteMessage(TextTracer::HEIGHT, 0);
         frames = 0;
         frameTime = 0;
     }

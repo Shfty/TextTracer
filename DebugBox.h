@@ -8,26 +8,22 @@
 #include <windows.h>
 #endif
 
-struct DebugBox
-{
-    static void WriteMessage(const std::stringstream& message, const int screenHeight, const int line)
-    {
-#ifdef _WIN32
-        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-        CONSOLE_SCREEN_BUFFER_INFO SBInfo;
-        GetConsoleScreenBufferInfo(hConsole, &SBInfo);
+class TextTracer;
 
-        COORD prevCursorPosition = SBInfo.dwCursorPosition;
-        int prevTextColour = SBInfo.wAttributes;
-        SHORT offsetLine = screenHeight + line;
-        COORD newCursorPosition = {0, offsetLine};
-        SetConsoleCursorPosition(hConsole, newCursorPosition);
-        SetConsoleTextAttribute(hConsole, 8 * 16);
-        std::cout << message.str();
-        SetConsoleCursorPosition(hConsole, prevCursorPosition);
-        SetConsoleTextAttribute(hConsole, prevTextColour);
-#endif // _WIN32
-    }
+class DebugBox
+{
+public:
+    static DebugBox& GetInstance();
+
+    void WriteMessage(const int screenHeight, const int line);
+
+    std::stringstream Message;
+
+private:
+    DebugBox() {};
+
+    DebugBox(DebugBox const&);
+    void operator=(DebugBox const&);
 };
 
 #endif // DEBUGBOX_H
