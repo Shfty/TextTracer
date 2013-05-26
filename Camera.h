@@ -8,8 +8,8 @@
 #include "Keyboard.h"
 #include "Ray.h"
 
-const float TRANS_UNITS_PER_MS = 20.0f / CLOCKS_PER_SEC;
-const float ROT_UNITS_PER_MS = 135.0f / CLOCKS_PER_SEC;
+const float TRANS_UNITS_PER_SEC = 20.0f;
+const float ROT_UNITS_PER_SEC = 135.0f;
 
 struct Camera : SphereObject
 {
@@ -34,12 +34,12 @@ public:
         FOV.y = ((float)Height / (float)Width) * FOV.x;
     }
 
-    void Update(const std::vector<WorldObject*>& worldObjects, const int elapsedTime)
+    void Update(const std::vector<WorldObject*>& worldObjects, const float deltaTime)
     {
         prevPos = m_position;
 
         // Movement
-        float positionChange = TRANS_UNITS_PER_MS * elapsedTime;
+        float positionChange = TRANS_UNITS_PER_SEC * deltaTime;
 
         if(Keyboard::IsKeyDown('A'))
         {
@@ -61,7 +61,7 @@ public:
         }
 
         // Rotation
-        float rotationChange = ROT_UNITS_PER_MS * elapsedTime;
+        float rotationChange = ROT_UNITS_PER_SEC * deltaTime;
 
         if(Keyboard::IsKeyDown('J'))
         {
@@ -106,29 +106,42 @@ public:
                 }
             }
 
+            glm::vec3 dm = m_position - prevPos;
+            DebugBox::GetInstance().Message << "Distance Moved: " << dm.x << "Y: " << dm.y << "Z: " << dm.z;
+            DebugBox::GetInstance().WriteMessage(24, 1);
+
             if(nearestPortalIdx != -1)
             {
-                // Compute new rotation
+                // Compute angular difference between portals
                 glm::vec3 backward = glm::vec3(0, 0, 1);
                 glm::vec3 entryPortalNormal = glm::normalize(glm::vec3(glm::vec4(backward, 1.0f) * worldObjects[nearestPortalIdx]->GetRotation()));
-                glm::vec3 exitPortalNormal = glm::normalize(glm::vec3(glm::vec4(backward, 1.0f) * worldObjects[nearestPortalIdx]->ExitPortal->GetRotation()));
-                glm::vec3 axis = glm::normalize(glm::cross(entryPortalNormal, exitPortalNormal));
+                glm::vec3 exitPortalNormal = glm::normalize(glm::vec3(glm::vec4(backward, 1.0f) * -worldObjects[nearestPortalIdx]->ExitPortal->GetRotation()));
                 float angle = glm::acos(glm::dot(entryPortalNormal, exitPortalNormal));
-                glm::mat4 newRotation = glm::rotate(180.0f, axis) * glm::rotate(glm::degrees(angle), axis);
+                glm::vec3 axis = glm::normalize(glm::cross(entryPortalNormal, exitPortalNormal));
 
-                xRotMat *= newRotation;
+                // Compute new rotation
+                glm::mat4 newRotation = glm::rotate(glm::degrees(angle), axis);
 
-                // Compute new position
+                // Compute exit point
                 glm::vec3 entryPointLocal = isectData.Entry - worldObjects[nearestPortalIdx]->GetPosition();
-                glm::vec3 entryPointLocalRotated = glm::vec3(newRotation * glm::vec4(entryPointLocal, 1.0f));
+                glm::vec3 entryPointLocalRotated =
+                glm::vec3(
+                    glm::rotate(glm::degrees(angle), axis) *
+                    glm::vec4(entryPointLocal, 1.0f)
+                );
                 glm::vec3 exitPoint = entryPointLocalRotated + worldObjects[nearestPortalIdx]->ExitPortal->GetPosition();
 
-                glm::vec3 distanceThroughPortal = m_position - isectData.Entry;
+                // Compute travel distance
+                glm::vec3 distanceThroughPortal = isectData.Entry - m_position;
                 glm::vec3 distanceThroughPortalRotated = glm::vec3(newRotation * glm::vec4(distanceThroughPortal, 1.0f));
 
-                glm::vec3 outPosition = exitPoint + distanceThroughPortalRotated;
+                DebugBox::GetInstance().Message << "Distance Through: X: " << distanceThroughPortalRotated.x << "Y: " << distanceThroughPortalRotated.y << "Z: " << distanceThroughPortalRotated.z;
+                DebugBox::GetInstance().WriteMessage(24, 2);
+
+                glm::vec3 outPosition = exitPoint + distanceThroughPortal;
 
                 SetPosition(outPosition);
+                xRotMat *= newRotation;
             }
         }
 

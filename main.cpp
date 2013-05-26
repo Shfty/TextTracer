@@ -2,6 +2,8 @@
 
 Text Tracer - A real-time raytracer
 TODO:
+Sphere orientation calculation (L should be camera-oriented, not viewport-oriented)
+CSG modeling for portal trim (draw trim if ray intersects trim NOT portal)
 Ray Refactoring
     -Move ray-shape intersection tests into Raytracer
     -Cumulative Ray colour (transparency)

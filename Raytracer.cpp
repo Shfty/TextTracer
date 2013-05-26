@@ -67,25 +67,27 @@ bool Raytracer::traceViewRay(Ray& ray, const std::vector<WorldObject*>& worldObj
     {
         if(worldObjects[nearestObjectIdx]->Portal && maxRecursion > 0)
         {
-            // Compute new origin
-            glm::vec3 inIntersectionRelative = isectData.Entry - worldObjects[nearestObjectIdx]->GetPosition();
-            glm::vec3 inIntersectionRelativeRotated =
-                glm::vec3(
-                    glm::rotate(180.0f, glm::vec3(0, 1, 0))*
-                    glm::vec4(inIntersectionRelative, 1.0f)
-                );
-            glm::vec3 rayOrigin = inIntersectionRelativeRotated + worldObjects[nearestObjectIdx]->ExitPortal->GetPosition();
-
             // Compute angular difference between portals
             glm::vec3 backward = glm::vec3(0, 0, 1);
             glm::vec3 entryPortalNormal = glm::normalize(glm::vec3(glm::vec4(backward, 1.0f) * worldObjects[nearestObjectIdx]->GetRotation()));
-            glm::vec3 exitPortalNormal = glm::normalize(glm::vec3(glm::vec4(backward, 1.0f) * worldObjects[nearestObjectIdx]->ExitPortal->GetRotation()));
+            glm::vec3 exitPortalNormal = glm::normalize(glm::vec3(glm::vec4(backward, 1.0f) * -worldObjects[nearestObjectIdx]->ExitPortal->GetRotation()));
             float angle = glm::acos(glm::dot(entryPortalNormal, exitPortalNormal));
             glm::vec3 axis = glm::normalize(glm::cross(entryPortalNormal, exitPortalNormal));
-            glm::mat4 rayOrientation = glm::rotate(180.0f, axis) * glm::rotate(glm::degrees(angle), axis);
+
+            // Compute new origin
+            glm::vec3 inOriginRelative = isectData.Entry - worldObjects[nearestObjectIdx]->GetPosition();
+            glm::vec3 inOriginRelativeRotated =
+                glm::vec3(
+                    glm::rotate(glm::degrees(angle), axis) *
+                    glm::vec4(inOriginRelative, 1.0f)
+                );
+            glm::vec3 rayOrigin = inOriginRelativeRotated + worldObjects[nearestObjectIdx]->ExitPortal->GetPosition();
+
+            glm::mat4 rayOrientation = glm::rotate(glm::degrees(angle), axis);
+            glm::vec3 rayDirection = glm::vec3(rayOrientation * glm::vec4(ray.Direction, 1.0f));
 
             ray.Origin = rayOrigin;
-            ray.Direction = glm::vec3(rayOrientation * glm::vec4(ray.Direction, 1.0f));
+            ray.Direction = rayDirection;
             ray.ParentObject = worldObjects[nearestObjectIdx]->ExitPortal;
             ray.FarPlane = FAR_PLANE;
             return traceViewRay(ray, worldObjects, maxRecursion - 1);

@@ -18,7 +18,7 @@ Scene::~Scene()
     // Delete any allocated objects
 }
 
-void Scene::Update(const int elapsedTime)
+void Scene::Update(const float deltaTime)
 {
     // Update dynamic objects
 

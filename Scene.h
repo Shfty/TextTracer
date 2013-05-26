@@ -17,7 +17,7 @@ public:
     KdTree* GetStaticTree() const { return m_staticTree; };
     KdTree* GetDynamicTree() const { return m_dynamicTree; };
 
-    virtual void Update(const int elapsedTime);
+    virtual void Update(const float deltaTime);
 
     glm::vec3 SunNormal = glm::vec3(0, 1, 0);
 

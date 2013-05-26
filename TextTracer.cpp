@@ -64,19 +64,20 @@ TextTracer::~TextTracer()
 
 void TextTracer::Update(const int worldClock)
 {
-    // Calculate elapsed time
-    m_worldClock = worldClock;
-    int elapsedTime = m_worldClock - m_prevWorldClock;
-    m_prevWorldClock = m_worldClock;
+    // Calculate delta time
+    int elapsedTime = worldClock - m_prevWorldClock;
+    m_prevWorldClock = worldClock;
+    // m_deltaTime is clamped to MIN_TIMESTEP to prevent instability at large timesteps
+    m_deltaTime = std::min(MIN_TIMESTEP, (float)elapsedTime / (float)CLOCKS_PER_SEC);
 
     // Update world and aggregate into worldObjects
     for(uint16_t i = 0; i < world.size(); i++)
     {
-        world[i]->Update(elapsedTime);
+        world[i]->Update(m_deltaTime);
     }
 
     // Controls
-    m_camera->Update(worldObjects, elapsedTime);
+    m_camera->Update(worldObjects, m_deltaTime);
 
     // Day/Night Cycle
     float lerpFactor = (-testScene->SunNormal.y + 1.0f) / 2.0f;
@@ -101,10 +102,9 @@ void TextTracer::Draw()
     m_framebuffer->Draw();
 
     // Basic FPS Counter
-    static int prevDrawClock = 0;
-    int elapsedTime = m_worldClock - prevDrawClock;
     static int frames = 0;
     static int frameTime = 0;
+    int elapsedTime = m_deltaTime * CLOCKS_PER_SEC;
     frames++;
     frameTime += elapsedTime;
     if(frameTime > CLOCKS_PER_SEC)
@@ -114,6 +114,4 @@ void TextTracer::Draw()
         frames = 0;
         frameTime = 0;
     }
-
-    prevDrawClock = m_worldClock;
 }

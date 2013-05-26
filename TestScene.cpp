@@ -5,7 +5,7 @@
 #include "DiscObject.h"
 #include "KdTree.h"
 
-const float SUN_ROTATION_PER_MS = 8.0f / 1000.0f;
+const float SUN_ROTATION_PER_SEC = 20.0f;
 
 SphereObject* sunSphere;
 SphereObject* moonSphere;
@@ -37,24 +37,24 @@ TestScene::TestScene()
 
     // Poly Portal
     ConvexPolyObject* polyPortalIn = new ConvexPolyObject(glm::vec3(-10, 0, -50), glm::rotate(-90.0f, glm::vec3(0, 1, 0)), 4.0f, 5, true);
-    ConvexPolyObject* polyPortalInOutline = new ConvexPolyObject(glm::vec3(-10, 0, -50), glm::rotate(-90.0f, glm::vec3(0, 1, 0)), 5.0f, 5, true);
+    //ConvexPolyObject* polyPortalInOutline = new ConvexPolyObject(glm::vec3(-10, 0, -50), glm::rotate(-90.0f, glm::vec3(0, 1, 0)), 5.0f, 5, true);
     ConvexPolyObject* polyPortalOut = new ConvexPolyObject(glm::vec3(10, 0, -50), glm::rotate(90.0f, glm::vec3(0, 1, 0)), 4.0f, 5, true);
-    ConvexPolyObject* polyPortalOutOutline = new ConvexPolyObject(glm::vec3(10, 0, -50), glm::rotate(90.0f, glm::vec3(0, 1, 0)), 5.0f, 5, true);
+    //ConvexPolyObject* polyPortalOutOutline = new ConvexPolyObject(glm::vec3(10, 0, -50), glm::rotate(90.0f, glm::vec3(0, 1, 0)), 5.0f, 5, true);
 
     polyPortalIn->ObjectColour = glm::vec4(0, 0, 0, 1);
     polyPortalIn->Portal = true;
     polyPortalIn->ExitPortal = polyPortalOut;
-    polyPortalIn->ExitDecoration = polyPortalInOutline;
+    //polyPortalIn->ExitDecoration = polyPortalInOutline;
 
     polyPortalOut->ObjectColour = glm::vec4(0, 0, 0, 1);
     polyPortalOut->Portal = true;
     polyPortalOut->ExitPortal = polyPortalIn;
-    polyPortalOut->ExitDecoration = polyPortalOutOutline;
+    //polyPortalOut->ExitDecoration = polyPortalOutOutline;
 
     m_staticObjects.push_back(polyPortalIn);
-    m_staticObjects.push_back(polyPortalInOutline);
+    //m_staticObjects.push_back(polyPortalInOutline);
     m_staticObjects.push_back(polyPortalOut);
-    m_staticObjects.push_back(polyPortalOutOutline);
+    //m_staticObjects.push_back(polyPortalOutOutline);
 
     // Sphere Portal
     SphereObject* spherePortalIn = new SphereObject(glm::vec3(20, 0, -20), glm::rotate(0.0f, glm::vec3(0, 1, 0)), 5.0f, true);
@@ -145,10 +145,10 @@ TestScene::~TestScene()
     delete m_dynamicTree;
 }
 
-void TestScene::Update(const int elapsedTime)
+void TestScene::Update(const float deltaTime)
 {
     // Move celestial bodies
-    float sunRotation = SUN_ROTATION_PER_MS * elapsedTime;
+    float sunRotation = SUN_ROTATION_PER_SEC * deltaTime;
 
     SunNormal = glm::normalize(glm::rotateZ(SunNormal, sunRotation));
     sunSphere->SetPosition(-SunNormal * 5000.0f);

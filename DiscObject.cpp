@@ -27,8 +27,7 @@ bool DiscObject::Intersects(Ray& ray, IsectData& isectData)
     float distance = glm::dot(pointOnPlaneLocal, pointOnPlaneLocal);
     if(distance > Scale * Scale) return false;
 
-    //Offset portal intersection by a small amount to fake volume
-    ray.FarPlane = t - (Portal ? 0.1f : 0.0f);
+    ray.FarPlane = t;
     isectData.Entry = ray.Origin + ray.Direction * (t - (Portal ? 0.1f : 0.0f));
     return true;
 }

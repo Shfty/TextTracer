@@ -41,11 +41,11 @@
 			<Add option="-DLOW_RES" />
 		</Compiler>
 		<Unit filename="Camera.h" />
-		<Unit filename="ColouredText.h" />
 		<Unit filename="ConsoleFramebuffer.cpp" />
 		<Unit filename="ConsoleFramebuffer.h" />
 		<Unit filename="ConvexPolyObject.cpp" />
 		<Unit filename="ConvexPolyObject.h" />
+		<Unit filename="DebugBox.cpp" />
 		<Unit filename="DebugBox.h" />
 		<Unit filename="DiscObject.cpp" />
 		<Unit filename="DiscObject.h" />

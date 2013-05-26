@@ -14,14 +14,15 @@ public:
     void Update(const int worldClock);
     void Draw();
 
-    #ifdef LOW_RES
+    const float FOV = 3.141f / 4; // 45 Degrees
+    const float MIN_TIMESTEP = 0.05f;
+#ifdef LOW_RES
     const int WIDTH = 32;
     const int HEIGHT = 24;
-    #else
+#else
     const int WIDTH = 64;
     const int HEIGHT = 48;
-    #endif // LOW_RES
-    const float FOV = 3.141f / 4; // 45 Degrees
+#endif // LOW_RES
     const int HUD_HEIGHT = 5;
 
 private:
@@ -36,7 +37,7 @@ private:
     float m_cameraAngleX = 0;
     float m_cameraAngleY = 0;
 
-    int m_worldClock = 0;
+    float m_deltaTime = 0;
     int m_prevWorldClock = 0;
 };
 

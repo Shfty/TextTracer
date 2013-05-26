@@ -10,7 +10,7 @@ public:
     TestScene();
     ~TestScene();
 
-   void Update(const int elapsedTime);
+   void Update(const float deltaTime);
 };
 
 #endif // TESTSCENE_H
