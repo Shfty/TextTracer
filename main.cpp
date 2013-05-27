@@ -4,13 +4,17 @@ Text Tracer - A real-time raytracer
 TODO:
 Sphere orientation calculation (L should be camera-oriented, not viewport-oriented)
 CSG modeling for portal trim (draw trim if ray intersects trim NOT portal)
+Per-object AABB for broad-phase collision
+
 Ray Refactoring
     -Move ray-shape intersection tests into Raytracer
     -Cumulative Ray colour (transparency)
     -Should IsectData be a member of Ray?
-kD Tree Visualisation w/transparent planes
-kD Tree Nearest Neighbour
-kD Tree-Ray Intersection
+
+kD Tree Refactoring
+    -Visualisation w/transparent planes
+    -Nearest Neighbour
+    -Store AABBs instead of WorldObjects
 
 Preprocessor definitions:
 LOW_RES
