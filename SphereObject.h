@@ -11,15 +11,19 @@ class SphereObject : public WorldObject
 public:
     SphereObject(const glm::vec3& position, const glm::mat4& rotation, const float radius, const bool backface);
 
-    bool Intersects(Ray& ray, IsectData& isectData);
     bool IntersectsPortal(Ray& ray, IsectData& isectData, const glm::mat4& cameraRotation);
-    bool IntersectsPlane(Ray& ray, IsectData& isectData, const glm::mat4& cameraRotation);
 
-    virtual void SetPosition(const glm::vec3& position) { m_position = position; }
-    virtual void SetRotation(const glm::mat4& rotation) { m_rotation = rotation; }
+    void SetPosition(const glm::vec3& position);
+    void SetRotation(const glm::mat4& rotation) { m_rotation = rotation; }
+    void SetRadius(const float radius);
 
-    float Radius = 1.0f;
     bool Backface = false;
+
+private:
+    void calculateAABB();
+    bool intersectsGeometry(Ray& ray, IsectData& isectData);
+
+    float m_radius = 1.0f;
 };
 
 #endif // SPHEREOBJECT_H

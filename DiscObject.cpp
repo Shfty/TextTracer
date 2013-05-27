@@ -10,7 +10,31 @@ DiscObject::DiscObject(const glm::vec3& position, const glm::mat4& rotation, flo
     ObjectColour = glm::vec4(1, 0, 0, 1);
 }
 
-bool DiscObject::Intersects(Ray& ray, IsectData& isectData)
+bool DiscObject::IntersectsPortal(Ray& ray, IsectData& isectData, const glm::mat4& cameraRotation)
+{
+    return intersectsAABB(ray) && intersectsGeometry(ray, isectData);
+}
+
+void DiscObject::SetPosition(const glm::vec3& position)
+{
+    m_position = position;
+    calculateWorldNormalDotPosition();
+}
+
+void DiscObject::SetRotation(const glm::mat4& rotation)
+{
+    m_rotation = rotation;
+    m_worldNormal = glm::normalize(glm::vec3(m_rotation * glm::vec4(m_objectNormal, 1.0f)));
+    calculateWorldNormalDotPosition();
+}
+
+// PRIVATE
+void DiscObject::calculateAABB()
+{
+    // TODO: Implement properly
+}
+
+bool DiscObject::intersectsGeometry(Ray& ray, IsectData& isectData)
 {
     IsectData dummy;
     if(Parent != NULL && Parent->GetExitPortal() != NULL && Parent->Intersects(ray, dummy)) return false;
@@ -35,25 +59,6 @@ bool DiscObject::Intersects(Ray& ray, IsectData& isectData)
     return true;
 }
 
-bool DiscObject::IntersectsPortal(Ray& ray, IsectData& isectData, const glm::mat4& cameraRotation)
-{
-    return Intersects(ray, isectData);
-}
-
-void DiscObject::SetPosition(const glm::vec3& position)
-{
-    m_position = position;
-    calculateWorldNormalDotPosition();
-}
-
-void DiscObject::SetRotation(const glm::mat4& rotation)
-{
-    m_rotation = rotation;
-    m_worldNormal = glm::normalize(glm::vec3(m_rotation * glm::vec4(m_objectNormal, 1.0f)));
-    calculateWorldNormalDotPosition();
-}
-
-// PRIVATE
 void DiscObject::calculateWorldNormalDotPosition()
 {
     m_worldNormalDotPosition = glm::dot(m_worldNormal, m_position);

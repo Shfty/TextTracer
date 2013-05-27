@@ -20,38 +20,9 @@ ConvexPolyObject::ConvexPolyObject(const glm::vec3& position, const glm::mat4& r
     ObjectColour = glm::vec4(1, 0, 0, 1);
 }
 
-bool ConvexPolyObject::Intersects(Ray& ray, IsectData& isectData)
-{
-    IsectData dummy;
-    if(Parent != NULL && Parent->GetExitPortal() != NULL && Parent->Intersects(ray, dummy)) return false;
-
-    // Step 1: Plane intersection test
-    float nDotRay = glm::dot(m_worldNormal, ray.Direction);
-    if(nDotRay == 0 || (nDotRay > 0 && !TwoSided)) return false;
-
-    float t = - (glm::dot(m_worldNormal, ray.Origin) - m_worldNormalDotPosition) / glm::dot(m_worldNormal, ray.Direction);
-
-    if(t <= ray.NearPlane || t > ray.FarPlane) return false;
-
-    glm::vec3 pointOnPlane = ray.Origin + ray.Direction * t;
-
-    // Step 2: Polygon intersection test
-    for(uint16_t i = 0; i < m_worldVertices.size(); i++)
-    {
-        glm::vec3 edge = m_worldEdges[i];
-        glm::vec3 C = glm::normalize(pointOnPlane - m_worldVertices[i]);
-
-        if(glm::dot(m_worldNormal, glm::cross(edge, C)) < 0) return false;
-    }
-
-    ray.FarPlane = t;
-    isectData.Entry = pointOnPlane;
-    return true;
-}
-
 bool ConvexPolyObject::IntersectsPortal(Ray& ray, IsectData& isectData, const glm::mat4& cameraRotation)
 {
-    return Intersects(ray, isectData);
+    return intersectsAABB(ray) && intersectsGeometry(ray, isectData);
 }
 
 void ConvexPolyObject::SetPosition(const glm::vec3& position)
@@ -96,6 +67,32 @@ void ConvexPolyObject::genWorldVertices()
     {
         m_worldVertices.push_back(glm::vec3(m_rotation * glm::vec4(m_objectVertices[i] * Scale, 1.0f)) + m_position);
     }
+
+    calculateAABB();
+}
+
+void ConvexPolyObject::calculateAABB()
+{
+    glm::vec3 minBound = m_worldVertices[0];
+    glm::vec3 maxBound = m_worldVertices[0];
+
+    for(uint16_t i = 0; i < m_worldVertices.size(); i++)
+    {
+        for(uint16_t o = 0; o < 3; o++)
+        {
+            if(m_worldVertices[i][o] < minBound[o])
+            {
+                minBound[o] = m_worldVertices[i][o];
+            }
+
+            if(m_worldVertices[i][o] > maxBound[o])
+            {
+                maxBound[o] = m_worldVertices[i][o];
+            }
+        }
+    }
+
+    m_bounds = AABB(minBound, maxBound);
 }
 
 void ConvexPolyObject::genWorldEdges()
@@ -113,4 +110,33 @@ void ConvexPolyObject::genWorldEdges()
 void ConvexPolyObject::calculateWorldNormalDotPosition()
 {
     m_worldNormalDotPosition = glm::dot(m_worldNormal, m_position);
+}
+
+bool ConvexPolyObject::intersectsGeometry(Ray& ray, IsectData& isectData)
+{
+    IsectData dummy;
+    if(Parent != NULL && Parent->GetExitPortal() != NULL && Parent->Intersects(ray, dummy)) return false;
+
+    // Step 1: Plane intersection test
+    float nDotRay = glm::dot(m_worldNormal, ray.Direction);
+    if(nDotRay == 0 || (nDotRay > 0 && !TwoSided)) return false;
+
+    float t = - (glm::dot(m_worldNormal, ray.Origin) - m_worldNormalDotPosition) / glm::dot(m_worldNormal, ray.Direction);
+
+    if(t <= ray.NearPlane || t > ray.FarPlane) return false;
+
+    glm::vec3 pointOnPlane = ray.Origin + ray.Direction * t;
+
+    // Step 2: Polygon intersection test
+    for(uint16_t i = 0; i < m_worldVertices.size(); i++)
+    {
+        glm::vec3 edge = m_worldEdges[i];
+        glm::vec3 C = glm::normalize(pointOnPlane - m_worldVertices[i]);
+
+        if(glm::dot(m_worldNormal, glm::cross(edge, C)) < 0) return false;
+    }
+
+    ray.FarPlane = t;
+    isectData.Entry = pointOnPlane;
+    return true;
 }
