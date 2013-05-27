@@ -22,6 +22,9 @@ ConvexPolyObject::ConvexPolyObject(const glm::vec3& position, const glm::mat4& r
 
 bool ConvexPolyObject::Intersects(Ray& ray, IsectData& isectData)
 {
+    IsectData dummy;
+    if(Parent != NULL && Parent->GetExitPortal() != NULL && Parent->Intersects(ray, dummy)) return false;
+
     // Step 1: Plane intersection test
     float nDotRay = glm::dot(m_worldNormal, ray.Direction);
     if(nDotRay == 0 || (nDotRay > 0 && !TwoSided)) return false;
@@ -42,7 +45,7 @@ bool ConvexPolyObject::Intersects(Ray& ray, IsectData& isectData)
     }
 
     ray.FarPlane = t;
-    isectData.Entry = ray.Origin + ray.Direction * (t - (Portal ? 0.1f : 0.0f));
+    isectData.Entry = pointOnPlane;
     return true;
 }
 

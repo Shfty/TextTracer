@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1369549122 source:e:\codeblocks\texttracer\main.cpp
+1369672696 source:e:\codeblocks\texttracer\main.cpp
 	<ctime>
 	"TextTracer.h"
 	"Keyboard.h"
@@ -16,7 +16,7 @@
 	<glm/glm.hpp>
 	<vector>
 
-1369545289 source:e:\codeblocks\texttracer\raytracer.cpp
+1369671958 source:e:\codeblocks\texttracer\raytracer.cpp
 	<cmath>
 	<iostream>
 	<glm/glm.hpp>
@@ -28,11 +28,12 @@
 	"Framebuffer.h"
 	"Camera.h"
 
-1369546136 e:\codeblocks\texttracer\worldobject.h
+1369671500 e:\codeblocks\texttracer\worldobject.h
 	<iostream>
 	<glm/glm.hpp>
 	<glm/ext.hpp>
 	"IsectData.h"
+	<vector>
 
 1369535846 e:\codeblocks\texttracer\ray.h
 	<glm/glm.hpp>
@@ -91,7 +92,7 @@
 	"Camera.h"
 	"Keyboard.h"
 
-1369549085 source:e:\codeblocks\texttracer\sphereobject.cpp
+1369669355 source:e:\codeblocks\texttracer\sphereobject.cpp
 	"SphereObject.h"
 	"Ray.h"
 
@@ -113,7 +114,7 @@
 	<iostream>
 	<windows.h>
 
-1369546072 source:e:\codeblocks\texttracer\discobject.cpp
+1369672829 source:e:\codeblocks\texttracer\discobject.cpp
 	"DiscObject.h"
 	"Ray.h"
 
@@ -121,11 +122,11 @@
 	<vector>
 	"WorldObject.h"
 
-1369546088 source:e:\codeblocks\texttracer\convexpolyobject.cpp
+1369672812 source:e:\codeblocks\texttracer\convexpolyobject.cpp
 	"ConvexPolyObject.h"
 	"Ray.h"
 
-1369529228 e:\codeblocks\texttracer\convexpolyobject.h
+1369672892 e:\codeblocks\texttracer\convexpolyobject.h
 	<vector>
 	"WorldObject.h"
 
@@ -161,7 +162,7 @@
 	"WorldObject.h"
 	"KdTree.h"
 
-1369548899 source:e:\codeblocks\texttracer\testscene.cpp
+1369672989 source:e:\codeblocks\texttracer\testscene.cpp
 	"TestScene.h"
 	"PlaneObject.h"
 	"ConvexPolyObject.h"
@@ -185,4 +186,11 @@
 
 1369539167 source:e:\codeblocks\texttracer\debugbox.cpp
 	"DebugBox.h"
+
+1369669990 source:e:\codeblocks\texttracer\camera.cpp
+	"Camera.h"
+	<sstream>
+	"DebugBox.h"
+	"Keyboard.h"
+	"Ray.h"
 

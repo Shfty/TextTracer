@@ -2,8 +2,6 @@
 
 Text Tracer - A real-time raytracer
 TODO:
-Sphere orientation calculation (L should be camera-oriented, not viewport-oriented)
-CSG modeling for portal trim (draw trim if ray intersects trim NOT portal)
 Per-object AABB for broad-phase collision
 
 Ray Refactoring
@@ -15,6 +13,8 @@ kD Tree Refactoring
     -Visualisation w/transparent planes
     -Nearest Neighbour
     -Store AABBs instead of WorldObjects
+
+Sphere orientation calculation (L should be camera-oriented, not viewport-oriented)?
 
 Preprocessor definitions:
 LOW_RES

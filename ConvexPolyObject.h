@@ -10,8 +10,6 @@ public:
     ConvexPolyObject(const glm::vec3& position, const glm::mat4& rotation, const float scale, const int sides, const bool twoSided);
     ConvexPolyObject(const glm::vec3& position, const glm::mat4& rotation, const float scale, const std::vector<glm::vec3>& vertices, const bool twoSided);
 
-    ~ConvexPolyObject() {}
-
     bool Intersects(Ray& ray, IsectData& isectData);
     bool IntersectsPortal(Ray& ray, IsectData& isectData, const glm::mat4& cameraRotation);
 

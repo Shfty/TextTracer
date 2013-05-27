@@ -73,7 +73,7 @@ void Camera::Update(const std::vector<WorldObject*>& worldObjects, const float d
 
         for(uint16_t i = 0; i < worldObjects.size(); i++)
         {
-            if(!worldObjects[i]->Portal)
+            if(worldObjects[i]->GetExitPortal() == NULL) // Not a portal
             {
                 continue;
             }
@@ -95,7 +95,7 @@ void Camera::Update(const std::vector<WorldObject*>& worldObjects, const float d
             // Compute angular difference between portals
             glm::vec3 backward = glm::vec3(0, 0, 1);
             glm::vec3 entryPortalNormal = glm::normalize(glm::vec3(glm::vec4(backward, 1.0f) * worldObjects[nearestPortalIdx]->GetRotation()));
-            glm::vec3 exitPortalNormal = glm::normalize(glm::vec3(glm::vec4(backward, 1.0f) * -worldObjects[nearestPortalIdx]->ExitPortal->GetRotation()));
+            glm::vec3 exitPortalNormal = glm::normalize(glm::vec3(glm::vec4(backward, 1.0f) * -worldObjects[nearestPortalIdx]->GetExitPortal()->GetRotation()));
             float angle = glm::acos(glm::dot(entryPortalNormal, exitPortalNormal));
             glm::vec3 axis = glm::normalize(glm::cross(entryPortalNormal, exitPortalNormal));
 
@@ -109,7 +109,7 @@ void Camera::Update(const std::vector<WorldObject*>& worldObjects, const float d
                 glm::rotate(glm::degrees(angle), axis) *
                 glm::vec4(entryPointLocal, 1.0f)
             );
-            glm::vec3 exitPoint = entryPointLocalRotated + worldObjects[nearestPortalIdx]->ExitPortal->GetPosition();
+            glm::vec3 exitPoint = entryPointLocalRotated + worldObjects[nearestPortalIdx]->GetExitPortal()->GetPosition();
 
             // Compute travel distance
             glm::vec3 distanceThroughPortal = isectData.Entry - m_position;
