@@ -2,7 +2,7 @@
 
 Text Tracer - A real-time raytracer
 TODO:
-Per-object AABB for broad-phase collision
+DiscObject AABB calculation
 
 Ray Refactoring
     -Move ray-shape intersection tests into Raytracer
@@ -12,14 +12,13 @@ Ray Refactoring
 kD Tree Refactoring
     -Visualisation w/transparent planes
     -Nearest Neighbour
-    -Store AABBs instead of WorldObjects
 
 Sphere orientation calculation (L should be camera-oriented, not viewport-oriented)?
 
 Preprocessor definitions:
 LOW_RES
-Disabled: Run in full resolution at 1x FPS
-Enabled: Run in half resolution at 2x FPS
+Disabled: Run in full resolution
+Enabled: Run in half resolution
 
 REALTIME
 Disabled: Update/Draw one frame, then quit

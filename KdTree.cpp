@@ -17,6 +17,7 @@ void KdTree::GenTree(const std::vector<WorldObject*>& worldObjects)
     m_rootNode = genNode(worldObjects, NULL, 0);
 }
 
+/*
 KdNode* KdTree::NearestNeighbour(const glm::vec3& position, const KdNode* rootNode)
 {
     // Go depth-first to the bottom of the tree to get our initial estimate
@@ -79,7 +80,7 @@ KdNode* KdTree::depthFirst(const glm::vec3& position, const KdNode* currentNode,
 
     return NULL;
 }
-
+*/
 
 KdNode* KdTree::genNode(const std::vector<WorldObject*>& worldObjects, const KdNode* parentNode, const int depth)
 {
@@ -104,23 +105,43 @@ KdNode* KdTree::genNode(const std::vector<WorldObject*>& worldObjects, const KdN
         break;
     }
 
-    int medianIdx = worldObjects.size() / 2;
+    float axisAverage = (sortedObjects[0]->GetPosition()[axis] + sortedObjects[0]->GetPosition()[axis]) / 2;
     std::vector<WorldObject*> leftObjects;
     std::vector<WorldObject*> rightObjects;
 
-    for(uint16_t i = 0; i < worldObjects.size(); i++)
+    glm::vec3 minBound = sortedObjects[0]->GetPosition();
+    glm::vec3 maxBound = minBound;
+
+    for(uint16_t i = 0; i < sortedObjects.size(); i++)
     {
-        if(i < medianIdx)
+        WorldObject* object = sortedObjects[i];
+        glm::vec3 objectPosition = object->GetPosition();
+        for(uint16_t o = 0; o < 3; o++)
+        {
+            if(objectPosition[o] < minBound[o])
+            {
+                minBound[o] = objectPosition[o];
+            }
+
+            if(objectPosition[o] > maxBound[o])
+            {
+                maxBound[o] = objectPosition[o];
+            }
+        }
+
+        if(objectPosition[axis] < axisAverage)
         {
             leftObjects.push_back(worldObjects[i]);
         }
-        else if(i > medianIdx)
+        else if(objectPosition[axis] > axisAverage)
         {
             rightObjects.push_back(worldObjects[i]);
         }
     }
 
-    KdNode* node = new KdNode(worldObjects[medianIdx], parentNode, axis);
+    AABB box = AABB(minBound, maxBound);
+    KdNode* node = new KdNode(box, parentNode, axis);
+
     if(parentNode == NULL)
     {
         node->Root = true;

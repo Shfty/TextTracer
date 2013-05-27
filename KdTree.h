@@ -7,7 +7,7 @@
 
 struct KdNode
 {
-    WorldObject* Object;
+    AABB Bounds;
     KdNode* Parent;
     KdNode* LeftChild;
     KdNode* RightChild;
@@ -15,16 +15,15 @@ struct KdNode
     bool Root = false;
     bool Leaf = false;
 
-    KdNode(const WorldObject* object, const KdNode* parent, const int axis)
+    KdNode(const AABB& bounds, const KdNode* parent, const int axis)
     {
-        Object = (WorldObject*)object;
+        Bounds = bounds;
         Parent = (KdNode*)parent;
         Axis = axis;
     }
 
     ~KdNode()
     {
-        delete Object;
         delete LeftChild;
         delete RightChild;
     }
