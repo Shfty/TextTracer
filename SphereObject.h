@@ -11,7 +11,7 @@ class SphereObject : public WorldObject
 public:
     SphereObject(const glm::vec3& position, const glm::mat4& rotation, const float radius, const bool backface);
 
-    bool IntersectsPortal(Ray& ray, IsectData& isectData, const glm::mat4& cameraRotation);
+    bool IntersectsPortal(const Ray& ray, IsectData* isectData, const glm::mat4& cameraRotation);
 
     void SetPosition(const glm::vec3& position);
     void SetRotation(const glm::mat4& rotation) { m_rotation = rotation; }
@@ -21,7 +21,7 @@ public:
 
 private:
     void calculateAABB();
-    bool intersectsGeometry(Ray& ray, IsectData& isectData);
+    bool intersectsGeometry(const Ray& ray, IsectData* isectData);
 
     float m_radius = 1.0f;
 };

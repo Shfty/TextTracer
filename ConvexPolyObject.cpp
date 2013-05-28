@@ -20,9 +20,19 @@ ConvexPolyObject::ConvexPolyObject(const glm::vec3& position, const glm::mat4& r
     ObjectColour = glm::vec4(1, 0, 0, 1);
 }
 
-bool ConvexPolyObject::IntersectsPortal(Ray& ray, IsectData& isectData, const glm::mat4& cameraRotation)
+bool ConvexPolyObject::IntersectsPortal(const Ray& ray, IsectData* isectData, const glm::mat4& cameraRotation)
 {
-    return intersectsAABB(ray) && intersectsGeometry(ray, isectData);
+    if(UseBoundingBox)
+    {
+        if(intersectsAABB(ray))
+        {
+            return intersectsGeometry(ray, isectData);
+        }
+    }
+    else
+    {
+        return intersectsGeometry(ray, isectData);
+    }
 }
 
 void ConvexPolyObject::SetPosition(const glm::vec3& position)
@@ -112,10 +122,9 @@ void ConvexPolyObject::calculateWorldNormalDotPosition()
     m_worldNormalDotPosition = glm::dot(m_worldNormal, m_position);
 }
 
-bool ConvexPolyObject::intersectsGeometry(Ray& ray, IsectData& isectData)
+bool ConvexPolyObject::intersectsGeometry(const Ray& ray, IsectData* isectData)
 {
-    IsectData dummy;
-    if(Parent != NULL && Parent->GetExitPortal() != NULL && Parent->Intersects(ray, dummy)) return false;
+    if(Parent != NULL && Parent->GetExitPortal() != NULL && Parent->Intersects(ray, (IsectData*)NULL)) return false;
 
     // Step 1: Plane intersection test
     float nDotRay = glm::dot(m_worldNormal, ray.Direction);
@@ -136,7 +145,13 @@ bool ConvexPolyObject::intersectsGeometry(Ray& ray, IsectData& isectData)
         if(glm::dot(m_worldNormal, glm::cross(edge, C)) < 0) return false;
     }
 
-    ray.FarPlane = t;
-    isectData.Entry = pointOnPlane;
+    if(isectData != NULL)
+    {
+        isectData->Distance = t;
+        isectData->Entry = ray.Origin + ray.Direction * t;
+        isectData->Exit = ray.Origin + ray.Direction * t;
+        isectData->Colour = ObjectColour;
+        isectData->Object = this;
+    }
     return true;
 }

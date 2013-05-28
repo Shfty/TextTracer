@@ -1,6 +1,7 @@
 #include <algorithm>
 
 #include "KdTree.h"
+#include "ConvexPolyObject.h"
 
 KdTree::KdTree(const std::vector<WorldObject*>& worldObjects)
 {
@@ -105,7 +106,7 @@ KdNode* KdTree::genNode(const std::vector<WorldObject*>& worldObjects, const KdN
         break;
     }
 
-    float axisAverage = (sortedObjects[0]->GetPosition()[axis] + sortedObjects[0]->GetPosition()[axis]) / 2;
+    float axisAverage = (sortedObjects[0]->GetPosition()[axis] + sortedObjects[sortedObjects.size() - 1]->GetPosition()[axis]) / 2;
     std::vector<WorldObject*> leftObjects;
     std::vector<WorldObject*> rightObjects;
 

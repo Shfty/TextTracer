@@ -40,6 +40,9 @@
 			<Add option="-DREALTIME" />
 			<Add option="-DLOW_RES" />
 		</Compiler>
+		<Unit filename="AABB.cpp" />
+		<Unit filename="AABB.h" />
+		<Unit filename="Camera.cpp" />
 		<Unit filename="Camera.h" />
 		<Unit filename="ConsoleFramebuffer.cpp" />
 		<Unit filename="ConsoleFramebuffer.h" />
@@ -68,6 +71,7 @@
 		<Unit filename="TextTracer.cpp" />
 		<Unit filename="TextTracer.h" />
 		<Unit filename="Vector3D.h" />
+		<Unit filename="WorldObject.cpp" />
 		<Unit filename="WorldObject.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>

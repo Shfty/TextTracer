@@ -23,7 +23,7 @@ void SphereObject::SetRadius(const float radius)
     calculateAABB();
 }
 
-bool SphereObject::IntersectsPortal(Ray& ray, IsectData& isectData, const glm::mat4& cameraRotation)
+bool SphereObject::IntersectsPortal(const Ray& ray, IsectData* isectData, const glm::mat4& cameraRotation)
 {
     if(!intersectsAABB(ray)) return false;
 
@@ -44,9 +44,13 @@ bool SphereObject::IntersectsPortal(Ray& ray, IsectData& isectData, const glm::m
     float distance = glm::dot(pointOnPlaneLocal, pointOnPlaneLocal);
     if(distance > m_radius * m_radius) return false;
 
-    //Offset portal intersection by a small amount to fake volume
-    ray.FarPlane = t;
-    isectData.Entry = ray.Origin + ray.Direction * t;
+    if(isectData != NULL)
+    {
+        isectData->Distance = t;
+        isectData->Entry = ray.Origin + ray.Direction * t;
+        isectData->Exit = isectData->Entry;
+        isectData->Object = this;
+    }
     return true;
 }
 
@@ -58,7 +62,7 @@ void SphereObject::calculateAABB()
     m_bounds = AABB(minBound, maxBound);
 }
 
-bool SphereObject::intersectsGeometry(Ray& ray, IsectData& isectData)
+bool SphereObject::intersectsGeometry(const Ray& ray, IsectData* isectData)
 {
     float t0;
     float t1;
@@ -77,15 +81,29 @@ bool SphereObject::intersectsGeometry(Ray& ray, IsectData& isectData)
     if(!Backface)
     {
             if (t0 > ray.FarPlane) return false;
-            else ray.FarPlane = t0;
-            isectData.Entry = ray.Origin + ray.Direction * t0;
-            isectData.Exit = ray.Origin + ray.Direction * t1;
+            if(isectData != NULL)
+            {
+                isectData->Distance = t0;
+                isectData->Entry = ray.Origin + ray.Direction * t0;
+                isectData->Exit = ray.Origin + ray.Direction * t1;
+            }
     }
     else
     {
             if (t1 > ray.FarPlane) return false;
-            else ray.FarPlane = t1;
-            isectData.Entry = ray.Origin + ray.Direction * t1;
+            if(isectData != NULL)
+            {
+                isectData->Distance = t1;
+                isectData->Entry = ray.Origin + ray.Direction * t1;
+                isectData->Exit = isectData->Entry;
+            }
     }
+
+    if(isectData != NULL)
+    {
+        isectData->Colour = ObjectColour; // Portal Colour
+        isectData->Object = this;
+    }
+
     return true;
 }

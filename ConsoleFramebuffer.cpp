@@ -5,9 +5,21 @@
 #include <iostream>
 #include <windows.h>
 
+#include "TextTracer.h"
+
 ConsoleFramebuffer::ConsoleFramebuffer(const int width, const int height)
     :Framebuffer(width, height)
 {
+    // Setup console window size
+#ifdef _WIN32
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SHORT cWidth = width;
+    SHORT cHeight = width + TextTracer::HUD_HEIGHT;
+    SMALL_RECT windowSize = {0, 0, cWidth, cHeight};
+    SetConsoleWindowInfo(hConsole, TRUE, &windowSize);
+    SetConsoleTitle("Text Tracer");
+#endif // _WIN32
+
     #ifdef _WIN32
     // Dark Colours
     m_colourPalette.push_back(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f)); // Black
@@ -30,14 +42,14 @@ ConsoleFramebuffer::ConsoleFramebuffer(const int width, const int height)
     #endif // _WIN32
 
     //Populate with blank cells to ensure sanity
-    Clear(glm::vec4(0, 0, 0, 1));
+    Clear();
 }
 
 ConsoleFramebuffer::~ConsoleFramebuffer()
 {
 }
 
-void ConsoleFramebuffer::Clear(const glm::vec4& colour)
+void ConsoleFramebuffer::Clear()
 {
     // Reset cursor position
 #ifdef _WIN32
@@ -48,12 +60,22 @@ void ConsoleFramebuffer::Clear(const glm::vec4& colour)
 #endif // _WIN32
 
     // Fill with clear colour
-    m_buffer.assign(m_width * m_height, colour);
+    m_buffer.assign(m_width * m_height, glm::vec4());
 }
 
 void ConsoleFramebuffer::PaintCell(const int x, const int y, const glm::vec4& colour)
 {
     m_buffer[m_width * y + x] = colour;
+    /*
+    if(colour.a >= 1.0f)
+    {
+        m_buffer[m_width * y + x] = colour;
+    }
+    else
+    {
+        m_buffer[m_width * y + x] += (colour * colour.a);
+    }
+    */
 }
 
 void ConsoleFramebuffer::Draw()

@@ -23,7 +23,7 @@ TestScene::TestScene()
     testWallN->ObjectColour = glm::vec4(1, 0, 0, 1);
     m_staticObjects.push_back(testWallN);
 
-    ConvexPolyObject* testWallE = new ConvexPolyObject(glm::vec3(40, 50, -20), glm::rotate(-90.0f, glm::vec3(0, 1, 0)), 100.0f, 4, true);
+    ConvexPolyObject* testWallE = new ConvexPolyObject(glm::vec3(60, 50, -20), glm::rotate(-90.0f, glm::vec3(0, 1, 0)), 100.0f, 4, true);
     testWallE->ObjectColour = glm::vec4(1, 1, 0, 1);
     m_staticObjects.push_back(testWallE);
 
@@ -31,23 +31,21 @@ TestScene::TestScene()
     testWallS->ObjectColour = glm::vec4(1, 1, 1, 1);
     m_staticObjects.push_back(testWallS);
 
-    ConvexPolyObject* testWallW = new ConvexPolyObject(glm::vec3(-40, 50, -20), glm::rotate(90.0f, glm::vec3(0, 1, 0)), 100.0f, 4, true);
+    ConvexPolyObject* testWallW = new ConvexPolyObject(glm::vec3(-60, 50, -20), glm::rotate(90.0f, glm::vec3(0, 1, 0)), 100.0f, 4, true);
     testWallW->ObjectColour = glm::vec4(1, 0, 1, 1);
     m_staticObjects.push_back(testWallW);
 
     // Poly Portal
-    ConvexPolyObject* polyPortalIn = new ConvexPolyObject(glm::vec3(-10, 0, -50), glm::rotate(0.0f, glm::vec3(0, 1, 0)), 4.0f, 5, true);
-    ConvexPolyObject* polyPortalInOutline = new ConvexPolyObject(glm::vec3(-10, 0, -50), glm::rotate(0.0f, glm::vec3(0, 1, 0)), 5.0f, 5, true);
+    ConvexPolyObject* polyPortalIn = new ConvexPolyObject(glm::vec3(-10, 0, -50), glm::rotate(-90.0f, glm::vec3(0, 1, 0)), 4.0f, 5, true);
+    ConvexPolyObject* polyPortalInOutline = new ConvexPolyObject(glm::vec3(-10, 0, -50), glm::rotate(-90.0f, glm::vec3(0, 1, 0)), 5.0f, 5, true);
     ConvexPolyObject* polyPortalOut = new ConvexPolyObject(glm::vec3(10, 0, -50), glm::rotate(90.0f, glm::vec3(0, 1, 0)), 4.0f, 5, true);
     ConvexPolyObject* polyPortalOutOutline = new ConvexPolyObject(glm::vec3(10, 0, -50), glm::rotate(90.0f, glm::vec3(0, 1, 0)), 5.0f, 5, true);
 
     polyPortalIn->SetExitPortal(polyPortalOut);
     polyPortalIn->AddChild(polyPortalInOutline);
-    polyPortalIn->ObjectColour = glm::vec4(0, 0, 0, 1);
 
     polyPortalOut->SetExitPortal(polyPortalIn);
     polyPortalOut->AddChild(polyPortalOutOutline);
-    polyPortalOut->ObjectColour = glm::vec4(0, 0, 0, 1);
 
     m_staticObjects.push_back(polyPortalIn);
     m_staticObjects.push_back(polyPortalInOutline);
@@ -60,11 +58,9 @@ TestScene::TestScene()
     SphereObject* spherePortalOut = new SphereObject(glm::vec3(-20, 0, -20), glm::rotate(180.0f, glm::vec3(0, 1, 0)), 5.0f, true);
     SphereObject* spherePortalOutOutline = new SphereObject(glm::vec3(-20, 0, -20), glm::mat4(), 6.0f, true);
 
-    spherePortalIn->ObjectColour = glm::vec4(0, 0, 0, 1);
     spherePortalIn->SetExitPortal(spherePortalOut);
     spherePortalIn->AddChild(spherePortalInOutline);
 
-    spherePortalOut->ObjectColour = glm::vec4(0, 0, 0, 1);
     spherePortalOut->SetExitPortal(spherePortalIn);
     spherePortalOut->AddChild(spherePortalOutOutline);
 
@@ -99,7 +95,7 @@ TestScene::TestScene()
 
     // Pentagon
     ConvexPolyObject* testPent = new ConvexPolyObject(glm::vec3(0, -2.5, -12.5), glm::rotate(-90.0f, glm::vec3(1, 0, 0)), 5.0f, 5, true);
-    testPent->ObjectColour = glm::vec4(1, 1, 0, 1);
+    testPent->ObjectColour = glm::vec4(1, 1, 0, 0.5f);
     m_staticObjects.push_back(testPent);
 
     // Arrowhead
@@ -111,6 +107,23 @@ TestScene::TestScene()
     ConvexPolyObject* arrowhead = new ConvexPolyObject(glm::vec3(-40, -10, -10), glm::rotate(-90.0f, glm::vec3(0, 1, 0)), 5.0f, arrowheadVertices, true);
     arrowhead->ObjectColour = glm::vec4(0, 1, 0, 1);
     m_staticObjects.push_back(arrowhead);
+
+    // Transparent Discs
+    DiscObject* transDisc0 = new DiscObject(glm::vec3(40, 0, -10), glm::rotate(0.0f, glm::vec3(0, 1, 0)), 5.0f, true);
+    transDisc0->ObjectColour = glm::vec4(1, 1, 1, 0.2f);
+    m_staticObjects.push_back(transDisc0);
+    DiscObject* transDisc1 = new DiscObject(glm::vec3(40, 0, -20), glm::rotate(0.0f, glm::vec3(0, 1, 0)), 5.0f, true);
+    transDisc1->ObjectColour = glm::vec4(1, 1, 1, 0.2f);
+    m_staticObjects.push_back(transDisc1);
+    DiscObject* transDisc2 = new DiscObject(glm::vec3(40, 0, -30), glm::rotate(0.0f, glm::vec3(0, 1, 0)), 5.0f, true);
+    transDisc2->ObjectColour = glm::vec4(1, 1, 1, 0.2f);
+    m_staticObjects.push_back(transDisc2);
+    DiscObject* transDisc3 = new DiscObject(glm::vec3(40, 0, -40), glm::rotate(0.0f, glm::vec3(0, 1, 0)), 5.0f, true);
+    transDisc3->ObjectColour = glm::vec4(1, 1, 1, 0.2f);
+    m_staticObjects.push_back(transDisc3);
+    DiscObject* transDisc4 = new DiscObject(glm::vec3(40, 0, -50), glm::rotate(0.0f, glm::vec3(0, 1, 0)), 5.0f, true);
+    transDisc4->ObjectColour = glm::vec4(1, 1, 1, 0.2f);
+    m_staticObjects.push_back(transDisc4);
 
     // STATIC TREE
     initStaticTree();

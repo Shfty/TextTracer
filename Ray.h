@@ -5,11 +5,16 @@
 
 #include "WorldObject.h"
 
+struct distanceSortPredicate
+{
+    bool operator()( const IsectData* lx, const IsectData* rx ) const {
+    	return lx->Distance < rx->Distance;
+    }
+};
+
 struct Ray
 {
     WorldObject* ParentObject;
-
-    glm::vec4 Colour;
 
     glm::vec3 Origin;
     glm::vec3 Direction;

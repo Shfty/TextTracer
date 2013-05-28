@@ -2,15 +2,9 @@
 
 Text Tracer - A real-time raytracer
 TODO:
-DiscObject AABB calculation
-
-Ray Refactoring
-    -Move ray-shape intersection tests into Raytracer
-    -Cumulative Ray colour (transparency)
-    -Should IsectData be a member of Ray?
-
 kD Tree Refactoring
-    -Visualisation w/transparent planes
+    -Construct AABBs using splitting plane and furthest object instead of just objects
+    -Ray Intersection
     -Nearest Neighbour
 
 Sphere orientation calculation (L should be camera-oriented, not viewport-oriented)?

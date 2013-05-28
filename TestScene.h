@@ -11,6 +11,9 @@ public:
     ~TestScene();
 
    void Update(const float deltaTime);
+
+private:
+    std::vector<WorldObject*> m_debugObjects;
 };
 
 #endif // TESTSCENE_H

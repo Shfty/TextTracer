@@ -10,9 +10,19 @@ DiscObject::DiscObject(const glm::vec3& position, const glm::mat4& rotation, flo
     ObjectColour = glm::vec4(1, 0, 0, 1);
 }
 
-bool DiscObject::IntersectsPortal(Ray& ray, IsectData& isectData, const glm::mat4& cameraRotation)
+bool DiscObject::IntersectsPortal(const Ray& ray, IsectData* isectData, const glm::mat4& cameraRotation)
 {
-    return intersectsAABB(ray) && intersectsGeometry(ray, isectData);
+    if(UseBoundingBox)
+    {
+        if(intersectsAABB(ray))
+        {
+            return intersectsGeometry(ray, isectData);
+        }
+    }
+    else
+    {
+        return intersectsGeometry(ray, isectData);
+    }
 }
 
 void DiscObject::SetPosition(const glm::vec3& position)
@@ -34,10 +44,9 @@ void DiscObject::calculateAABB()
     // TODO: Implement properly
 }
 
-bool DiscObject::intersectsGeometry(Ray& ray, IsectData& isectData)
+bool DiscObject::intersectsGeometry(const Ray& ray, IsectData* isectData)
 {
-    IsectData dummy;
-    if(Parent != NULL && Parent->GetExitPortal() != NULL && Parent->Intersects(ray, dummy)) return false;
+    if(Parent != NULL && Parent->GetExitPortal() != NULL && Parent->Intersects(ray, NULL)) return false;
 
     // Step 1: Plane intersection test
     float nDotRay = glm::dot(m_worldNormal, ray.Direction);
@@ -54,8 +63,14 @@ bool DiscObject::intersectsGeometry(Ray& ray, IsectData& isectData)
     float distance = glm::dot(pointOnPlaneLocal, pointOnPlaneLocal);
     if(distance > Scale * Scale) return false;
 
-    ray.FarPlane = t;
-    isectData.Entry = pointOnPlane;
+    if(isectData != NULL)
+    {
+        isectData->Distance = t;
+        isectData->Entry = ray.Origin + ray.Direction * t;
+        isectData->Exit = ray.Origin + ray.Direction * t;
+        isectData->Colour = ObjectColour;
+        isectData->Object = this;
+    }
     return true;
 }
 

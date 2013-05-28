@@ -4,13 +4,14 @@
 #include <vector>
 
 #include "WorldObject.h"
+#include "PlaneObject.h"
 
 struct KdNode
 {
     AABB Bounds;
-    KdNode* Parent;
-    KdNode* LeftChild;
-    KdNode* RightChild;
+    KdNode* Parent = NULL;
+    KdNode* LeftChild = NULL;
+    KdNode* RightChild = NULL;
     int Axis = 0;
     bool Root = false;
     bool Leaf = false;
@@ -24,8 +25,15 @@ struct KdNode
 
     ~KdNode()
     {
-        delete LeftChild;
-        delete RightChild;
+        if(LeftChild != NULL)
+        {
+            delete LeftChild;
+        }
+
+        if(RightChild != NULL)
+        {
+            delete RightChild;
+        }
     }
 };
 
@@ -61,6 +69,8 @@ public:
 
     void GenTree(const std::vector<WorldObject*>& worldObjects);
     KdNode* NearestNeighbour(const glm::vec3& position, const KdNode* rootNode);
+
+    std::vector<WorldObject*> SplittingPlanes;
 
 private:
     KdNode* genNode(const std::vector<WorldObject*>& worldObjects, const KdNode* parentNode, const int depth);

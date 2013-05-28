@@ -13,7 +13,7 @@ public:
     int Width() const { return m_width; }
     int Height() const { return m_height; }
 
-    virtual void Clear(const glm::vec4& colour) = 0;
+    virtual void Clear() = 0;
     virtual void PaintCell(const int x, const int y, const glm::vec4& colour) = 0;
     virtual void Draw() = 0;
 

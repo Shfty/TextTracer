@@ -20,6 +20,7 @@ public:
 
     bool CastShadow = true;
     bool Fullbright = false;
+    bool UseBoundingBox = false;
 
     WorldObject() {}
     virtual ~WorldObject() {};
@@ -35,8 +36,8 @@ public:
 
     void AddChild(WorldObject* child);
 
-    bool Intersects(Ray& ray, IsectData& isectData);
-    virtual bool IntersectsPortal(Ray& ray, IsectData& isectData, const glm::mat4& cameraRotation) = 0;
+    bool Intersects(const Ray& ray, IsectData* isectData);
+    virtual bool IntersectsPortal(const Ray& ray, IsectData* isectData, const glm::mat4& cameraRotation) = 0;
 
 protected:
     std::vector<WorldObject*> m_children;
@@ -48,8 +49,8 @@ protected:
     glm::mat4 m_rotation = glm::mat4();
 
     virtual void calculateAABB() = 0;
-    bool intersectsAABB(Ray& ray);
-    virtual bool intersectsGeometry(Ray& ray, IsectData& isectData) = 0;
+    bool intersectsAABB(const Ray& ray);
+    virtual bool intersectsGeometry(const Ray& ray, IsectData* isectData) = 0;
 };
 
 #endif // WORLDOBJECT_H

@@ -1,5 +1,6 @@
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 #include <glm/glm.hpp>
 
 #include "Raytracer.h"
@@ -30,20 +31,16 @@ void Raytracer::Trace(const std::vector<WorldObject*>& worldObjects)
                     glm::vec3 direction = glm::vec3(m_camera->GetRotation() * glm::vec4(glm::normalize(glm::vec3(xMag, yMag, -1.0f)), 0.0f));
 
                     Ray ray(m_camera->GetPosition(), direction, NEAR_PLANE, FAR_PLANE, m_camera);
-                    if(traceViewRay(ray, worldObjects, 5))
-                    {
-                        m_framebuffer->PaintCell(x + cx, y + cy, ray.Colour);
-                    }
+                    m_framebuffer->PaintCell(x + cx, y + cy, traceViewRay(ray, worldObjects, MAX_BOUNCES));
                 }
             }
         }
     }
 }
 
-bool Raytracer::traceViewRay(Ray& ray, const std::vector<WorldObject*>& worldObjects, const int maxRecursion)
+glm::vec4 Raytracer::traceViewRay(Ray& ray, const std::vector<WorldObject*>& worldObjects, const int maxRecursion)
 {
-    int nearestObjectIdx = -1;
-    IsectData isectData;
+    std::vector<IsectData*> intersections;
 
     for(uint16_t i = 0; i < worldObjects.size(); i++)
     {
@@ -64,48 +61,53 @@ bool Raytracer::traceViewRay(Ray& ray, const std::vector<WorldObject*>& worldObj
             }
         }
 
+        IsectData* isectData = new IsectData();
         if(worldObjects[i]->Intersects(ray, isectData))
         {
-            nearestObjectIdx = i;
-        }
-    }
-
-    if(nearestObjectIdx != -1)
-    {
-        if(worldObjects[nearestObjectIdx]->GetExitPortal() != NULL && maxRecursion > 0)
-        {
-            // Compute angular difference between portals
-            glm::vec3 backward = glm::vec3(0, 0, 1);
-            glm::vec3 entryPortalNormal = glm::normalize(glm::vec3(glm::vec4(backward, 1.0f) * worldObjects[nearestObjectIdx]->GetRotation()));
-            glm::vec3 exitPortalNormal = glm::normalize(glm::vec3(glm::vec4(backward, 1.0f) * -worldObjects[nearestObjectIdx]->GetExitPortal()->GetRotation()));
-            float angle = glm::acos(glm::dot(entryPortalNormal, exitPortalNormal));
-            glm::vec3 axis = glm::normalize(glm::cross(entryPortalNormal, exitPortalNormal));
-
-            // Compute new origin
-            glm::vec3 inOriginRelative = isectData.Entry - worldObjects[nearestObjectIdx]->GetPosition();
-            glm::vec3 inOriginRelativeRotated =
-                glm::vec3(
-                    glm::rotate(glm::degrees(angle), axis) *
-                    glm::vec4(inOriginRelative, 1.0f)
-                );
-            glm::vec3 rayOrigin = inOriginRelativeRotated + worldObjects[nearestObjectIdx]->GetExitPortal()->GetPosition();
-
-            glm::mat4 rayOrientation = glm::rotate(glm::degrees(angle), axis);
-            glm::vec3 rayDirection = glm::vec3(rayOrientation * glm::vec4(ray.Direction, 1.0f));
-
-            ray.Origin = rayOrigin;
-            ray.Direction = rayDirection;
-            ray.ParentObject = worldObjects[nearestObjectIdx]->GetExitPortal();
-            ray.FarPlane = FAR_PLANE;
-            return traceViewRay(ray, worldObjects, maxRecursion - 1);
+            intersections.push_back(isectData);
         }
         else
         {
-            ray.Colour = worldObjects[nearestObjectIdx]->ObjectColour;
-#ifndef DISABLE_LIGHTING
-            if(!worldObjects[nearestObjectIdx]->Fullbright)
+            delete isectData;
+        }
+    }
+
+    if(intersections.size() > 0)
+    {
+        // Check for portal intersections, re-cast ray to determine their final colour
+        for(uint16_t i = 0; i < intersections.size(); i++)
+        {
+            if(intersections[i]->Object->GetExitPortal() != NULL)
             {
-                Ray shadowRay(isectData.Entry, -glm::normalize(SkyLightDirection), NEAR_PLANE, FAR_PLANE, worldObjects[nearestObjectIdx]);
+                if(maxRecursion > 0)
+                {
+                    intersections[i]->Colour = portalViewRay(ray, intersections[i], worldObjects, maxRecursion - 1);
+                }
+                else
+                {
+                    intersections[i]->Colour = glm::vec4(0, 0, 0, 1);
+                }
+            }
+        }
+
+        // Sort intersections from near-far
+        std::sort(intersections.begin(), intersections.end(), distanceSortPredicate());
+
+        // Iterate through sorted intersections and sum colour
+        //  Break out of loop if colour alpha >= 1.0f
+        glm::vec4 finalColour = glm::vec4(0);
+        float alpha = 0.0f;
+        for(uint16_t i = 0; i < intersections.size(); i++)
+        {
+            alpha += intersections[i]->Colour.a;
+
+            glm::vec4 objectColour = intersections[i]->Colour;
+            float objectAlpha = intersections[i]->Colour.a;
+
+#ifndef DISABLE_LIGHTING
+            if(!intersections[i]->Object->Fullbright)
+            {
+                Ray shadowRay(intersections[i]->Entry, -glm::normalize(SkyLightDirection), NEAR_PLANE, FAR_PLANE, intersections[i]->Object);
                 bool occluded = traceShadowRay(shadowRay, worldObjects);
                 float diffuseFactor = glm::max(0.0f, glm::dot(ray.Direction, glm::normalize(SkyLightDirection)));
 
@@ -119,31 +121,73 @@ bool Raytracer::traceViewRay(Ray& ray, const std::vector<WorldObject*>& worldObj
                     brightness = diffuseFactor + AmbientIntensity;
                 }
 
-                ray.Colour *= SkyLightColour;
-                ray.Colour *= AmbientLightColour;
-                ray.Colour *= brightness;
+                objectColour *= SkyLightColour;
+                objectColour *= AmbientLightColour;
+                objectColour *= brightness;
             }
 #endif // DISABLE_LIGHTING
-            return true;
+
+            finalColour += objectColour * objectAlpha;
+
+            if(alpha >= 1.0f)
+            {
+                break;
+            }
         }
+
+        if(alpha < 1.0f)
+        {
+            finalColour += SkyColour * (1.0f - alpha);
+        }
+
+        for(int i = 0; i < 4; i++)
+        {
+            finalColour[i] = glm::min(finalColour[i], 1.0f);
+        }
+
+        return finalColour;
     }
-    else
-    {
-        return false;
-    }
+
+    return SkyColour;
+}
+
+glm::vec4 Raytracer::portalViewRay(Ray& ray, IsectData* isectData, const std::vector<WorldObject*>& worldObjects, const int maxRecursion)
+{
+    // Compute angular difference between portals
+    glm::vec3 backward = glm::vec3(0, 0, 1);
+    glm::vec3 entryPortalNormal = glm::normalize(glm::vec3(glm::vec4(backward, 1.0f) * isectData->Object->GetRotation()));
+    glm::vec3 exitPortalNormal = glm::normalize(glm::vec3(glm::vec4(backward, 1.0f) * -isectData->Object->GetExitPortal()->GetRotation()));
+    float angle = glm::acos(glm::dot(entryPortalNormal, exitPortalNormal));
+    glm::vec3 axis = glm::normalize(glm::cross(entryPortalNormal, exitPortalNormal));
+
+    // Compute new origin
+    glm::vec3 inOriginRelative = isectData->Entry - isectData->Object->GetPosition();
+    glm::vec3 inOriginRelativeRotated =
+        glm::vec3(
+            glm::rotate(glm::degrees(angle), axis) *
+            glm::vec4(inOriginRelative, 1.0f)
+        );
+    glm::vec3 rayOrigin = inOriginRelativeRotated + isectData->Object->GetExitPortal()->GetPosition();
+
+    glm::mat4 rayOrientation = glm::rotate(glm::degrees(angle), axis);
+    glm::vec3 rayDirection = glm::vec3(rayOrientation * glm::vec4(ray.Direction, 1.0f));
+
+    ray.Origin = rayOrigin;
+    ray.Direction = rayDirection;
+    ray.ParentObject = isectData->Object->GetExitPortal();
+
+    return traceViewRay(ray, worldObjects, maxRecursion);
 }
 
 bool Raytracer::traceShadowRay(Ray& ray, const std::vector<WorldObject*>& worldObjects)
 {
-    IsectData isectData;
-
     for(uint16_t i = 0; i < worldObjects.size(); i++)
     {
         if(worldObjects[i] == ray.ParentObject) continue;
 
         if(!worldObjects[i]->CastShadow) continue;
 
-        if(worldObjects[i]->Intersects(ray, isectData))
+        if(worldObjects[i]->Intersects(ray, (IsectData*)NULL))
         {
             return true;
         }
@@ -154,13 +198,11 @@ bool Raytracer::traceShadowRay(Ray& ray, const std::vector<WorldObject*>& worldO
 
 bool Raytracer::traceHitRay(Ray& ray, const std::vector<WorldObject*>& worldObjects)
 {
-    IsectData isectData;
-
     for(uint16_t i = 0; i < worldObjects.size(); i++)
     {
         if(worldObjects[i] == ray.ParentObject) continue;
 
-        if(worldObjects[i]->Intersects(ray, isectData))
+        if(worldObjects[i]->Intersects(ray, (IsectData*)NULL))
         {
             return true;
         }

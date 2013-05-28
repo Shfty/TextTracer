@@ -1,7 +1,6 @@
 #ifndef TEXTTRACER_H
 #define TEXTTRACER_H
 
-#include "ConsoleFramebuffer.h"
 #include "Camera.h"
 #include "Raytracer.h"
 
@@ -23,14 +22,13 @@ public:
     const int WIDTH = 64;
     const int HEIGHT = 48;
 #endif // LOW_RES
-    const int HUD_HEIGHT = 5;
+    static const int HUD_HEIGHT = 5;
 
 private:
-    ConsoleFramebuffer* m_framebuffer;
+    Framebuffer* m_framebuffer;
     Camera* m_camera;
     Raytracer* m_raytracer;
 
-    glm::vec4 m_skyColour;
     glm::vec4 m_dayColour = glm::vec4(0, 1, 1, 1);
     glm::vec4 m_nightColour = glm::vec4(0, 0, 0.5, 1);
 

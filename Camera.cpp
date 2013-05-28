@@ -7,9 +7,10 @@
 #include "Ray.h"
 
 Camera::Camera(const int width, const int height, const glm::vec3& position, const glm::mat4& rotation, const float fov)
-    :SphereObject(position, rotation, 2.0f, false), Width(width), Height(height)
+    :SphereObject(position, rotation, 1.0f, false), Width(width), Height(height)
 {
     ObjectColour = glm::vec4(1, 1, 1, 1);
+    Fullbright = true;
     FOV.x = fov;
     FOV.y = ((float)Height / (float)Width) * FOV.x;
 }
@@ -68,7 +69,7 @@ void Camera::Update(const std::vector<WorldObject*>& worldObjects, const float d
     {
         glm::vec3 heading = m_position - prevPos;
         Ray ray(prevPos, glm::normalize(heading), 0.0f, heading.length(), NULL);
-        IsectData isectData;
+        IsectData* isectData = new IsectData();
         int nearestPortalIdx = -1;
 
         for(uint16_t i = 0; i < worldObjects.size(); i++)
@@ -103,7 +104,7 @@ void Camera::Update(const std::vector<WorldObject*>& worldObjects, const float d
             glm::mat4 newRotation = glm::rotate(glm::degrees(angle), axis);
 
             // Compute exit point
-            glm::vec3 entryPointLocal = isectData.Entry - worldObjects[nearestPortalIdx]->GetPosition();
+            glm::vec3 entryPointLocal = isectData->Entry - worldObjects[nearestPortalIdx]->GetPosition();
             glm::vec3 entryPointLocalRotated =
             glm::vec3(
                 glm::rotate(glm::degrees(angle), axis) *
@@ -112,7 +113,7 @@ void Camera::Update(const std::vector<WorldObject*>& worldObjects, const float d
             glm::vec3 exitPoint = entryPointLocalRotated + worldObjects[nearestPortalIdx]->GetExitPortal()->GetPosition();
 
             // Compute travel distance
-            glm::vec3 distanceThroughPortal = isectData.Entry - m_position;
+            glm::vec3 distanceThroughPortal = isectData->Entry - m_position;
             glm::vec3 distanceThroughPortalRotated = glm::vec3(newRotation * glm::vec4(distanceThroughPortal, 1.0f));
 
             DebugBox::GetInstance().Message << "Distance Through: X: " << distanceThroughPortalRotated.x << "Y: " << distanceThroughPortalRotated.y << "Z: " << distanceThroughPortalRotated.z;
@@ -123,6 +124,8 @@ void Camera::Update(const std::vector<WorldObject*>& worldObjects, const float d
             SetPosition(outPosition);
             xRotMat *= newRotation;
         }
+
+        delete isectData;
     }
 
     SetRotation(xRotMat * yRotMat);

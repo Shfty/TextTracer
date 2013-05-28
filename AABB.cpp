@@ -2,7 +2,7 @@
 
 #include "Ray.h"
 
-bool AABB::Intersects(Ray& ray)
+bool AABB::Intersects(const Ray& ray)
 {
     glm::vec3 dirfrac;
 

@@ -9,6 +9,7 @@
 #include "WorldObject.h"
 #include "KdTree.h"
 #include "TestScene.h"
+#include "GLFWFramebuffer.h"
 
 // Scenes
 TestScene* testScene;
@@ -20,18 +21,8 @@ std::vector<WorldObject*> worldObjects;
 
 TextTracer::TextTracer()
 {
-    // Setup console window size
-#ifdef _WIN32
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    SHORT width = WIDTH;
-    SHORT height = HEIGHT + HUD_HEIGHT;
-    SMALL_RECT windowSize = {0, 0, width, height};
-    SetConsoleWindowInfo(hConsole, TRUE, &windowSize);
-    SetConsoleTitle("Text Tracer");
-#endif // _WIN32
-
     // Instantiate Main Objects
-    m_framebuffer = new ConsoleFramebuffer(WIDTH, HEIGHT);
+    m_framebuffer = new GLFWFramebuffer(WIDTH, HEIGHT);
     m_camera = new Camera(m_framebuffer->Width(), m_framebuffer->Height(), glm::vec3(0, 0, 0), glm::mat4(), FOV);
     m_raytracer = new Raytracer(m_camera, m_framebuffer);
 
@@ -40,12 +31,15 @@ TextTracer::TextTracer()
     world.push_back(testScene);
 
     worldObjects.clear();
+    worldObjects.push_back(m_camera);
     for(uint16_t i = 0; i < world.size(); i++)
     {
         const std::vector<WorldObject*>* staticObjects = world[i]->GetStaticObjects();
         const std::vector<WorldObject*>* dynamicObjects = world[i]->GetDynamicObjects();
+        const std::vector<WorldObject*> debugObjects = world[i]->GetStaticTree()->SplittingPlanes;
         worldObjects.insert(worldObjects.end(), staticObjects->begin(), staticObjects->end());
         worldObjects.insert(worldObjects.end(), dynamicObjects->begin(), dynamicObjects->end());
+        worldObjects.insert(worldObjects.end(), debugObjects.begin(), debugObjects.end());
     }
 }
 
@@ -81,7 +75,7 @@ void TextTracer::Update(const int worldClock)
 
     // Day/Night Cycle
     float lerpFactor = (-testScene->SunNormal.y + 1.0f) / 2.0f;
-    m_skyColour = glm::lerp(m_dayColour, m_nightColour, lerpFactor);
+    m_raytracer->SkyColour = glm::lerp(m_dayColour, m_nightColour, lerpFactor);
     m_raytracer->SkyLightDirection = testScene->SunNormal;
 
     // DEBUG: kD Tree nearest neighbour
@@ -97,7 +91,7 @@ void TextTracer::Update(const int worldClock)
 
 void TextTracer::Draw()
 {
-    m_framebuffer->Clear(m_skyColour);
+    m_framebuffer->Clear();
     m_raytracer->Trace(worldObjects);
     m_framebuffer->Draw();
 

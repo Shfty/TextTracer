@@ -18,7 +18,7 @@ struct AABB
         Max = maxPoint;
     }
 
-    bool Intersects(Ray& ray);
+    bool Intersects(const Ray& ray);
 };
 
 #endif // AABB_H

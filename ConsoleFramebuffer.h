@@ -11,7 +11,7 @@ public:
     ConsoleFramebuffer(const int width, const int height);
     ~ConsoleFramebuffer();
 
-    void Clear(const glm::vec4& colour);
+    void Clear();
     void PaintCell(const int x, const int y, const glm::vec4& colour);
     void Draw();
 
