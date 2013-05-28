@@ -29,10 +29,8 @@ bool ConvexPolyObject::IntersectsPortal(const Ray& ray, IsectData* isectData, co
             return intersectsGeometry(ray, isectData);
         }
     }
-    else
-    {
-        return intersectsGeometry(ray, isectData);
-    }
+
+    return intersectsGeometry(ray, isectData);
 }
 
 void ConvexPolyObject::SetPosition(const glm::vec3& position)

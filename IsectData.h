@@ -11,6 +11,7 @@ struct IsectData
     glm::vec3 Exit;
 
     float Distance;
+    bool Portal = false;
 
     WorldObject* Object;
 };

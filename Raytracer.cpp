@@ -74,9 +74,15 @@ glm::vec4 Raytracer::traceViewRay(Ray& ray, const std::vector<WorldObject*>& wor
 
     if(intersections.size() > 0)
     {
-        // Check for portal intersections, re-cast ray to determine their final colour
+        // Sort intersections from near-far
+        std::sort(intersections.begin(), intersections.end(), distanceSortPredicate());
+
+        // Cull objects behind opaque surfaces and portals
+        float totalAlpha = 0.0f;
         for(uint16_t i = 0; i < intersections.size(); i++)
         {
+            totalAlpha += intersections[i]->Colour.a;
+
             if(intersections[i]->Object->GetExitPortal() != NULL)
             {
                 if(maxRecursion > 0)
@@ -87,25 +93,28 @@ glm::vec4 Raytracer::traceViewRay(Ray& ray, const std::vector<WorldObject*>& wor
                 {
                     intersections[i]->Colour = glm::vec4(0, 0, 0, 1);
                 }
+
+                intersections[i]->Portal = true;
+                intersections.erase(intersections.begin() + i + 1, intersections.end());
+                break;
+            }
+
+            if(totalAlpha >= 1.0f)
+            {
+                intersections.erase(intersections.begin() + i + 1, intersections.end());
+                break;
             }
         }
 
-        // Sort intersections from near-far
-        std::sort(intersections.begin(), intersections.end(), distanceSortPredicate());
-
         // Iterate through sorted intersections and sum colour
-        //  Break out of loop if colour alpha >= 1.0f
         glm::vec4 finalColour = glm::vec4(0);
-        float alpha = 0.0f;
         for(uint16_t i = 0; i < intersections.size(); i++)
         {
-            alpha += intersections[i]->Colour.a;
-
             glm::vec4 objectColour = intersections[i]->Colour;
             float objectAlpha = intersections[i]->Colour.a;
 
 #ifndef DISABLE_LIGHTING
-            if(!intersections[i]->Object->Fullbright)
+            if(!intersections[i]->Object->Fullbright && !intersections[i]->Portal)
             {
                 Ray shadowRay(intersections[i]->Entry, -glm::normalize(SkyLightDirection), NEAR_PLANE, FAR_PLANE, intersections[i]->Object);
                 bool occluded = traceShadowRay(shadowRay, worldObjects);
@@ -124,22 +133,19 @@ glm::vec4 Raytracer::traceViewRay(Ray& ray, const std::vector<WorldObject*>& wor
                 objectColour *= SkyLightColour;
                 objectColour *= AmbientLightColour;
                 objectColour *= brightness;
+                objectColour *= objectAlpha;
             }
 #endif // DISABLE_LIGHTING
 
-            finalColour += objectColour * objectAlpha;
-
-            if(alpha >= 1.0f)
-            {
-                break;
-            }
+            finalColour += objectColour;
         }
 
-        if(alpha < 1.0f)
+        if(totalAlpha < 1.0f)
         {
-            finalColour += SkyColour * (1.0f - alpha);
+            finalColour += SkyColour * (1.0f - totalAlpha);
         }
 
+        // Clamp to 1.0 to prevent integer wrapping
         for(int i = 0; i < 4; i++)
         {
             finalColour[i] = glm::min(finalColour[i], 1.0f);

@@ -5,7 +5,7 @@
 #include "DiscObject.h"
 #include "KdTree.h"
 
-const float SUN_ROTATION_PER_SEC = 20.0f;
+const float SUN_ROTATION_PER_SEC = 10.0f;
 
 SphereObject* sunSphere;
 SphereObject* moonSphere;

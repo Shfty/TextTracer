@@ -14,10 +14,8 @@ bool WorldObject::Intersects(const Ray& ray, IsectData* isectData)
             return intersectsGeometry(ray, isectData);
         }
     }
-    else
-    {
-        return intersectsGeometry(ray, isectData);
-    }
+
+    return intersectsGeometry(ray, isectData);
 }
 
 bool WorldObject::intersectsAABB(const Ray& ray)

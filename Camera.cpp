@@ -10,7 +10,6 @@ Camera::Camera(const int width, const int height, const glm::vec3& position, con
     :SphereObject(position, rotation, 1.0f, false), Width(width), Height(height)
 {
     ObjectColour = glm::vec4(1, 1, 1, 1);
-    Fullbright = true;
     FOV.x = fov;
     FOV.y = ((float)Height / (float)Width) * FOV.x;
 }
@@ -87,10 +86,6 @@ void Camera::Update(const std::vector<WorldObject*>& worldObjects, const float d
             }
         }
 
-        glm::vec3 dm = m_position - prevPos;
-        DebugBox::GetInstance().Message << "Distance Moved: " << dm.x << "Y: " << dm.y << "Z: " << dm.z;
-        DebugBox::GetInstance().WriteMessage(24, 1);
-
         if(nearestPortalIdx != -1)
         {
             // Compute angular difference between portals
@@ -119,7 +114,7 @@ void Camera::Update(const std::vector<WorldObject*>& worldObjects, const float d
             DebugBox::GetInstance().Message << "Distance Through: X: " << distanceThroughPortalRotated.x << "Y: " << distanceThroughPortalRotated.y << "Z: " << distanceThroughPortalRotated.z;
             DebugBox::GetInstance().WriteMessage(24, 2);
 
-            glm::vec3 outPosition = exitPoint + distanceThroughPortal;
+            glm::vec3 outPosition = exitPoint + distanceThroughPortalRotated;
 
             SetPosition(outPosition);
             xRotMat *= newRotation;

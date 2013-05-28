@@ -19,10 +19,8 @@ bool DiscObject::IntersectsPortal(const Ray& ray, IsectData* isectData, const gl
             return intersectsGeometry(ray, isectData);
         }
     }
-    else
-    {
-        return intersectsGeometry(ray, isectData);
-    }
+
+    return intersectsGeometry(ray, isectData);
 }
 
 void DiscObject::SetPosition(const glm::vec3& position)
