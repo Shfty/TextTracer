@@ -5,7 +5,7 @@
 		<Option title="TextTracer" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="Headers\;Sources\;" />
+		<Option virtualFolders="Headers\;Sources\;Headers\Debug\;Headers\Objects\;Headers\Raytracer\;Headers\Geometry\;Headers\Input\;Headers\Scenes\;Headers\Framebuffer\;Sources\Debug\;Sources\Framebuffer\;Sources\Geometry\;Sources\Input\;Sources\Objects\;Sources\Raytracer\;Sources\Scenes\;" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/TextTracer" prefix_auto="1" extension_auto="1" />
@@ -46,51 +46,141 @@
 			<Add library="glu32" />
 			<Add library="gdi32" />
 		</Linker>
-		<Unit filename="AABB.cpp" />
-		<Unit filename="AABB.h" />
-		<Unit filename="Camera.cpp" />
-		<Unit filename="Camera.h" />
-		<Unit filename="ConsoleFramebuffer.cpp" />
-		<Unit filename="ConsoleFramebuffer.h" />
-		<Unit filename="ConvexPolyGeometry.cpp" />
-		<Unit filename="ConvexPolyGeometry.h" />
-		<Unit filename="ConvexPolyObject.cpp" />
-		<Unit filename="ConvexPolyObject.h" />
-		<Unit filename="DebugBox.cpp" />
-		<Unit filename="DebugBox.h" />
-		<Unit filename="DiscGeometry.cpp" />
-		<Unit filename="DiscGeometry.h" />
-		<Unit filename="DiscObject.cpp" />
-		<Unit filename="DiscObject.h" />
-		<Unit filename="Framebuffer.h" />
-		<Unit filename="GLFWFramebuffer.cpp" />
-		<Unit filename="GLFWFramebuffer.h" />
-		<Unit filename="Geometry.cpp" />
-		<Unit filename="Geometry.h" />
-		<Unit filename="IsectData.h" />
-		<Unit filename="KdTree.cpp" />
-		<Unit filename="KdTree.h" />
-		<Unit filename="Keyboard.h" />
-		<Unit filename="PlaneGeometry.cpp" />
-		<Unit filename="PlaneGeometry.h" />
-		<Unit filename="PlaneObject.cpp" />
-		<Unit filename="PlaneObject.h" />
-		<Unit filename="Ray.h" />
-		<Unit filename="Raytracer.cpp" />
-		<Unit filename="Raytracer.h" />
-		<Unit filename="Scene.cpp" />
-		<Unit filename="Scene.h" />
-		<Unit filename="SphereGeometry.cpp" />
-		<Unit filename="SphereGeometry.h" />
-		<Unit filename="SphereObject.cpp" />
-		<Unit filename="SphereObject.h" />
-		<Unit filename="TestScene.cpp" />
-		<Unit filename="TestScene.h" />
-		<Unit filename="TextTracer.cpp" />
-		<Unit filename="TextTracer.h" />
-		<Unit filename="Vector3D.h" />
-		<Unit filename="WorldObject.cpp" />
-		<Unit filename="WorldObject.h" />
+		<Unit filename="AABB.cpp">
+			<Option virtualFolder="Sources/Geometry/" />
+		</Unit>
+		<Unit filename="AABB.h">
+			<Option virtualFolder="Headers/Geometry/" />
+		</Unit>
+		<Unit filename="Camera.cpp">
+			<Option virtualFolder="Sources/Objects/" />
+		</Unit>
+		<Unit filename="Camera.h">
+			<Option virtualFolder="Headers/Objects/" />
+		</Unit>
+		<Unit filename="ConsoleFramebuffer.cpp">
+			<Option virtualFolder="Sources/Framebuffer/" />
+		</Unit>
+		<Unit filename="ConsoleFramebuffer.h">
+			<Option virtualFolder="Headers/Framebuffer/" />
+		</Unit>
+		<Unit filename="ConvexPolyGeometry.cpp">
+			<Option virtualFolder="Sources/Geometry/" />
+		</Unit>
+		<Unit filename="ConvexPolyGeometry.h">
+			<Option virtualFolder="Headers/Geometry/" />
+		</Unit>
+		<Unit filename="ConvexPolyObject.cpp">
+			<Option virtualFolder="Sources/Objects/" />
+		</Unit>
+		<Unit filename="ConvexPolyObject.h">
+			<Option virtualFolder="Headers/Objects/" />
+		</Unit>
+		<Unit filename="DebugBox.cpp">
+			<Option virtualFolder="Sources/Debug/" />
+		</Unit>
+		<Unit filename="DebugBox.h">
+			<Option virtualFolder="Headers/Debug/" />
+		</Unit>
+		<Unit filename="DiscGeometry.cpp">
+			<Option virtualFolder="Sources/Geometry/" />
+		</Unit>
+		<Unit filename="DiscGeometry.h">
+			<Option virtualFolder="Headers/Geometry/" />
+		</Unit>
+		<Unit filename="DiscObject.cpp">
+			<Option virtualFolder="Sources/Objects/" />
+		</Unit>
+		<Unit filename="DiscObject.h">
+			<Option virtualFolder="Headers/Objects/" />
+		</Unit>
+		<Unit filename="Framebuffer.h">
+			<Option virtualFolder="Headers/Framebuffer/" />
+		</Unit>
+		<Unit filename="GLFWFramebuffer.cpp">
+			<Option virtualFolder="Sources/Framebuffer/" />
+		</Unit>
+		<Unit filename="GLFWFramebuffer.h">
+			<Option virtualFolder="Headers/Framebuffer/" />
+		</Unit>
+		<Unit filename="Geometry.cpp">
+			<Option virtualFolder="Sources/Geometry/" />
+		</Unit>
+		<Unit filename="Geometry.h">
+			<Option virtualFolder="Headers/Geometry/" />
+		</Unit>
+		<Unit filename="IsectData.h">
+			<Option virtualFolder="Headers/Raytracer/" />
+		</Unit>
+		<Unit filename="KdTree.cpp">
+			<Option virtualFolder="Sources/Scenes/" />
+		</Unit>
+		<Unit filename="KdTree.h">
+			<Option virtualFolder="Headers/Scenes/" />
+		</Unit>
+		<Unit filename="Keyboard.cpp">
+			<Option virtualFolder="Sources/Input/" />
+		</Unit>
+		<Unit filename="Keyboard.h">
+			<Option virtualFolder="Headers/Input/" />
+		</Unit>
+		<Unit filename="PlaneGeometry.cpp">
+			<Option virtualFolder="Sources/Geometry/" />
+		</Unit>
+		<Unit filename="PlaneGeometry.h">
+			<Option virtualFolder="Headers/Geometry/" />
+		</Unit>
+		<Unit filename="PlaneObject.cpp">
+			<Option virtualFolder="Sources/Objects/" />
+		</Unit>
+		<Unit filename="PlaneObject.h">
+			<Option virtualFolder="Headers/Objects/" />
+		</Unit>
+		<Unit filename="Ray.h">
+			<Option virtualFolder="Headers/Raytracer/" />
+		</Unit>
+		<Unit filename="Raytracer.cpp">
+			<Option virtualFolder="Sources/Raytracer/" />
+		</Unit>
+		<Unit filename="Raytracer.h">
+			<Option virtualFolder="Headers/Raytracer/" />
+		</Unit>
+		<Unit filename="Scene.cpp">
+			<Option virtualFolder="Sources/Scenes/" />
+		</Unit>
+		<Unit filename="Scene.h">
+			<Option virtualFolder="Headers/Scenes/" />
+		</Unit>
+		<Unit filename="SphereGeometry.cpp">
+			<Option virtualFolder="Sources/Geometry/" />
+		</Unit>
+		<Unit filename="SphereGeometry.h">
+			<Option virtualFolder="Headers/Geometry/" />
+		</Unit>
+		<Unit filename="SphereObject.cpp">
+			<Option virtualFolder="Sources/Objects/" />
+		</Unit>
+		<Unit filename="SphereObject.h">
+			<Option virtualFolder="Headers/Objects/" />
+		</Unit>
+		<Unit filename="TestScene.cpp">
+			<Option virtualFolder="Sources/Scenes/" />
+		</Unit>
+		<Unit filename="TestScene.h">
+			<Option virtualFolder="Headers/Scenes/" />
+		</Unit>
+		<Unit filename="TextTracer.cpp">
+			<Option virtualFolder="Sources/" />
+		</Unit>
+		<Unit filename="TextTracer.h">
+			<Option virtualFolder="Headers/" />
+		</Unit>
+		<Unit filename="WorldObject.cpp">
+			<Option virtualFolder="Sources/Objects/" />
+		</Unit>
+		<Unit filename="WorldObject.h">
+			<Option virtualFolder="Headers/Objects/" />
+		</Unit>
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
