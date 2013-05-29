@@ -42,10 +42,10 @@ TestScene::TestScene()
     ConvexPolyObject* polyPortalOutOutline = new ConvexPolyObject(glm::vec3(10, 0, -50), glm::rotate(90.0f, glm::vec3(0, 1, 0)), 5.0f, 5, true);
 
     polyPortalIn->SetExitPortal(polyPortalOut);
-    polyPortalIn->AddChild(polyPortalInOutline);
+    polyPortalInOutline->GetGeometry()->SetCSGSubtract(polyPortalIn->GetGeometry());
 
     polyPortalOut->SetExitPortal(polyPortalIn);
-    polyPortalOut->AddChild(polyPortalOutOutline);
+    polyPortalOutOutline->GetGeometry()->SetCSGSubtract(polyPortalOut->GetGeometry());
 
     m_staticObjects.push_back(polyPortalIn);
     m_staticObjects.push_back(polyPortalInOutline);
@@ -59,10 +59,8 @@ TestScene::TestScene()
     SphereObject* spherePortalOutOutline = new SphereObject(glm::vec3(-20, 0, -20), glm::mat4(), 6.0f, true);
 
     spherePortalIn->SetExitPortal(spherePortalOut);
-    spherePortalIn->AddChild(spherePortalInOutline);
 
     spherePortalOut->SetExitPortal(spherePortalIn);
-    spherePortalOut->AddChild(spherePortalOutOutline);
 
     m_staticObjects.push_back(spherePortalIn);
     m_staticObjects.push_back(spherePortalInOutline);
@@ -76,12 +74,12 @@ TestScene::TestScene()
     DiscObject* discPortalOutOutline = new DiscObject(glm::vec3(-20, -15, 39), glm::rotate(180.0f, glm::vec3(0, 1, 0)), 5.0f, true);
 
     discPortalIn->SetExitPortal(discPortalOut);
-    discPortalIn->AddChild(discPortalInOutline);
+    discPortalInOutline->GetGeometry()->SetCSGSubtract(discPortalIn->GetGeometry());
     discPortalInOutline->SetColour(glm::vec4(1, 0.65, 0, 1));
     discPortalInOutline->Fullbright = true;
 
     discPortalOut->SetExitPortal(discPortalIn);
-    discPortalOut->AddChild(discPortalOutOutline);
+    discPortalOutOutline->GetGeometry()->SetCSGSubtract(discPortalOut->GetGeometry());
     discPortalOutOutline->SetColour(glm::vec4(0, 1, 1, 1));
     discPortalOutOutline->Fullbright = true;
 

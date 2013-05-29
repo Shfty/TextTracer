@@ -5,7 +5,7 @@
 		<Option title="TextTracer" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="Headers\;" />
+		<Option virtualFolders="Headers\;Sources\;" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/TextTracer" prefix_auto="1" extension_auto="1" />
@@ -52,19 +52,27 @@
 		<Unit filename="Camera.h" />
 		<Unit filename="ConsoleFramebuffer.cpp" />
 		<Unit filename="ConsoleFramebuffer.h" />
+		<Unit filename="ConvexPolyGeometry.cpp" />
+		<Unit filename="ConvexPolyGeometry.h" />
 		<Unit filename="ConvexPolyObject.cpp" />
 		<Unit filename="ConvexPolyObject.h" />
 		<Unit filename="DebugBox.cpp" />
 		<Unit filename="DebugBox.h" />
+		<Unit filename="DiscGeometry.cpp" />
+		<Unit filename="DiscGeometry.h" />
 		<Unit filename="DiscObject.cpp" />
 		<Unit filename="DiscObject.h" />
 		<Unit filename="Framebuffer.h" />
 		<Unit filename="GLFWFramebuffer.cpp" />
 		<Unit filename="GLFWFramebuffer.h" />
+		<Unit filename="Geometry.cpp" />
+		<Unit filename="Geometry.h" />
 		<Unit filename="IsectData.h" />
 		<Unit filename="KdTree.cpp" />
 		<Unit filename="KdTree.h" />
 		<Unit filename="Keyboard.h" />
+		<Unit filename="PlaneGeometry.cpp" />
+		<Unit filename="PlaneGeometry.h" />
 		<Unit filename="PlaneObject.cpp" />
 		<Unit filename="PlaneObject.h" />
 		<Unit filename="Ray.h" />
@@ -72,6 +80,8 @@
 		<Unit filename="Raytracer.h" />
 		<Unit filename="Scene.cpp" />
 		<Unit filename="Scene.h" />
+		<Unit filename="SphereGeometry.cpp" />
+		<Unit filename="SphereGeometry.h" />
 		<Unit filename="SphereObject.cpp" />
 		<Unit filename="SphereObject.h" />
 		<Unit filename="TestScene.cpp" />

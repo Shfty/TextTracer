@@ -23,20 +23,17 @@ public:
     glm::vec4 GetColour() const { return m_geometry->GetColour(); }
     Geometry* GetGeometry() const { return m_geometry; }
     WorldObject* GetExitPortal() const { return m_exitPortal; }
-    std::vector<WorldObject*> GetChildren() const { return m_children; }
 
     void SetPosition(const glm::vec3& position) { m_geometry->SetPosition(position); }
     void SetRotation(const glm::mat4& rotation) { m_geometry->SetRotation(rotation); }
     void SetColour(const glm::vec4& colour) { m_geometry->SetColour(colour); }
     void SetExitPortal(const WorldObject* exitPortal) { m_exitPortal = (WorldObject*)exitPortal; }
 
-    void AddChild(WorldObject* child);
     bool Intersects(const Ray& ray, IsectData* isectData, const Camera* camera, const bool portal);
 
 protected:
     Geometry* m_geometry;
 
-    std::vector<WorldObject*> m_children;
     WorldObject* m_exitPortal = NULL;
 };
 

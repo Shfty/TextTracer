@@ -49,18 +49,6 @@ glm::vec4 Raytracer::traceViewRay(Ray& ray, const std::vector<WorldObject*>& wor
             continue;
         }
 
-        if(ray.ParentObject != NULL)
-        {
-            std::vector<WorldObject*> rayParentChildren = ray.ParentObject->GetChildren();
-            for(uint16_t o = 0; o < rayParentChildren.size(); o++)
-            {
-                if(worldObjects[i] == rayParentChildren[o])
-                {
-                    continue;
-                }
-            }
-        }
-
         IsectData* isectData = new IsectData();
         if(worldObjects[i]->Intersects(ray, isectData, m_camera, false))
         {

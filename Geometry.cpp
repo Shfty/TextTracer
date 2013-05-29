@@ -2,6 +2,8 @@
 
 bool Geometry::Intersects(const Ray& ray, IsectData* isectData, const Camera* camera, const bool portal)
 {
+    if(m_csgSubtract != NULL && m_csgSubtract->Intersects(ray, isectData, camera, portal)) return false;
+
     if(UseBoundingBox)
     {
         if(intersectsAABB(ray))

@@ -3,7 +3,10 @@
 Text Tracer - A real-time raytracer
 TODO:
 Universal portal transport for all ray types (shadow esp.)
-PhysicsObjectl
+PhysicsObject
+Store intersection normal in isectData
+Specular lighting
+Separate 2D geometry into it's own base class (or use PlaneObject)
 
 kD Tree Refactoring
     -Construct AABBs using splitting plane and furthest object instead of just objects

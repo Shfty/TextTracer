@@ -23,6 +23,7 @@ public:
     virtual void SetRotation(const glm::mat4& rotation) = 0;
     void SetColour(const glm::vec4& colour) { m_colour = colour; }
     void SetUseBoundingBox(const bool useBBox) { m_useBBox = useBBox; }
+    void SetCSGSubtract(const Geometry* csgSubtract) { m_csgSubtract = (Geometry*)csgSubtract; }
 
     bool Intersects(const Ray& ray, IsectData* isectData, const Camera* camera, const bool portal);
 
@@ -39,6 +40,8 @@ protected:
     glm::mat4 m_rotation;
     glm::vec4 m_colour;
     bool m_useBBox;
+
+    Geometry* m_csgSubtract = NULL;
 };
 
 #endif // GEOMETRY_H

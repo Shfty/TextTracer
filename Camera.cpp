@@ -7,7 +7,7 @@
 #include "Ray.h"
 
 Camera::Camera(const int width, const int height, const glm::vec3& position, const glm::mat4& rotation, const float fov)
-    :SphereObject(position, rotation, 5.0f, false), Width(width), Height(height)
+    :SphereObject(position, rotation, 2.0f, false), Width(width), Height(height)
 {
     SetColour(glm::vec4(1, 1, 1, 1));
     FOV.x = fov;
