@@ -9,35 +9,35 @@ GLFWFramebuffer::GLFWFramebuffer(const int width, const int height)
 {
     glfwInit();
 
+    // Calculate window size and attempt to open
     GLFWvidmode vm;
     glfwGetDesktopMode(&vm);
     float ar = (float)width / (float)height;
     float windowWidth = vm.Width / 2;
-    float windowHeight = (vm.Height / 2) * ar;
+    float windowHeight = vm.Height / 2 * ar;
 
-    if( !glfwOpenWindow( vm.Width / 2, (vm.Height / 2) * ar, 0, 0, 0, 0, 0, 0, GLFW_WINDOW ) )
+    if( !glfwOpenWindow( windowWidth, windowHeight, 0, 0, 0, 0, 0, 0, GLFW_WINDOW ) )
     {
         glfwTerminate();
     }
 
+    // Position centrally
     glfwSetWindowPos(vm.Width / 2 - windowWidth / 2, vm.Height / 2 - windowHeight / 2);
 
     glfwSetWindowTitle("TextTracer");
 
-    // Setup screen texture
+    // Init screen texture
     m_screenBuffer = new GLubyte[width * height * 3];
-
     glGenTextures(1, &m_screenTexture);
     glBindTexture(GL_TEXTURE_2D, m_screenTexture);
 
+    // Setup texture parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-
-    //Populate with blank cells to ensure sanity
+    //Clear screen to ensure sanity
     Clear();
 }
 

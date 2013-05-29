@@ -7,38 +7,41 @@
 #include "Ray.h"
 
 Camera::Camera(const int width, const int height, const glm::vec3& position, const glm::mat4& rotation, const float fov)
-    :SphereObject(position, rotation, 1.0f, false), Width(width), Height(height)
+    :SphereObject(position, rotation, 5.0f, false), Width(width), Height(height)
 {
-    ObjectColour = glm::vec4(1, 1, 1, 1);
+    SetColour(glm::vec4(1, 1, 1, 1));
     FOV.x = fov;
     FOV.y = ((float)Height / (float)Width) * FOV.x;
 }
 
 void Camera::Update(const std::vector<WorldObject*>& worldObjects, const float deltaTime)
 {
-    prevPos = m_position;
+    prevPos = GetPosition();
+    glm::vec3 newPos = prevPos;
 
     // Movement
     float positionChange = TRANS_UNITS_PER_SEC * deltaTime;
 
     if(Keyboard::IsKeyDown('A'))
     {
-        m_position += glm::vec3(xRotMat * glm::vec4(-positionChange, 0, 0, 1.0f));
+        newPos += glm::vec3(xRotMat * glm::vec4(-positionChange, 0, 0, 1.0f));
     }
 
     if(Keyboard::IsKeyDown('D'))
     {
-        m_position += glm::vec3(xRotMat * glm::vec4(positionChange, 0, 0, 1.0f));
+        newPos += glm::vec3(xRotMat * glm::vec4(positionChange, 0, 0, 1.0f));
     }
     if(Keyboard::IsKeyDown('W'))
     {
-        m_position += glm::vec3(xRotMat * glm::vec4(0, 0, -positionChange, 1.0f));
+        newPos += glm::vec3(xRotMat * glm::vec4(0, 0, -positionChange, 1.0f));
     }
 
     if(Keyboard::IsKeyDown('S'))
     {
-        m_position += glm::vec3(xRotMat * glm::vec4(0, 0, positionChange, 1.0f));
+        newPos += glm::vec3(xRotMat * glm::vec4(0, 0, positionChange, 1.0f));
     }
+
+    SetPosition(newPos);
 
     // Rotation
     float rotationChange = ROT_UNITS_PER_SEC * deltaTime;
@@ -63,27 +66,50 @@ void Camera::Update(const std::vector<WorldObject*>& worldObjects, const float d
         yRotMat *= glm::rotate(glm::mat4(), rotationChange, glm::vec3(1, 0, 0));
     }
 
-    //Portal Intersection
-    if(m_position != prevPos)
+    // WorldObject Intersection
+    if(GetPosition() != prevPos)
     {
-        glm::vec3 heading = m_position - prevPos;
+        glm::vec3 heading = GetPosition() - prevPos;
         Ray ray(prevPos, glm::normalize(heading), 0.0f, heading.length(), NULL);
         IsectData* isectData = new IsectData();
+        int nearestObjectIdx = -1;
         int nearestPortalIdx = -1;
 
         for(uint16_t i = 0; i < worldObjects.size(); i++)
         {
-            if(worldObjects[i]->GetExitPortal() == NULL) // Not a portal
+            if(worldObjects[i] == this)
             {
                 continue;
             }
+
+            if(worldObjects[i]->GetExitPortal() == NULL) // Not a portal
+            {
+                /*
+                if(worldObjects[i]->Intersects(ray, isectData))
+                {
+                    nearestObjectIdx = i;
+                }
+                */
+            }
             else
             {
-                if(worldObjects[i]->IntersectsPortal(ray, isectData, m_rotation))
+                if(worldObjects[i]->GetGeometry()->Intersects(ray, isectData, this, true))
                 {
                     nearestPortalIdx = i;
                 }
             }
+        }
+
+        if(nearestObjectIdx != -1)
+        {
+            /*
+            glm::vec3 heading = isectData->Entry - prevPos;
+            if(heading.length() <= m_radius)
+            {
+                glm::vec3 inverseTravel = ray.Direction * (heading.length() - m_radius);
+                SetPosition(m_position + inverseTravel);
+            }
+            */
         }
 
         if(nearestPortalIdx != -1)
@@ -108,7 +134,7 @@ void Camera::Update(const std::vector<WorldObject*>& worldObjects, const float d
             glm::vec3 exitPoint = entryPointLocalRotated + worldObjects[nearestPortalIdx]->GetExitPortal()->GetPosition();
 
             // Compute travel distance
-            glm::vec3 distanceThroughPortal = isectData->Entry - m_position;
+            glm::vec3 distanceThroughPortal = isectData->Entry - GetPosition();
             glm::vec3 distanceThroughPortalRotated = glm::vec3(newRotation * glm::vec4(distanceThroughPortal, 1.0f));
 
             DebugBox::GetInstance().Message << "Distance Through: X: " << distanceThroughPortalRotated.x << "Y: " << distanceThroughPortalRotated.y << "Z: " << distanceThroughPortalRotated.z;

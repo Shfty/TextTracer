@@ -3,28 +3,18 @@
 
 #include <vector>
 #include "WorldObject.h"
+#include "DiscGeometry.h"
 
 class DiscObject : public WorldObject
 {
 public:
     DiscObject(const glm::vec3& position, const glm::mat4& rotation, const float scale, const bool twoSided);
 
-    bool IntersectsPortal(const Ray& ray, IsectData* isectData, const glm::mat4& cameraRotation);
+    bool GetTwoSided() { return dynamic_cast<DiscGeometry*>(m_geometry)->GetTwoSided(); }
+    float GetScale() { return dynamic_cast<DiscGeometry*>(m_geometry)->GetScale(); }
 
-    void SetPosition(const glm::vec3& position);
-    void SetRotation(const glm::mat4& rotation);
-
-    float Scale;
-    bool TwoSided;
-
-private:
-    void calculateAABB();
-    bool intersectsGeometry(const Ray& ray, IsectData* isectData);
-    void calculateWorldNormalDotPosition();
-
-    glm::vec3 m_objectNormal = glm::vec3(0, 0, 1);
-    glm::vec3 m_worldNormal = glm::vec3(0, 0, 1);
-    float m_worldNormalDotPosition = 0;
+    void SetTwoSided(const bool twoSided) { dynamic_cast<DiscGeometry*>(m_geometry)->SetTwoSided(twoSided); }
+    void SetScale(const float scale) { dynamic_cast<DiscGeometry*>(m_geometry)->SetScale(scale); }
 };
 
 #endif // DISCOBJECT_H

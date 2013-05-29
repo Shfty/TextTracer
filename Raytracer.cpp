@@ -62,7 +62,7 @@ glm::vec4 Raytracer::traceViewRay(Ray& ray, const std::vector<WorldObject*>& wor
         }
 
         IsectData* isectData = new IsectData();
-        if(worldObjects[i]->Intersects(ray, isectData))
+        if(worldObjects[i]->Intersects(ray, isectData, m_camera, false))
         {
             intersections.push_back(isectData);
         }
@@ -110,7 +110,7 @@ glm::vec4 Raytracer::traceViewRay(Ray& ray, const std::vector<WorldObject*>& wor
         glm::vec4 finalColour = glm::vec4(0);
         for(uint16_t i = 0; i < intersections.size(); i++)
         {
-            glm::vec4 objectColour = intersections[i]->Colour;
+            glm::vec4 Colour = intersections[i]->Colour;
             float objectAlpha = intersections[i]->Colour.a;
 
 #ifndef DISABLE_LIGHTING
@@ -130,14 +130,14 @@ glm::vec4 Raytracer::traceViewRay(Ray& ray, const std::vector<WorldObject*>& wor
                     brightness = diffuseFactor + AmbientIntensity;
                 }
 
-                objectColour *= SkyLightColour;
-                objectColour *= AmbientLightColour;
-                objectColour *= brightness;
-                objectColour *= objectAlpha;
+                Colour *= SkyLightColour;
+                Colour *= AmbientLightColour;
+                Colour *= brightness;
+                Colour *= objectAlpha;
             }
 #endif // DISABLE_LIGHTING
 
-            finalColour += objectColour;
+            finalColour += Colour;
         }
 
         if(totalAlpha < 1.0f)
@@ -193,7 +193,7 @@ bool Raytracer::traceShadowRay(Ray& ray, const std::vector<WorldObject*>& worldO
 
         if(!worldObjects[i]->CastShadow) continue;
 
-        if(worldObjects[i]->Intersects(ray, (IsectData*)NULL))
+        if(worldObjects[i]->Intersects(ray, (IsectData*)NULL, m_camera, false))
         {
             return true;
         }
@@ -208,7 +208,7 @@ bool Raytracer::traceHitRay(Ray& ray, const std::vector<WorldObject*>& worldObje
     {
         if(worldObjects[i] == ray.ParentObject) continue;
 
-        if(worldObjects[i]->Intersects(ray, (IsectData*)NULL))
+        if(worldObjects[i]->Intersects(ray, (IsectData*)NULL, m_camera, false))
         {
             return true;
         }

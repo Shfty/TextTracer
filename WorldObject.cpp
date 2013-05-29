@@ -1,32 +1,21 @@
 #include "WorldObject.h"
+#include "IsectData.h"
 
 void WorldObject::AddChild(WorldObject* child)
 {
     child->Parent = this; m_children.push_back(child);
 }
 
-bool WorldObject::Intersects(const Ray& ray, IsectData* isectData)
+bool WorldObject::Intersects(const Ray& ray, IsectData* isectData, const Camera* camera, const bool portal)
 {
-    if(UseBoundingBox)
+    if(m_geometry->Intersects(ray, isectData, camera, portal))
     {
-        if(intersectsAABB(ray))
+        if(isectData != NULL)
         {
-            return intersectsGeometry(ray, isectData);
+            isectData->Object = this;
         }
-    }
-
-    return intersectsGeometry(ray, isectData);
-}
-
-bool WorldObject::intersectsAABB(const Ray& ray)
-{
-    // If the object has a bounding box of size 0 (aka no bounding box/disabled), return true
-    if(m_bounds.Min == glm::vec3() && m_bounds.Max == glm::vec3())
-    {
         return true;
     }
-    else
-    {
-        return m_bounds.Intersects(ray);
-    }
+
+    return false;
 }

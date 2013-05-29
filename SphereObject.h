@@ -5,25 +5,18 @@
 
 #include "DebugBox.h"
 #include "WorldObject.h"
+#include "SphereGeometry.h"
 
 class SphereObject : public WorldObject
 {
 public:
     SphereObject(const glm::vec3& position, const glm::mat4& rotation, const float radius, const bool backface);
 
-    bool IntersectsPortal(const Ray& ray, IsectData* isectData, const glm::mat4& cameraRotation);
+    float GetRadius() { return dynamic_cast<SphereGeometry*>(m_geometry)->GetRadius(); }
+    float GetBackface() { return dynamic_cast<SphereGeometry*>(m_geometry)->GetBackface(); }
 
-    void SetPosition(const glm::vec3& position);
-    void SetRotation(const glm::mat4& rotation) { m_rotation = rotation; }
-    void SetRadius(const float radius);
-
-    bool Backface = false;
-
-private:
-    void calculateAABB();
-    bool intersectsGeometry(const Ray& ray, IsectData* isectData);
-
-    float m_radius = 1.0f;
+    void SetRadius(const float radius) { dynamic_cast<SphereGeometry*>(m_geometry)->SetRadius(radius); }
+    void SetBackface(const bool backface) { dynamic_cast<SphereGeometry*>(m_geometry)->SetBackface(backface); }
 };
 
 #endif // SPHEREOBJECT_H

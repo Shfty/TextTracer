@@ -3,7 +3,7 @@
 
 #include <glm/glm.hpp>
 
-#include "WorldObject.h"
+#include "IsectData.h"
 
 struct distanceSortPredicate
 {
