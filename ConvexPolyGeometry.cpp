@@ -146,7 +146,9 @@ bool ConvexPolyGeometry::intersectsGeometry(const Ray& ray, IsectData* isectData
     {
         isectData->Distance = t;
         isectData->Entry = ray.Origin + ray.Direction * t;
-        isectData->Exit = ray.Origin + ray.Direction * t;
+        isectData->EntryNormal = m_worldNormal * (nDotRay > 0 ? 1.0f : -1.0f);
+        isectData->Exit = isectData->Entry;
+        isectData->ExitNormal = isectData->EntryNormal;
         isectData->Colour = m_colour;
     }
     return true;

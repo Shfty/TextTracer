@@ -106,7 +106,19 @@ glm::vec4 Raytracer::traceViewRay(Ray& ray, const std::vector<WorldObject*>& wor
             {
                 Ray shadowRay(intersections[i]->Entry, -glm::normalize(SkyLightDirection), NEAR_PLANE, FAR_PLANE, intersections[i]->Object);
                 bool occluded = traceShadowRay(shadowRay, worldObjects);
-                float diffuseFactor = glm::max(0.0f, glm::dot(ray.Direction, glm::normalize(SkyLightDirection)));
+
+                // Diffuse
+                float diffuseFactor = glm::max(0.0f, glm::dot(intersections[i]->EntryNormal, glm::normalize(SkyLightDirection)));
+
+                // Specular
+                float specularFactor = 0;
+                if(diffuseFactor > 0)
+                {
+                    glm::vec3 intersectionToOrigin = glm::normalize(ray.Origin - intersections[i]->Entry);
+                    glm::vec3 reflectedLight = glm::normalize(glm::reflect(SkyLightDirection, intersections[i]->EntryNormal));
+                    specularFactor = glm::dot(intersectionToOrigin, reflectedLight);
+                    specularFactor = glm::pow(specularFactor, 16.0f);
+                }
 
                 float brightness;
                 if(occluded)
@@ -115,7 +127,7 @@ glm::vec4 Raytracer::traceViewRay(Ray& ray, const std::vector<WorldObject*>& wor
                 }
                 else
                 {
-                    brightness = diffuseFactor + AmbientIntensity;
+                    brightness = specularFactor + diffuseFactor + AmbientIntensity;
                 }
 
                 Colour *= SkyLightColour;

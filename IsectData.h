@@ -10,6 +10,9 @@ struct IsectData
     glm::vec3 Entry;
     glm::vec3 Exit;
 
+    glm::vec3 EntryNormal;
+    glm::vec3 ExitNormal;
+
     float Distance;
     bool Portal = false;
 

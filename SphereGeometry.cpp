@@ -56,7 +56,9 @@ bool SphereGeometry::intersectsGeometry(const Ray& ray, IsectData* isectData, co
             {
                 isectData->Distance = t0;
                 isectData->Entry = ray.Origin + ray.Direction * t0;
+                isectData->EntryNormal = glm::normalize(m_position - isectData->Entry);
                 isectData->Exit = ray.Origin + ray.Direction * t1;
+                isectData->ExitNormal = glm::normalize(m_position - isectData->Exit);
             }
     }
     else
@@ -66,7 +68,9 @@ bool SphereGeometry::intersectsGeometry(const Ray& ray, IsectData* isectData, co
             {
                 isectData->Distance = t1;
                 isectData->Entry = ray.Origin + ray.Direction * t1;
+                isectData->EntryNormal = glm::normalize(isectData->Entry - m_position);
                 isectData->Exit = isectData->Entry;
+                isectData->ExitNormal = isectData->EntryNormal;
             }
     }
 

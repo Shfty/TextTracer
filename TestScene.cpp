@@ -125,6 +125,11 @@ TestScene::TestScene()
     transDisc4->SetColour(glm::vec4(1, 1, 1, 0.2f));
     m_staticObjects.push_back(transDisc4);
 
+    // Floating Sphere
+    SphereObject* testSphere = new SphereObject(glm::vec3(20, 0, 20), glm::mat4(), 5.0f, false);
+    testSphere->SetColour(glm::vec4(0.2f, 0.5, 0.2f, 1));
+    m_staticObjects.push_back(testSphere);
+
     // STATIC TREE
     initStaticTree();
 

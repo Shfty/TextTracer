@@ -4,8 +4,9 @@ Text Tracer - A real-time raytracer
 TODO:
 Universal portal transport for all ray types (shadow esp.)
 PhysicsObject
-Store intersection normal in isectData
-Specular lighting
+Material class for storing lighting factors, reflectiveness etc
+Reflectiveness
+Fix lighting + cumulative opacity issue (overlaid discs)
 Separate 2D geometry into it's own base class (or use PlaneObject)
 
 kD Tree Refactoring
