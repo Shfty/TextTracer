@@ -3,9 +3,9 @@
 #include "KdTree.h"
 #include "ConvexPolyObject.h"
 
-KdTree::KdTree(const std::vector<WorldObject*>& worldObjects)
+KdTree::KdTree(const AABB& bounds, const std::vector<WorldObject*>& worldObjects)
 {
-    GenTree(worldObjects);
+    GenTree(bounds, worldObjects);
 }
 
 KdTree::~KdTree()
@@ -13,9 +13,9 @@ KdTree::~KdTree()
     delete m_rootNode;
 }
 
-void KdTree::GenTree(const std::vector<WorldObject*>& worldObjects)
+void KdTree::GenTree(const AABB& bounds, const std::vector<WorldObject*>& worldObjects)
 {
-    m_rootNode = genNode(worldObjects, NULL, 0);
+    m_rootNode = genNode(bounds, worldObjects, NULL, 0);
 }
 
 /*
@@ -83,15 +83,14 @@ KdNode* KdTree::depthFirst(const glm::vec3& position, const KdNode* currentNode,
 }
 */
 
-KdNode* KdTree::genNode(const std::vector<WorldObject*>& worldObjects, const KdNode* parentNode, const int depth)
+KdNode* KdTree::genNode(const AABB& bounds, const std::vector<WorldObject*>& worldObjects, const KdNode* parentNode, const int depth)
 {
     if(worldObjects.size() == 0) return NULL;
 
-    int axis = depth % 3;
-
+    // Sort the objects from near-far in the current splitAxis
+    int splitAxis = depth % 3;
     std::vector<WorldObject*> sortedObjects = worldObjects;
-
-    switch(axis)
+    switch(splitAxis)
     {
     case 0:
         std::sort(sortedObjects.begin(), sortedObjects.end(), xAxisSortPredicate());
@@ -106,60 +105,58 @@ KdNode* KdTree::genNode(const std::vector<WorldObject*>& worldObjects, const KdN
         break;
     }
 
-    float axisAverage = (sortedObjects[0]->GetPosition()[axis] + sortedObjects[sortedObjects.size() - 1]->GetPosition()[axis]) / 2;
-    std::vector<WorldObject*> leftObjects;
-    std::vector<WorldObject*> rightObjects;
-
-    glm::vec3 minBound = sortedObjects[0]->GetPosition();
-    glm::vec3 maxBound = minBound;
-
+    // Find the average of the objects positions in the current splitAxis
+    float splitPosition = 0;
     for(uint16_t i = 0; i < sortedObjects.size(); i++)
     {
-        WorldObject* object = sortedObjects[i];
-        glm::vec3 objectPosition = object->GetPosition();
-        for(uint16_t o = 0; o < 3; o++)
-        {
-            if(objectPosition[o] < minBound[o])
-            {
-                minBound[o] = objectPosition[o];
-            }
+        splitPosition += sortedObjects[i]->GetPosition()[splitAxis];
+    }
+    splitPosition /= sortedObjects.size();
 
-            if(objectPosition[o] > maxBound[o])
-            {
-                maxBound[o] = objectPosition[o];
-            }
-        }
+    // Sort the objects into left/right relative to the split position
+    std::vector<WorldObject*> leftObjects;
+    std::vector<WorldObject*> rightObjects;
+    for(uint16_t i = 0; i < sortedObjects.size(); i++)
+    {
+        glm::vec3 objectPosition = sortedObjects[i]->GetPosition();
 
-        if(objectPosition[axis] < axisAverage)
+        if(objectPosition[splitAxis] < splitPosition)
         {
             leftObjects.push_back(worldObjects[i]);
         }
-        else if(objectPosition[axis] > axisAverage)
+        else if(objectPosition[splitAxis] > splitPosition)
         {
             rightObjects.push_back(worldObjects[i]);
         }
     }
 
-    AABB box = AABB(minBound, maxBound);
-    KdNode* node = new KdNode(box, parentNode, axis);
+    // Generate node
+    KdNode* node = new KdNode(splitAxis, splitPosition, parentNode);
 
-    if(parentNode == NULL)
+    if(leftObjects.size() > 0)
     {
-        node->Root = true;
+        AABB leftBounds;
+        leftBounds.Min = bounds.Min;
+        leftBounds.Max = bounds.Max;
+        leftBounds.Max[splitAxis] = splitPosition;
+        node->LeftChild = genNode(leftBounds, leftObjects, node, depth + 1);
     }
 
-    if(leftObjects.size() + rightObjects.size() > 0)
+    if(rightObjects.size() > 0)
     {
-        node->LeftChild = genNode(leftObjects, node, depth + 1);
-        node->RightChild = genNode(rightObjects, node, depth + 1);
+        AABB rightBounds;
+        rightBounds.Min = bounds.Min;
+        rightBounds.Max = bounds.Max;
+        rightBounds.Min[splitAxis] = splitPosition;
+        node->RightChild = genNode(rightBounds, rightObjects, node, depth + 1);
     }
-    else
+
+    if(leftObjects.size() + rightObjects.size() == 0)
     {
         node->Leaf = true;
     }
-/*
-    glm::vec3 nodePosition = node->Object->GetPosition();
-    std::cout << (node->Leaf ? "Leaf " : "") << (node->Root ? "Root " : "") << "Node at depth " << depth << ": X: " << nodePosition.x << " Y: " << nodePosition.y << " Z: " << nodePosition.z << std::endl;
-*/
+
+    node->Bounds = bounds;
+
     return node;
 }

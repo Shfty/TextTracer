@@ -12,15 +12,15 @@ struct KdNode
     KdNode* Parent = NULL;
     KdNode* LeftChild = NULL;
     KdNode* RightChild = NULL;
-    int Axis = 0;
-    bool Root = false;
+    float SplitPosition = 0;
+    int SplitAxis = 0;
     bool Leaf = false;
 
-    KdNode(const AABB& bounds, const KdNode* parent, const int axis)
+    KdNode(const int splitAxis, const float splitPos, const KdNode* parent)
     {
-        Bounds = bounds;
+        SplitAxis = splitAxis;
+        SplitPosition = splitPos;
         Parent = (KdNode*)parent;
-        Axis = axis;
     }
 
     ~KdNode()
@@ -62,18 +62,16 @@ class KdTree
 {
 public:
     KdTree() {}
-    KdTree(const std::vector<WorldObject*>& worldObjects);
+    KdTree(const AABB& bounds, const std::vector<WorldObject*>& worldObjects);
     ~KdTree();
 
     KdNode* GetRootNode() const { return m_rootNode; }
 
-    void GenTree(const std::vector<WorldObject*>& worldObjects);
-    KdNode* NearestNeighbour(const glm::vec3& position, const KdNode* rootNode);
-
-    std::vector<WorldObject*> SplittingPlanes;
+    void GenTree(const AABB& bounds, const std::vector<WorldObject*>& worldObjects);
+    //KdNode* NearestNeighbour(const glm::vec3& position, const KdNode* rootNode);
 
 private:
-    KdNode* genNode(const std::vector<WorldObject*>& worldObjects, const KdNode* parentNode, const int depth);
+    KdNode* genNode(const AABB& bounds, const std::vector<WorldObject*>& worldObjects, const KdNode* parentNode, const int depth);
     KdNode* depthFirst(const glm::vec3& position, const KdNode* currentNode, const int depth);
 
     KdNode* m_rootNode;

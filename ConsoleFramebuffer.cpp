@@ -104,7 +104,7 @@ void ConsoleFramebuffer::setColour(const glm::vec4& colour)
 int ConsoleFramebuffer::nearestWinConsoleColour(glm::vec4 colour)
 {
     float currentDistance = 2.0f;
-    int nearestColour;
+    int nearestColour = 0;
 
     for(uint16_t i = 0; i < m_colourPalette.size(); i++)
     {

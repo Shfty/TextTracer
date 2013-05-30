@@ -35,7 +35,7 @@ void PlaneGeometry::calculateWorldNormalDotPosition()
 bool PlaneGeometry::intersectsGeometry(const Ray& ray, IsectData* isectData, const Camera* camera)
 {
     float nDotRay = glm::dot(m_worldNormal, ray.Direction);
-    if(nDotRay == 0 || (nDotRay > 0 && m_twoSided)) return false;
+    if(nDotRay == 0 || (nDotRay > 0 && !m_twoSided)) return false;
 
     float t = - (glm::dot(m_worldNormal, ray.Origin) - m_worldNormalDotPosition) / glm::dot(m_worldNormal, ray.Direction);
 

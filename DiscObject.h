@@ -9,6 +9,7 @@ class DiscObject : public WorldObject
 {
 public:
     DiscObject(const glm::vec3& position, const glm::mat4& rotation, const float scale, const bool twoSided);
+    DiscObject(const glm::vec3& position, const glm::vec3& normal, const float scale, const bool twoSided);
 
     bool GetTwoSided() { return dynamic_cast<DiscGeometry*>(m_geometry)->GetTwoSided(); }
     float GetScale() { return dynamic_cast<DiscGeometry*>(m_geometry)->GetScale(); }

@@ -1,41 +1,87 @@
 #include "AABB.h"
 
 #include "Ray.h"
+#include "Camera.h"
 
-bool AABB::Intersects(const Ray& ray)
+bool AABB::Contains(const glm::vec3& point)
 {
-    glm::vec3 dirfrac;
-
-    // r.dir is unit direction vector of ray
-    dirfrac.x = 1.0f / ray.Direction.x;
-    dirfrac.y = 1.0f / ray.Direction.y;
-    dirfrac.z = 1.0f / ray.Direction.z;
-    // lb is the corner of AABB with minimal coordinates - left bottom, rt is maximal corner
-    // r.org is origin of ray
-    float t1 = (Min.x - ray.Origin.x)*dirfrac.x;
-    float t2 = (Max.x - ray.Origin.x)*dirfrac.x;
-    float t3 = (Min.y - ray.Origin.y)*dirfrac.y;
-    float t4 = (Max.y - ray.Origin.y)*dirfrac.y;
-    float t5 = (Min.z - ray.Origin.z)*dirfrac.z;
-    float t6 = (Max.z - ray.Origin.z)*dirfrac.z;
-
-    float tmin = glm::max(glm::max(glm::min(t1, t2), glm::min(t3, t4)), glm::min(t5, t6));
-    float tmax = glm::min(glm::min(glm::max(t1, t2), glm::max(t3, t4)), glm::max(t5, t6));
-
-    // if tmax < 0, ray (line) is intersecting AABB, but whole AABB is behing us
-    if (tmax < 0)
+    bool contains = true;
+    for(int i = 0; i < 3; i++)
     {
-        //t = tmax;
-        return false;
+        if(point[i] < Min[i] || point[i] > Max[i])
+        {
+            contains = false;
+        }
+    }
+    return contains;
+}
+
+// Simple yes/no intersection for broad-phase collision
+bool AABB::Intersects(const Ray& ray, IsectData* isectData, const Camera* camera)
+{
+    // EZ cases: if the ray starts inside the box, or ends inside
+    // the box, then it definitely hits the box.
+    // I'm using this code for ray tracing with an octree,
+    // so I needed rays that start and end within an
+    // octree node to COUNT as hits.
+    // You could modify this test to (ray starts inside and ends outside)
+    // to qualify as a hit if you wanted to NOT count totally internal rays
+    if( Contains( ray.Origin ) )
+    {
+        if(isectData != NULL)
+        {
+            isectData->Distance = 0;
+            isectData->Entry = ray.Origin;
+            isectData->EntryNormal = glm::vec3(0, 0, 1);
+            isectData->Exit = isectData->Entry;
+            isectData->ExitNormal = isectData->EntryNormal;
+        }
+
+        return true ;
     }
 
-    // if tmin > tmax, ray doesn't intersect AABB
-    if (tmin > tmax)
+    // the algorithm says, find 3 t's,
+    glm::vec3 t ;
+
+    // LARGEST t is the only one we need to test if it's on the face.
+    for( int i = 0 ; i < 3 ; i++ )
     {
-        //t = tmax;
-        return false;
+        if( ray.Direction[i] > 0 ) // CULL BACK FACE
+          t[i] = ( Min[i] - ray.Origin[i] ) / ray.Direction[i] ;
+        else
+          t[i] = ( Max[i] - ray.Origin[i] ) / ray.Direction[i] ;
     }
 
-    //t = tmin;
-    return true;
+    int mi = 0;
+    float val = 0;
+    for(int i = 0; i < 3; i++)
+    {
+        float indexVal = t[i];
+        if(indexVal > val)
+        {
+            val = indexVal;
+            mi = i;
+        }
+    }
+
+    if(t[mi] < ray.NearPlane || t[mi] > ray.FarPlane) return false;
+
+    glm::vec3 pt = ray.Origin + ( ray.Direction * t[mi] ) ;
+
+    // check it's in the box in other 2 dimensions
+    int o1 = ( mi + 1 ) % 3 ; // i=0: o1=1, o2=2, i=1: o1=2,o2=0 etc.
+    int o2 = ( mi + 2 ) % 3 ;
+
+    if((pt[o1] > Min[o1] && pt[o1] < Max[o1]) && (pt[o2] > Min[o2] && pt[o2] < Max[o2]))
+    {
+        if(isectData != NULL)
+        {
+            isectData->Distance = t[mi];
+            isectData->Entry = pt;
+            isectData->Exit = isectData->Entry;
+        }
+        return true;
+    }
+
+    return false ; // the ray did not hit the box.
 }

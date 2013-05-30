@@ -9,7 +9,9 @@ class ConvexPolyObject : public WorldObject
 {
 public:
     ConvexPolyObject(const glm::vec3& position, const glm::mat4& rotation, const float scale, const int sides, const bool twoSided);
+    ConvexPolyObject(const glm::vec3& position, const glm::vec3& normal, const float scale, const int sides, const bool twoSided);
     ConvexPolyObject(const glm::vec3& position, const glm::mat4& rotation, const float scale, const std::vector<glm::vec3>& vertices, const bool twoSided);
+    ConvexPolyObject(const glm::vec3& position, const glm::vec3& normal, const float scale, const std::vector<glm::vec3>& vertices, const bool twoSided);
 
     float GetScale() const { return dynamic_cast<ConvexPolyGeometry*>(m_geometry)->GetScale(); }
     bool GetTwoSided() const { return dynamic_cast<ConvexPolyGeometry*>(m_geometry)->GetTwoSided(); }

@@ -15,6 +15,7 @@
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
+					<Add option="-DLOW_RES" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg -lgmon" />
@@ -38,7 +39,6 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions -std=c++11" />
 			<Add option="-DREALTIME" />
-			<Add option="-DLOW_RES" />
 		</Compiler>
 		<Linker>
 			<Add library="glfw" />
@@ -51,6 +51,18 @@
 		</Unit>
 		<Unit filename="AABB.h">
 			<Option virtualFolder="Headers/Geometry/" />
+		</Unit>
+		<Unit filename="AABBGeometry.cpp">
+			<Option virtualFolder="Sources/Geometry/" />
+		</Unit>
+		<Unit filename="AABBGeometry.h">
+			<Option virtualFolder="Headers/Geometry/" />
+		</Unit>
+		<Unit filename="AABBObject.cpp">
+			<Option virtualFolder="Sources/Objects/" />
+		</Unit>
+		<Unit filename="AABBObject.h">
+			<Option virtualFolder="Headers/Objects/" />
 		</Unit>
 		<Unit filename="Camera.cpp">
 			<Option virtualFolder="Sources/Objects/" />

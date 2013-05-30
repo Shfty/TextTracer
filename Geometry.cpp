@@ -24,6 +24,6 @@ bool Geometry::intersectsAABB(const Ray& ray)
     }
     else
     {
-        return m_bounds.Intersects(ray);
+        return m_bounds.Intersects(ray, NULL, NULL);
     }
 }

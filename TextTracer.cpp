@@ -36,10 +36,8 @@ TextTracer::TextTracer()
     {
         const std::vector<WorldObject*>* staticObjects = world[i]->GetStaticObjects();
         const std::vector<WorldObject*>* dynamicObjects = world[i]->GetDynamicObjects();
-        const std::vector<WorldObject*> debugObjects = world[i]->GetStaticTree()->SplittingPlanes;
         worldObjects.insert(worldObjects.end(), staticObjects->begin(), staticObjects->end());
         worldObjects.insert(worldObjects.end(), dynamicObjects->begin(), dynamicObjects->end());
-        worldObjects.insert(worldObjects.end(), debugObjects.begin(), debugObjects.end());
     }
 }
 
@@ -104,7 +102,7 @@ void TextTracer::Draw()
     if(frameTime > CLOCKS_PER_SEC)
     {
         DebugBox::GetInstance().Message << "FPS: " << frames << "\t";
-        DebugBox::GetInstance().WriteMessage(TextTracer::HEIGHT, 0);
+        DebugBox::GetInstance().WriteMessage(0, 0);
         frames = 0;
         frameTime = 0;
     }

@@ -26,6 +26,8 @@ protected:
     void initDynamicTree();
     void updateDynamicTree();
 
+    AABB m_staticBounds;
+    AABB m_dynamicBounds;
     KdTree* m_staticTree;
     KdTree* m_dynamicTree;
     std::vector<WorldObject*> m_staticObjects;

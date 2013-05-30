@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1369801623 source:e:\codeblocks\texttracer\main.cpp
+1369939960 source:e:\codeblocks\texttracer\main.cpp
 	<ctime>
 	"TextTracer.h"
 	"Keyboard.h"
@@ -12,11 +12,11 @@
 	"Colour.h"
 	"ColouredText.h"
 
-1369709885 e:\codeblocks\texttracer\framebuffer.h
+1369709886 e:\codeblocks\texttracer\framebuffer.h
 	<glm/glm.hpp>
 	<vector>
 
-1369801532 source:e:\codeblocks\texttracer\raytracer.cpp
+1369940369 source:e:\codeblocks\texttracer\raytracer.cpp
 	<cmath>
 	<iostream>
 	<algorithm>
@@ -24,35 +24,35 @@
 	"Raytracer.h"
 	"Ray.h"
 
-1369716296 e:\codeblocks\texttracer\raytracer.h
+1369716298 e:\codeblocks\texttracer\raytracer.h
 	"WorldObject.h"
 	"Framebuffer.h"
 	"Camera.h"
 
-1369794538 e:\codeblocks\texttracer\worldobject.h
+1369794540 e:\codeblocks\texttracer\worldobject.h
 	<vector>
 	<glm/glm.hpp>
 	<glm/ext.hpp>
 	"Geometry.h"
 
-1369782101 e:\codeblocks\texttracer\ray.h
+1369782102 e:\codeblocks\texttracer\ray.h
 	<glm/glm.hpp>
 	"IsectData.h"
 
 1368836484 e:\codeblocks\texttracer\vector3d.h
 	<cmath>
 
-1369783352 e:\codeblocks\texttracer\sphereobject.h
+1369783354 e:\codeblocks\texttracer\sphereobject.h
 	<sstream>
 	"DebugBox.h"
 	"WorldObject.h"
 	"SphereGeometry.h"
 
-1369786597 e:\codeblocks\texttracer\planeobject.h
+1369924400 e:\codeblocks\texttracer\planeobject.h
 	"WorldObject.h"
 	"PlaneGeometry.h"
 
-1369782241 e:\codeblocks\texttracer\camera.h
+1369782242 e:\codeblocks\texttracer\camera.h
 	<vector>
 	"SphereObject.h"
 
@@ -60,7 +60,7 @@
 	<vector>
 	"WorldObject.h"
 
-1369796262 e:\codeblocks\texttracer\keyboard.h
+1369796264 e:\codeblocks\texttracer\keyboard.h
 	<iostream>
 	<windows.h>
 
@@ -72,9 +72,9 @@
 
 1368996512 e:\codeblocks\texttracer\colour.h
 
-1369798407 e:\codeblocks\texttracer\isectdata.h
+1369798408 e:\codeblocks\texttracer\isectdata.h
 
-1369539119 e:\codeblocks\texttracer\debugbox.h
+1369539120 e:\codeblocks\texttracer\debugbox.h
 	<sstream>
 	<iostream>
 	<windows.h>
@@ -94,22 +94,22 @@
 	"Camera.h"
 	"Keyboard.h"
 
-1369789178 source:e:\codeblocks\texttracer\sphereobject.cpp
+1369789180 source:e:\codeblocks\texttracer\sphereobject.cpp
 	"SphereObject.h"
 	"Ray.h"
 
 1369356398 source:e:\codeblocks\texttracer\polyobject.cpp
 	"PolyObject.h"
 
-1369789161 source:e:\codeblocks\texttracer\planeobject.cpp
+1369926946 source:e:\codeblocks\texttracer\planeobject.cpp
 	"PlaneObject.h"
 	"PlaneGeometry.h"
 
-1369709923 e:\codeblocks\texttracer\consoleframebuffer.h
+1369709924 e:\codeblocks\texttracer\consoleframebuffer.h
 	<vector>
 	"Framebuffer.h"
 
-1369709931 source:e:\codeblocks\texttracer\consoleframebuffer.cpp
+1369938275 source:e:\codeblocks\texttracer\consoleframebuffer.cpp
 	"ConsoleFramebuffer.h"
 	<cstdlib>
 	<ctime>
@@ -117,40 +117,40 @@
 	<windows.h>
 	"TextTracer.h"
 
-1369789355 source:e:\codeblocks\texttracer\discobject.cpp
+1369927236 source:e:\codeblocks\texttracer\discobject.cpp
 	"DiscObject.h"
 	"DiscGeometry.h"
 	"Ray.h"
 
-1369788603 e:\codeblocks\texttracer\discobject.h
+1369927210 e:\codeblocks\texttracer\discobject.h
 	<vector>
 	"WorldObject.h"
 	"DiscGeometry.h"
 
-1369785209 source:e:\codeblocks\texttracer\convexpolyobject.cpp
+1369938584 source:e:\codeblocks\texttracer\convexpolyobject.cpp
 	"ConvexPolyObject.h"
 	"Ray.h"
 
-1369785520 e:\codeblocks\texttracer\convexpolyobject.h
+1369927160 e:\codeblocks\texttracer\convexpolyobject.h
 	<vector>
 	"WorldObject.h"
 	"ConvexPolyGeometry.h"
 
-1369704760 source:e:\codeblocks\texttracer\kdtree.cpp
+1369938240 source:e:\codeblocks\texttracer\kdtree.cpp
 	<algorithm>
 	"KdTree.h"
 	"ConvexPolyObject.h"
 
-1369703319 e:\codeblocks\texttracer\kdtree.h
+1369932650 e:\codeblocks\texttracer\kdtree.h
 	<vector>
 	"WorldObject.h"
 	"PlaneObject.h"
 
-1369799931 e:\codeblocks\texttracer\texttracer.h
+1369938435 e:\codeblocks\texttracer\texttracer.h
 	"Camera.h"
 	"Raytracer.h"
 
-1369789069 source:e:\codeblocks\texttracer\texttracer.cpp
+1369938389 source:e:\codeblocks\texttracer\texttracer.cpp
 	"TextTracer.h"
 	<cmath>
 	<vector>
@@ -162,22 +162,23 @@
 	"TestScene.h"
 	"GLFWFramebuffer.h"
 
-1369548841 source:e:\codeblocks\texttracer\scene.cpp
+1369933112 source:e:\codeblocks\texttracer\scene.cpp
 	"Scene.h"
 
-1369548829 e:\codeblocks\texttracer\scene.h
+1369933126 e:\codeblocks\texttracer\scene.h
 	<vector>
 	"WorldObject.h"
 	"KdTree.h"
 
-1369800322 source:e:\codeblocks\texttracer\testscene.cpp
+1369938156 source:e:\codeblocks\texttracer\testscene.cpp
 	"TestScene.h"
 	"PlaneObject.h"
 	"ConvexPolyObject.h"
 	"DiscObject.h"
+	"AABBObject.h"
 	"KdTree.h"
 
-1369702526 e:\codeblocks\texttracer\testscene.h
+1369702528 e:\codeblocks\texttracer\testscene.h
 	"Scene.h"
 	"SphereObject.h"
 
@@ -192,77 +193,94 @@
 	"KdTree.h"
 	"TestScene.h"
 
-1369539167 source:e:\codeblocks\texttracer\debugbox.cpp
+1369539168 source:e:\codeblocks\texttracer\debugbox.cpp
 	"DebugBox.h"
 
-1369796609 source:e:\codeblocks\texttracer\camera.cpp
+1369929654 source:e:\codeblocks\texttracer\camera.cpp
 	"Camera.h"
 	<sstream>
 	"DebugBox.h"
 	"Keyboard.h"
 	"Ray.h"
 
-1369693236 e:\codeblocks\texttracer\aabb.h
+1369937589 e:\codeblocks\texttracer\aabb.h
 	<glm/glm.hpp>
 
-1369794515 source:e:\codeblocks\texttracer\worldobject.cpp
+1369794516 source:e:\codeblocks\texttracer\worldobject.cpp
 	"WorldObject.h"
 	"IsectData.h"
 
-1369704983 source:e:\codeblocks\texttracer\aabb.cpp
+1369940439 source:e:\codeblocks\texttracer\aabb.cpp
 	"AABB.h"
 	"Ray.h"
+	"Camera.h"
 
-1369772788 source:e:\codeblocks\texttracer\glfwframebuffer.cpp
+1369854448 source:e:\codeblocks\texttracer\glfwframebuffer.cpp
 	"GLFWFramebuffer.h"
 	<cstdlib>
 	<ctime>
 	<iostream>
 
-1369713037 e:\codeblocks\texttracer\glfwframebuffer.h
+1369713038 e:\codeblocks\texttracer\glfwframebuffer.h
 	<vector>
 	"Framebuffer.h"
 	<GL/glfw.h>
 
-1369794200 e:\codeblocks\texttracer\geometry.h
+1369794202 e:\codeblocks\texttracer\geometry.h
 	<glm/glm.hpp>
 	"AABB.h"
 
-1369788884 e:\codeblocks\texttracer\spheregeometry.h
+1369788886 e:\codeblocks\texttracer\spheregeometry.h
 	"Geometry.h"
 
-1369799338 source:e:\codeblocks\texttracer\convexpolygeometry.cpp
+1369938685 source:e:\codeblocks\texttracer\convexpolygeometry.cpp
 	"ConvexPolyGeometry.h"
 	<glm/ext.hpp>
 	"Ray.h"
 
-1369788192 e:\codeblocks\texttracer\convexpolygeometry.h
+1369938671 e:\codeblocks\texttracer\convexpolygeometry.h
 	<vector>
 	"Geometry.h"
 
-1369799427 source:e:\codeblocks\texttracer\discgeometry.cpp
+1369938661 source:e:\codeblocks\texttracer\discgeometry.cpp
 	"DiscGeometry.h"
 	"Ray.h"
 
-1369788782 e:\codeblocks\texttracer\discgeometry.h
+1369938680 e:\codeblocks\texttracer\discgeometry.h
 	"Geometry.h"
 
-1369794214 source:e:\codeblocks\texttracer\geometry.cpp
+1369937703 source:e:\codeblocks\texttracer\geometry.cpp
 	"Geometry.h"
 
-1369788813 e:\codeblocks\texttracer\planegeometry.h
+1369788814 e:\codeblocks\texttracer\planegeometry.h
 	"Geometry.h"
 
-1369799588 source:e:\codeblocks\texttracer\planegeometry.cpp
+1369925142 source:e:\codeblocks\texttracer\planegeometry.cpp
 	"PlaneGeometry.h"
 	"Camera.h"
 	"Ray.h"
 
-1369798807 source:e:\codeblocks\texttracer\spheregeometry.cpp
+1369798808 source:e:\codeblocks\texttracer\spheregeometry.cpp
 	"SphereGeometry.h"
 	"Ray.h"
 	"Camera.h"
 
-1369796320 source:e:\codeblocks\texttracer\keyboard.cpp
+1369796322 source:e:\codeblocks\texttracer\keyboard.cpp
 	"Keyboard.h"
+
+1369940995 source:e:\codeblocks\texttracer\aabbgeometry.cpp
+	"AABBGeometry.h"
+	"Camera.h"
+	"Ray.h"
+
+1369940596 e:\codeblocks\texttracer\aabbgeometry.h
+	"Geometry.h"
+
+1369935921 source:e:\codeblocks\texttracer\aabbobject.cpp
+	"AABBObject.h"
+	"AABBGeometry.h"
+
+1369935910 e:\codeblocks\texttracer\aabbobject.h
+	"WorldObject.h"
+	"AABBGeometry.h"
 

@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 
 class Ray;
+class IsectData;
+class Camera;
 
 struct AABB
 {
@@ -18,7 +20,8 @@ struct AABB
         Max = maxPoint;
     }
 
-    bool Intersects(const Ray& ray);
+    bool Contains(const glm::vec3& point);
+    bool Intersects(const Ray& ray, IsectData* isectData, const Camera* camera);
 };
 
 #endif // AABB_H

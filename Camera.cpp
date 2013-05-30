@@ -24,21 +24,21 @@ void Camera::Update(const std::vector<WorldObject*>& worldObjects, const float d
 
     if(Keyboard::IsKeyDown('A'))
     {
-        newPos += glm::vec3(xRotMat * glm::vec4(-positionChange, 0, 0, 1.0f));
+        newPos += glm::vec3(xRotMat * yRotMat * glm::vec4(-positionChange, 0, 0, 1.0f));
     }
 
     if(Keyboard::IsKeyDown('D'))
     {
-        newPos += glm::vec3(xRotMat * glm::vec4(positionChange, 0, 0, 1.0f));
+        newPos += glm::vec3(xRotMat * yRotMat * glm::vec4(positionChange, 0, 0, 1.0f));
     }
     if(Keyboard::IsKeyDown('W'))
     {
-        newPos += glm::vec3(xRotMat * glm::vec4(0, 0, -positionChange, 1.0f));
+        newPos += glm::vec3(xRotMat * yRotMat * glm::vec4(0, 0, -positionChange, 1.0f));
     }
 
     if(Keyboard::IsKeyDown('S'))
     {
-        newPos += glm::vec3(xRotMat * glm::vec4(0, 0, positionChange, 1.0f));
+        newPos += glm::vec3(xRotMat * yRotMat * glm::vec4(0, 0, positionChange, 1.0f));
     }
 
     SetPosition(newPos);

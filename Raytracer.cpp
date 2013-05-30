@@ -193,7 +193,7 @@ bool Raytracer::traceShadowRay(Ray& ray, const std::vector<WorldObject*>& worldO
 
         if(!worldObjects[i]->CastShadow) continue;
 
-        if(worldObjects[i]->Intersects(ray, (IsectData*)NULL, m_camera, false))
+        if(worldObjects[i]->Intersects(ray, NULL, m_camera, false))
         {
             return true;
         }

@@ -3,6 +3,7 @@
 #include "PlaneObject.h"
 #include "ConvexPolyObject.h"
 #include "DiscObject.h"
+#include "AABBObject.h"
 #include "KdTree.h"
 
 const float SUN_ROTATION_PER_SEC = 10.0f;
@@ -130,6 +131,18 @@ TestScene::TestScene()
     testSphere->SetColour(glm::vec4(0.2f, 0.5, 0.2f, 1));
     m_staticObjects.push_back(testSphere);
 
+    // Floating Sphere
+    AABB testBounds;
+    testBounds.Min = glm::vec3(-5, -5, -5);
+    testBounds.Max = glm::vec3(5, 5, 5);
+    AABBObject* testAABB = new AABBObject(glm::vec3(-40, 0, -40), glm::mat4(), testBounds);
+    testSphere->SetColour(glm::vec4(1.0f, 0.5, 0.2f, 1));
+    m_staticObjects.push_back(testAABB);
+
+    // STATIC BOUNDS
+    m_staticBounds.Min = glm::vec3(-50, -50, -50);
+    m_staticBounds.Max = glm::vec3(50, 50, 50);
+
     // STATIC TREE
     initStaticTree();
 
@@ -146,6 +159,10 @@ TestScene::TestScene()
     moonSphere->CastShadow = false;
     moonSphere->Fullbright = true;
     m_dynamicObjects.push_back(moonSphere);
+
+    // DYNAMIC BOUNDS
+    m_dynamicBounds.Min = glm::vec3(-5500, -5500, -500);
+    m_dynamicBounds.Max = glm::vec3(5500, 5500, 500);
 
     // DYNAMIC TREE
     initDynamicTree();
