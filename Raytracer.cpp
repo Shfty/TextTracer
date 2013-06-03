@@ -101,41 +101,44 @@ glm::vec4 Raytracer::traceViewRay(Ray& ray, const std::vector<WorldObject*>& wor
             glm::vec4 Colour = intersections[i]->Colour;
             float objectAlpha = intersections[i]->Colour.a;
 
-#ifndef DISABLE_LIGHTING
-            if(!intersections[i]->Object->Fullbright && !intersections[i]->Portal)
+            if(!intersections[i]->Portal)
             {
-                Ray shadowRay(intersections[i]->Entry, -glm::normalize(SkyLightDirection), NEAR_PLANE, FAR_PLANE, intersections[i]->Object);
-                bool occluded = traceShadowRay(shadowRay, worldObjects);
-
-                // Diffuse
-                float diffuseFactor = glm::max(0.0f, glm::dot(intersections[i]->EntryNormal, glm::normalize(SkyLightDirection)));
-
-                // Specular
-                float specularFactor = 0;
-                if(diffuseFactor > 0)
+#ifndef DISABLE_LIGHTING
+                if(!intersections[i]->Object->Fullbright && objectAlpha >= 1.0f)
                 {
-                    glm::vec3 intersectionToOrigin = glm::normalize(ray.Origin - intersections[i]->Entry);
-                    glm::vec3 reflectedLight = glm::normalize(glm::reflect(SkyLightDirection, intersections[i]->EntryNormal));
-                    specularFactor = glm::dot(intersectionToOrigin, reflectedLight);
-                    specularFactor = glm::pow(specularFactor, 16.0f);
-                }
+                    Ray shadowRay(intersections[i]->Entry, -glm::normalize(SkyLightDirection), NEAR_PLANE, FAR_PLANE, intersections[i]->Object);
+                    bool occluded = traceShadowRay(shadowRay, worldObjects);
 
-                float brightness;
-                if(occluded)
-                {
-                    brightness = AmbientIntensity;
-                }
-                else
-                {
-                    brightness = specularFactor + diffuseFactor + AmbientIntensity;
-                }
+                    // Diffuse
+                    float diffuseFactor = glm::max(0.0f, glm::dot(intersections[i]->EntryNormal, glm::normalize(SkyLightDirection)));
 
-                Colour *= SkyLightColour;
-                Colour *= AmbientLightColour;
-                Colour *= brightness;
+                    // Specular
+                    float specularFactor = 0;
+                    if(diffuseFactor > 0)
+                    {
+                        glm::vec3 intersectionToOrigin = glm::normalize(ray.Origin - intersections[i]->Entry);
+                        glm::vec3 reflectedLight = glm::normalize(glm::reflect(SkyLightDirection, intersections[i]->EntryNormal));
+                        specularFactor = glm::dot(intersectionToOrigin, reflectedLight);
+                        specularFactor = glm::pow(specularFactor, 16.0f);
+                    }
+
+                    float brightness;
+                    if(occluded)
+                    {
+                        brightness = AmbientIntensity;
+                    }
+                    else
+                    {
+                        brightness = specularFactor + diffuseFactor + AmbientIntensity;
+                    }
+
+                    Colour *= SkyLightColour;
+                    Colour *= AmbientLightColour;
+                    Colour *= brightness;
+                }
+#endif // DISABLE_LIGHTING
                 Colour *= objectAlpha;
             }
-#endif // DISABLE_LIGHTING
 
             finalColour += Colour;
         }

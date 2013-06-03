@@ -24,7 +24,7 @@
 	"Raytracer.h"
 	"Ray.h"
 
-1370275801 e:\codeblocks\texttracer\raytracer.h
+1370276194 e:\codeblocks\texttracer\raytracer.h
 	"WorldObject.h"
 	"Framebuffer.h"
 	"Camera.h"
@@ -136,15 +136,12 @@
 	"WorldObject.h"
 	"ConvexPolyGeometry.h"
 
-1370226855 source:e:\codeblocks\texttracer\kdtree.cpp
+1370276194 source:e:\codeblocks\texttracer\kdtree.cpp
 	<algorithm>
 	"KdTree.h"
 	"ConvexPolyObject.h"
-	"AABBObject.h"
-	"IsectData.h"
-	"Ray.h"
 
-1370275801 e:\codeblocks\texttracer\kdtree.h
+1370276194 e:\codeblocks\texttracer\kdtree.h
 	<vector>
 	"WorldObject.h"
 	"PlaneObject.h"
@@ -153,7 +150,7 @@
 	"Camera.h"
 	"Raytracer.h"
 
-1370227179 source:e:\codeblocks\texttracer\texttracer.cpp
+1370276194 source:e:\codeblocks\texttracer\texttracer.cpp
 	"TextTracer.h"
 	<cmath>
 	<vector>
