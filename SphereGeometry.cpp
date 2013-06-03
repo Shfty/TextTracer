@@ -28,9 +28,9 @@ void SphereGeometry::SetBackface(const bool backface)
 // PRIVATE
 void SphereGeometry::calculateAABB()
 {
-    glm::vec3 minBound = glm::vec3(-m_radius) + m_position;
-    glm::vec3 maxBound = glm::vec3(m_radius) + m_position;
-    m_bounds = AABB(minBound, maxBound);
+    glm::vec3 minBound = glm::vec3(-m_radius);
+    glm::vec3 maxBound = glm::vec3(m_radius);
+    m_bounds = AABB(m_position, minBound, maxBound);
 }
 
 bool SphereGeometry::intersectsGeometry(const Ray& ray, IsectData* isectData, const Camera* camera)
@@ -54,9 +54,10 @@ bool SphereGeometry::intersectsGeometry(const Ray& ray, IsectData* isectData, co
             if (t0 > ray.FarPlane) return false;
             if(isectData != NULL)
             {
-                isectData->Distance = t0;
+                isectData->EntryDistance = t0;
                 isectData->Entry = ray.Origin + ray.Direction * t0;
                 isectData->EntryNormal = glm::normalize(m_position - isectData->Entry);
+                isectData->ExitDistance = t1;
                 isectData->Exit = ray.Origin + ray.Direction * t1;
                 isectData->ExitNormal = glm::normalize(m_position - isectData->Exit);
             }
@@ -66,9 +67,10 @@ bool SphereGeometry::intersectsGeometry(const Ray& ray, IsectData* isectData, co
             if (t1 > ray.FarPlane) return false;
             if(isectData != NULL)
             {
-                isectData->Distance = t1;
+                isectData->EntryDistance = t1;
                 isectData->Entry = ray.Origin + ray.Direction * t1;
                 isectData->EntryNormal = glm::normalize(isectData->Entry - m_position);
+                isectData->ExitDistance = isectData->EntryDistance;
                 isectData->Exit = isectData->Entry;
                 isectData->ExitNormal = isectData->EntryNormal;
             }
@@ -76,7 +78,7 @@ bool SphereGeometry::intersectsGeometry(const Ray& ray, IsectData* isectData, co
 
     if(isectData != NULL)
     {
-        isectData->Colour = m_colour; // Portal Colour
+        isectData->Colour = m_colour;
     }
 
     return true;
@@ -84,8 +86,6 @@ bool SphereGeometry::intersectsGeometry(const Ray& ray, IsectData* isectData, co
 
 bool SphereGeometry::intersectsPortal(const Ray& ray, IsectData* isectData, const Camera* camera)
 {
-    if(!intersectsAABB(ray)) return false;
-
     glm::vec3 rNormal = glm::vec3(camera->GetRotation() * glm::vec4(0, 0, 1, 1.0f));
 
     float nDotRay = glm::dot(rNormal, ray.Direction);
@@ -105,8 +105,9 @@ bool SphereGeometry::intersectsPortal(const Ray& ray, IsectData* isectData, cons
 
     if(isectData != NULL)
     {
-        isectData->Distance = t;
+        isectData->EntryDistance = t;
         isectData->Entry = ray.Origin + ray.Direction * t;
+        isectData->ExitDistance = isectData->EntryDistance;
         isectData->Exit = isectData->Entry;
     }
     return true;

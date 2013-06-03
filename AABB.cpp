@@ -3,12 +3,44 @@
 #include "Ray.h"
 #include "Camera.h"
 
+AABB::AABB(const glm::vec3& minBound, const glm::vec3& maxBound)
+{
+    m_minBoundLocal = minBound;
+    m_maxBoundLocal = maxBound;
+    SetPosition(glm::vec3());
+}
+
+AABB::AABB(const glm::vec3& position, const glm::vec3& minBound, const glm::vec3& maxBound)
+{
+    m_minBoundLocal = minBound;
+    m_maxBoundLocal = maxBound;
+    SetPosition(position);
+}
+
+void AABB::SetPosition(const glm::vec3& position)
+{
+    m_position = position;
+    calculateWorldBounds();
+}
+
+void AABB::SetMin(const glm::vec3& minBound)
+{
+    m_minBoundLocal = minBound;
+    calculateWorldBounds();
+}
+
+void AABB::SetMax(const glm::vec3& maxBound)
+{
+    m_maxBoundLocal = maxBound;
+    calculateWorldBounds();
+}
+
 bool AABB::Contains(const glm::vec3& point)
 {
     bool contains = true;
     for(int i = 0; i < 3; i++)
     {
-        if(point[i] < Min[i] || point[i] > Max[i])
+        if(point[i] < m_minBoundWorld[i] || point[i] > m_maxBoundWorld[i])
         {
             contains = false;
         }
@@ -16,72 +48,157 @@ bool AABB::Contains(const glm::vec3& point)
     return contains;
 }
 
-// Simple yes/no intersection for broad-phase collision
 bool AABB::Intersects(const Ray& ray, IsectData* isectData, const Camera* camera)
 {
-    // EZ cases: if the ray starts inside the box, or ends inside
-    // the box, then it definitely hits the box.
-    // I'm using this code for ray tracing with an octree,
-    // so I needed rays that start and end within an
-    // octree node to COUNT as hits.
-    // You could modify this test to (ray starts inside and ends outside)
-    // to qualify as a hit if you wanted to NOT count totally internal rays
-    if( Contains( ray.Origin ) )
+    if(Contains( ray.Origin ))
     {
         if(isectData != NULL)
         {
-            isectData->Distance = 0;
+            isectData->EntryDistance = 0;
             isectData->Entry = ray.Origin;
-            isectData->EntryNormal = glm::vec3(0, 0, 1);
+            isectData->EntryNormal = -glm::normalize(ray.Direction);
+            isectData->ExitDistance = isectData->EntryDistance;
             isectData->Exit = isectData->Entry;
-            isectData->ExitNormal = isectData->EntryNormal;
-        }
-
-        return true ;
-    }
-
-    // the algorithm says, find 3 t's,
-    glm::vec3 t ;
-
-    // LARGEST t is the only one we need to test if it's on the face.
-    for( int i = 0 ; i < 3 ; i++ )
-    {
-        if( ray.Direction[i] > 0 ) // CULL BACK FACE
-          t[i] = ( Min[i] - ray.Origin[i] ) / ray.Direction[i] ;
-        else
-          t[i] = ( Max[i] - ray.Origin[i] ) / ray.Direction[i] ;
-    }
-
-    int mi = 0;
-    float val = 0;
-    for(int i = 0; i < 3; i++)
-    {
-        float indexVal = t[i];
-        if(indexVal > val)
-        {
-            val = indexVal;
-            mi = i;
-        }
-    }
-
-    if(t[mi] < ray.NearPlane || t[mi] > ray.FarPlane) return false;
-
-    glm::vec3 pt = ray.Origin + ( ray.Direction * t[mi] ) ;
-
-    // check it's in the box in other 2 dimensions
-    int o1 = ( mi + 1 ) % 3 ; // i=0: o1=1, o2=2, i=1: o1=2,o2=0 etc.
-    int o2 = ( mi + 2 ) % 3 ;
-
-    if((pt[o1] > Min[o1] && pt[o1] < Max[o1]) && (pt[o2] > Min[o2] && pt[o2] < Max[o2]))
-    {
-        if(isectData != NULL)
-        {
-            isectData->Distance = t[mi];
-            isectData->Entry = pt;
-            isectData->Exit = isectData->Entry;
+            isectData->ExitNormal = -isectData->EntryNormal;
         }
         return true;
     }
+    bool backface = m_backface || Contains( ray.Origin );
 
-    return false ; // the ray did not hit the box.
+    // find 3 ts (one per axis) for the near and far intersections
+    glm::vec3 nt;
+    glm::vec3 ft;
+
+    // LARGEST t is the only one we need to test if it's on the face.
+    for( int i = 0 ; i < 6 ; i++ )
+    {
+        if(i < 3)
+        {
+            if( ray.Direction[i] > 0 ) // CULL BACK FACE
+              nt[i] = ( m_minBoundWorld[i] - ray.Origin[i] ) / ray.Direction[i] ;
+            else
+              nt[i] = ( m_maxBoundWorld[i] - ray.Origin[i] ) / ray.Direction[i] ;
+        }
+        else
+        {
+            if( ray.Direction[i - 3] > 0 ) // CULL BACK FACE
+              ft[i - 3] = ( m_maxBoundWorld[i - 3] - ray.Origin[i - 3] ) / ray.Direction[i - 3] ;
+            else
+              ft[i - 3] = ( m_minBoundWorld[i - 3] - ray.Origin[i - 3] ) / ray.Direction[i - 3] ;
+        }
+    }
+
+    int miNear = 0;
+    float valNear = 0;
+    int miFar = 0;
+    float valFar = 0;
+
+    for(int i = 0; i < 6; i++)
+    {
+        if(i < 3)
+        {
+            float indexValNear = nt[i];
+            if(i == 0)
+            {
+                valNear = indexValNear;
+            }
+            else
+            {
+                if(indexValNear > valNear)
+                {
+                    valNear = indexValNear;
+                    miNear = i;
+                }
+            }
+        }
+        else
+        {
+            float indexValFar = ft[i - 3];
+            if(i - 3 == 0)
+            {
+                valFar = indexValFar;
+            }
+            else
+            {
+                if(indexValFar < valFar)
+                {
+                    valFar = indexValFar;
+                    miFar = i - 3;
+                }
+            }
+        }
+    }
+
+    if(!backface)
+    {
+        if(nt[miNear] < ray.NearPlane || nt[miNear] > ray.FarPlane) return false;
+    }
+    else
+    {
+        if(ft[miFar] < ray.NearPlane || ft[miFar] > ray.FarPlane) return false;
+    }
+
+    glm::vec3 ptNear = ray.Origin + ( ray.Direction * nt[miNear] ) ;
+    glm::vec3 ptFar = ray.Origin + ( ray.Direction * ft[miNear] ) ;
+
+    // check it's in the box in other 2 dimensions
+
+    if(!backface)
+    {
+        int o1 = ( miNear + 1 ) % 3 ; // i=0: o1=1, o2=2, i=1: o1=2,o2=0 etc.
+        int o2 = ( miNear + 2 ) % 3 ;
+
+        if(
+            (ptNear[o1] < m_minBoundWorld[o1] || ptNear[o1] > m_maxBoundWorld[o1]) ||
+            (ptNear[o2] < m_minBoundWorld[o2] || ptNear[o2] > m_maxBoundWorld[o2])
+        ) return false;
+    }
+    else
+    {
+        int o1 = ( miFar + 1 ) % 3 ; // i=0: o1=1, o2=2, i=1: o1=2,o2=0 etc.
+        int o2 = ( miFar + 2 ) % 3 ;
+
+        if(
+            (ptFar[o1] < m_minBoundWorld[o1] || ptFar[o1] > m_maxBoundWorld[o1]) ||
+            (ptFar[o2] < m_minBoundWorld[o2] || ptFar[o2] > m_maxBoundWorld[o2])
+        ) return false;
+    }
+
+    if(isectData != NULL)
+    {
+        isectData->EntryDistance = nt[miNear];
+        isectData->Entry = ptNear;
+        isectData->EntryNormal = cardinalDirection(m_position - isectData->Entry);
+        isectData->ExitDistance = ft[miFar];
+        isectData->Exit = ptFar;
+        isectData->ExitNormal = -cardinalDirection(m_position - isectData->Entry);
+    }
+
+    return true ; // the ray hit the box.
+}
+
+// PRIVATE
+void AABB::calculateWorldBounds()
+{
+    m_minBoundWorld = m_minBoundLocal + m_position;
+    m_maxBoundWorld = m_maxBoundLocal + m_position;
+}
+
+glm::vec3 AABB::cardinalDirection(const glm::vec3& inVector)
+{
+    float maxIndex = 0;
+    float maxVal = 0;
+    for(int i = 0; i < 3; i++)
+    {
+        if(glm::abs(inVector[i]) > maxVal)
+        {
+            maxVal = glm::abs(inVector[i]);
+            maxIndex = i;
+        }
+    }
+
+    glm::vec3 outVector;
+    outVector[maxIndex] = glm::sign(inVector[maxIndex]);
+
+    return outVector;
 }

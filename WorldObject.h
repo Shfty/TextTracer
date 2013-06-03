@@ -16,7 +16,7 @@ public:
     bool Fullbright = false;
 
     WorldObject() {}
-    virtual ~WorldObject() {};
+    virtual ~WorldObject() { delete m_geometry; };
 
     glm::vec3 GetPosition() const { return m_geometry->GetPosition(); }
     glm::mat4 GetRotation() const { return m_geometry->GetRotation(); }

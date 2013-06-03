@@ -16,7 +16,17 @@ Scene::Scene()
 
 Scene::~Scene()
 {
-    // Delete any allocated objects
+    for(uint16_t i = 0; i < m_staticObjects.size(); i++)
+    {
+        delete m_staticObjects[i];
+    }
+    for(uint16_t i = 0; i < m_dynamicObjects.size(); i++)
+    {
+        delete m_dynamicObjects[i];
+    }
+
+    delete m_staticTree;
+    delete m_dynamicTree;
 }
 
 void Scene::Update(const float deltaTime)

@@ -57,9 +57,10 @@ bool DiscGeometry::intersectsGeometry(const Ray& ray, IsectData* isectData, cons
 
     if(isectData != NULL)
     {
-        isectData->Distance = t;
+        isectData->EntryDistance = t;
         isectData->Entry = ray.Origin + ray.Direction * t;
         isectData->EntryNormal = m_worldNormal * (nDotRay > 0 ? 1.0f : -1.0f);
+        isectData->ExitDistance = isectData->EntryDistance;
         isectData->Exit = isectData->Entry;
         isectData->ExitNormal = isectData->EntryNormal;
         isectData->Colour = GetColour();

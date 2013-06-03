@@ -52,26 +52,26 @@ void ConvexPolyGeometry::SetObjectVertices(const std::vector<glm::vec3>& objectV
 // PRIVATE
 void ConvexPolyGeometry::calculateAABB()
 {
-    glm::vec3 minBound = m_worldVertices[0];
-    glm::vec3 maxBound = m_worldVertices[0];
+    glm::vec3 minBound = m_objectVertices[0];
+    glm::vec3 maxBound = m_objectVertices[0];
 
-    for(uint16_t i = 0; i < m_worldVertices.size(); i++)
+    for(uint16_t i = 0; i < m_objectVertices.size(); i++)
     {
         for(uint16_t o = 0; o < 3; o++)
         {
-            if(m_worldVertices[i][o] < minBound[o])
+            if(m_objectVertices[i][o] < minBound[o])
             {
-                minBound[o] = m_worldVertices[i][o];
+                minBound[o] = m_objectVertices[i][o];
             }
 
-            if(m_worldVertices[i][o] > maxBound[o])
+            if(m_objectVertices[i][o] > maxBound[o])
             {
-                maxBound[o] = m_worldVertices[i][o];
+                maxBound[o] = m_objectVertices[i][o];
             }
         }
     }
 
-    m_bounds = AABB(minBound, maxBound);
+    m_bounds = AABB(m_position, minBound, maxBound);
 }
 
 void ConvexPolyGeometry::genObjectVertices()
@@ -144,9 +144,10 @@ bool ConvexPolyGeometry::intersectsGeometry(const Ray& ray, IsectData* isectData
 
     if(isectData != NULL)
     {
-        isectData->Distance = t;
+        isectData->EntryDistance = t;
         isectData->Entry = ray.Origin + ray.Direction * t;
         isectData->EntryNormal = m_worldNormal * (nDotRay > 0 ? 1.0f : -1.0f);
+        isectData->ExitDistance = isectData->EntryDistance;
         isectData->Exit = isectData->Entry;
         isectData->ExitNormal = isectData->EntryNormal;
         isectData->Colour = m_colour;

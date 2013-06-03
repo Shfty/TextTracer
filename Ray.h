@@ -8,7 +8,7 @@
 struct distanceSortPredicate
 {
     bool operator()( const IsectData* lx, const IsectData* rx ) const {
-    	return lx->Distance < rx->Distance;
+    	return lx->EntryDistance < rx->EntryDistance;
     }
 };
 

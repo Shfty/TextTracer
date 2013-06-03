@@ -18,7 +18,7 @@ bool Geometry::Intersects(const Ray& ray, IsectData* isectData, const Camera* ca
 bool Geometry::intersectsAABB(const Ray& ray)
 {
     // If the object has a bounding box of size 0 (aka no bounding box/disabled), return true
-    if(m_bounds.Min == glm::vec3() && m_bounds.Max == glm::vec3())
+    if(m_bounds.GetMin() == glm::vec3() && m_bounds.GetMax() == glm::vec3())
     {
         return true;
     }

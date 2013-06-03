@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1369939960 source:e:\codeblocks\texttracer\main.cpp
+1370202808 source:e:\codeblocks\texttracer\main.cpp
 	<ctime>
 	"TextTracer.h"
 	"Keyboard.h"
@@ -16,7 +16,7 @@
 	<glm/glm.hpp>
 	<vector>
 
-1369940369 source:e:\codeblocks\texttracer\raytracer.cpp
+1370223499 source:e:\codeblocks\texttracer\raytracer.cpp
 	<cmath>
 	<iostream>
 	<algorithm>
@@ -24,18 +24,19 @@
 	"Raytracer.h"
 	"Ray.h"
 
-1369716298 e:\codeblocks\texttracer\raytracer.h
+1370209737 e:\codeblocks\texttracer\raytracer.h
 	"WorldObject.h"
 	"Framebuffer.h"
 	"Camera.h"
+	"KdTree.h"
 
-1369794540 e:\codeblocks\texttracer\worldobject.h
+1370219538 e:\codeblocks\texttracer\worldobject.h
 	<vector>
 	<glm/glm.hpp>
 	<glm/ext.hpp>
 	"Geometry.h"
 
-1369782102 e:\codeblocks\texttracer\ray.h
+1370039127 e:\codeblocks\texttracer\ray.h
 	<glm/glm.hpp>
 	"IsectData.h"
 
@@ -72,7 +73,7 @@
 
 1368996512 e:\codeblocks\texttracer\colour.h
 
-1369798408 e:\codeblocks\texttracer\isectdata.h
+1370039114 e:\codeblocks\texttracer\isectdata.h
 
 1369539120 e:\codeblocks\texttracer\debugbox.h
 	<sstream>
@@ -136,21 +137,24 @@
 	"WorldObject.h"
 	"ConvexPolyGeometry.h"
 
-1369938240 source:e:\codeblocks\texttracer\kdtree.cpp
+1370226855 source:e:\codeblocks\texttracer\kdtree.cpp
 	<algorithm>
 	"KdTree.h"
 	"ConvexPolyObject.h"
+	"AABBObject.h"
+	"IsectData.h"
+	"Ray.h"
 
-1369932650 e:\codeblocks\texttracer\kdtree.h
+1370227198 e:\codeblocks\texttracer\kdtree.h
 	<vector>
 	"WorldObject.h"
 	"PlaneObject.h"
 
-1369938435 e:\codeblocks\texttracer\texttracer.h
+1370275147 e:\codeblocks\texttracer\texttracer.h
 	"Camera.h"
 	"Raytracer.h"
 
-1369938389 source:e:\codeblocks\texttracer\texttracer.cpp
+1370227179 source:e:\codeblocks\texttracer\texttracer.cpp
 	"TextTracer.h"
 	<cmath>
 	<vector>
@@ -162,7 +166,7 @@
 	"TestScene.h"
 	"GLFWFramebuffer.h"
 
-1369933112 source:e:\codeblocks\texttracer\scene.cpp
+1370221587 source:e:\codeblocks\texttracer\scene.cpp
 	"Scene.h"
 
 1369933126 e:\codeblocks\texttracer\scene.h
@@ -170,7 +174,7 @@
 	"WorldObject.h"
 	"KdTree.h"
 
-1369938156 source:e:\codeblocks\texttracer\testscene.cpp
+1370219783 source:e:\codeblocks\texttracer\testscene.cpp
 	"TestScene.h"
 	"PlaneObject.h"
 	"ConvexPolyObject.h"
@@ -203,19 +207,19 @@
 	"Keyboard.h"
 	"Ray.h"
 
-1369937589 e:\codeblocks\texttracer\aabb.h
+1370041393 e:\codeblocks\texttracer\aabb.h
 	<glm/glm.hpp>
 
 1369794516 source:e:\codeblocks\texttracer\worldobject.cpp
 	"WorldObject.h"
 	"IsectData.h"
 
-1369940439 source:e:\codeblocks\texttracer\aabb.cpp
+1370220217 source:e:\codeblocks\texttracer\aabb.cpp
 	"AABB.h"
 	"Ray.h"
 	"Camera.h"
 
-1369854448 source:e:\codeblocks\texttracer\glfwframebuffer.cpp
+1370042370 source:e:\codeblocks\texttracer\glfwframebuffer.cpp
 	"GLFWFramebuffer.h"
 	<cstdlib>
 	<ctime>
@@ -226,14 +230,14 @@
 	"Framebuffer.h"
 	<GL/glfw.h>
 
-1369794202 e:\codeblocks\texttracer\geometry.h
+1370037405 e:\codeblocks\texttracer\geometry.h
 	<glm/glm.hpp>
 	"AABB.h"
 
 1369788886 e:\codeblocks\texttracer\spheregeometry.h
 	"Geometry.h"
 
-1369938685 source:e:\codeblocks\texttracer\convexpolygeometry.cpp
+1370039212 source:e:\codeblocks\texttracer\convexpolygeometry.cpp
 	"ConvexPolyGeometry.h"
 	<glm/ext.hpp>
 	"Ray.h"
@@ -242,25 +246,25 @@
 	<vector>
 	"Geometry.h"
 
-1369938661 source:e:\codeblocks\texttracer\discgeometry.cpp
+1370039233 source:e:\codeblocks\texttracer\discgeometry.cpp
 	"DiscGeometry.h"
 	"Ray.h"
 
 1369938680 e:\codeblocks\texttracer\discgeometry.h
 	"Geometry.h"
 
-1369937703 source:e:\codeblocks\texttracer\geometry.cpp
+1370037601 source:e:\codeblocks\texttracer\geometry.cpp
 	"Geometry.h"
 
 1369788814 e:\codeblocks\texttracer\planegeometry.h
 	"Geometry.h"
 
-1369925142 source:e:\codeblocks\texttracer\planegeometry.cpp
+1370039254 source:e:\codeblocks\texttracer\planegeometry.cpp
 	"PlaneGeometry.h"
 	"Camera.h"
 	"Ray.h"
 
-1369798808 source:e:\codeblocks\texttracer\spheregeometry.cpp
+1370042117 source:e:\codeblocks\texttracer\spheregeometry.cpp
 	"SphereGeometry.h"
 	"Ray.h"
 	"Camera.h"
@@ -268,7 +272,7 @@
 1369796322 source:e:\codeblocks\texttracer\keyboard.cpp
 	"Keyboard.h"
 
-1369940995 source:e:\codeblocks\texttracer\aabbgeometry.cpp
+1370038880 source:e:\codeblocks\texttracer\aabbgeometry.cpp
 	"AABBGeometry.h"
 	"Camera.h"
 	"Ray.h"
@@ -276,7 +280,7 @@
 1369940596 e:\codeblocks\texttracer\aabbgeometry.h
 	"Geometry.h"
 
-1369935921 source:e:\codeblocks\texttracer\aabbobject.cpp
+1370038120 source:e:\codeblocks\texttracer\aabbobject.cpp
 	"AABBObject.h"
 	"AABBGeometry.h"
 

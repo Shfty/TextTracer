@@ -35,7 +35,7 @@ protected:
     virtual bool intersectsGeometry(const Ray& ray, IsectData* isectData, const Camera* camera) = 0;
     virtual bool intersectsPortal(const Ray& ray, IsectData* isectData, const Camera* camera) = 0;
 
-    AABB m_bounds = AABB(glm::vec3(), glm::vec3());
+    AABB m_bounds = AABB(glm::vec3(), glm::vec3(), glm::vec3());
     glm::vec3 m_position;
     glm::mat4 m_rotation;
     glm::vec4 m_colour;

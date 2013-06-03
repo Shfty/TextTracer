@@ -3,12 +3,12 @@
 Text Tracer - A real-time raytracer
 TODO:
 Recursive Ray-kD Tree intersection
+Fix AABB slice issue, backface rendering & cleanup
 
 Material class for storing colour, lighting factors, reflectiveness etc
 Universal portal transport for all ray types (shadow esp.)
 PhysicsObject
 Reflectiveness
-Fix lighting + cumulative opacity issue (overlaid discs)
 Separate 2D geometry into it's own base class (or use PlaneObject)
 
 Sphere orientation calculation (L should be camera-oriented, not viewport-oriented)?

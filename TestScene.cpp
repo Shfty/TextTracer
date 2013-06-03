@@ -6,7 +6,7 @@
 #include "AABBObject.h"
 #include "KdTree.h"
 
-const float SUN_ROTATION_PER_SEC = 10.0f;
+const float SUN_ROTATION_PER_SEC = 5.0f;
 
 SphereObject* sunSphere;
 SphereObject* moonSphere;
@@ -131,17 +131,15 @@ TestScene::TestScene()
     testSphere->SetColour(glm::vec4(0.2f, 0.5, 0.2f, 1));
     m_staticObjects.push_back(testSphere);
 
-    // Floating Sphere
-    AABB testBounds;
-    testBounds.Min = glm::vec3(-5, -5, -5);
-    testBounds.Max = glm::vec3(5, 5, 5);
+    // Box
+    AABB testBounds(glm::vec3(-40, 0, -40), glm::vec3(-5, -5, -5), glm::vec3(5, 5, 5));
     AABBObject* testAABB = new AABBObject(glm::vec3(-40, 0, -40), glm::mat4(), testBounds);
-    testSphere->SetColour(glm::vec4(1.0f, 0.5, 0.2f, 1));
+    testAABB->SetColour(glm::vec4(1.0f, 0.5, 0.2f, 1));
     m_staticObjects.push_back(testAABB);
 
     // STATIC BOUNDS
-    m_staticBounds.Min = glm::vec3(-50, -50, -50);
-    m_staticBounds.Max = glm::vec3(50, 50, 50);
+    m_staticBounds.SetMin(glm::vec3(-50, -50, -50));
+    m_staticBounds.SetMax(glm::vec3(50, 50, 50));
 
     // STATIC TREE
     initStaticTree();
@@ -161,8 +159,8 @@ TestScene::TestScene()
     m_dynamicObjects.push_back(moonSphere);
 
     // DYNAMIC BOUNDS
-    m_dynamicBounds.Min = glm::vec3(-5500, -5500, -500);
-    m_dynamicBounds.Max = glm::vec3(5500, 5500, 500);
+    m_dynamicBounds.SetMin(glm::vec3(-5500, -5500, -500));
+    m_dynamicBounds.SetMax(glm::vec3(5500, 5500, 500));
 
     // DYNAMIC TREE
     initDynamicTree();
@@ -170,8 +168,6 @@ TestScene::TestScene()
 
 TestScene::~TestScene()
 {
-    delete m_staticTree;
-    delete m_dynamicTree;
 }
 
 void TestScene::Update(const float deltaTime)
