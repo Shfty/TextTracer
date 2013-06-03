@@ -24,11 +24,10 @@
 	"Raytracer.h"
 	"Ray.h"
 
-1370209737 e:\codeblocks\texttracer\raytracer.h
+1370275801 e:\codeblocks\texttracer\raytracer.h
 	"WorldObject.h"
 	"Framebuffer.h"
 	"Camera.h"
-	"KdTree.h"
 
 1370219538 e:\codeblocks\texttracer\worldobject.h
 	<vector>
@@ -145,7 +144,7 @@
 	"IsectData.h"
 	"Ray.h"
 
-1370227198 e:\codeblocks\texttracer\kdtree.h
+1370275801 e:\codeblocks\texttracer\kdtree.h
 	<vector>
 	"WorldObject.h"
 	"PlaneObject.h"

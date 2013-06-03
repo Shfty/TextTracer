@@ -136,18 +136,18 @@ KdNode* KdTree::genNode(const AABB& bounds, const std::vector<WorldObject*>& wor
     if(leftObjects.size() > 0)
     {
         AABB leftBounds;
-        leftBounds.Min = bounds.Min;
-        leftBounds.Max = bounds.Max;
-        leftBounds.Max[splitAxis] = splitPosition;
+        leftBounds.GetMin() = bounds.GetMin();
+        leftBounds.GetMax() = bounds.GetMax();
+        leftBounds.GetMax()[splitAxis] = splitPosition;
         node->LeftChild = genNode(leftBounds, leftObjects, node, depth + 1);
     }
 
     if(rightObjects.size() > 0)
     {
         AABB rightBounds;
-        rightBounds.Min = bounds.Min;
-        rightBounds.Max = bounds.Max;
-        rightBounds.Min[splitAxis] = splitPosition;
+        rightBounds.GetMin() = bounds.GetMin();
+        rightBounds.GetMax() = bounds.GetMax();
+        rightBounds.GetMin()[splitAxis] = splitPosition;
         node->RightChild = genNode(rightBounds, rightObjects, node, depth + 1);
     }
 
