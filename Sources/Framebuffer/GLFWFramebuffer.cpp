@@ -10,21 +10,23 @@ GLFWFramebuffer::GLFWFramebuffer(const int width, const int height)
     glfwInit();
 
     // Calculate window size and attempt to open
-    GLFWvidmode vm;
-    glfwGetDesktopMode(&vm);
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* vm = glfwGetVideoMode(monitor);
     float ar = (float)width / (float)height;
-    float windowWidth = vm.Width / 2;
-    float windowHeight = vm.Height / 2 * ar;
+    float windowWidth = vm->width / 2;
+    float windowHeight = vm->height / 2 * ar;
 
-    if( !glfwOpenWindow( windowWidth, windowHeight, 0, 0, 0, 0, 0, 0, GLFW_WINDOW ) )
+    m_window = glfwCreateWindow( windowWidth, windowHeight, "TextTracer", NULL, NULL );
+    if( !m_window )
     {
         glfwTerminate();
     }
 
     // Position centrally
-    glfwSetWindowPos(vm.Width / 2 - windowWidth / 2, vm.Height / 2 - windowHeight / 2);
+    glfwSetWindowPos(m_window, vm->width / 2 - windowWidth / 2, vm->height / 2 - windowHeight / 2);
 
-    glfwSetWindowTitle("TextTracer");
+    // Set the active context
+    glfwMakeContextCurrent(m_window);
 
     // Init screen texture
     m_screenBuffer = new GLubyte[width * height * 3];
@@ -39,6 +41,9 @@ GLFWFramebuffer::GLFWFramebuffer(const int width, const int height)
 
     //Clear screen to ensure sanity
     Clear();
+
+    // Finally, show the window
+    glfwShowWindow(m_window);
 }
 
 GLFWFramebuffer::~GLFWFramebuffer()
@@ -86,5 +91,16 @@ void GLFWFramebuffer::Draw()
                 glTexCoord2f(0.0, 1.0); glVertex3f(-1.0, -1.0, 0.0);
             glEnd();
         glDisable(GL_TEXTURE_2D);
-    glfwSwapBuffers();
+    glfwSwapBuffers(m_window);
+    glfwPollEvents();
+}
+
+bool GLFWFramebuffer::IsKeyDown(const char key) const
+{
+#ifdef _WIN32
+    return GetAsyncKeyState(key);
+#else
+    int state = glfwGetKey(m_window, key);
+    return state == GLFW_PRESS;
+#endif
 }

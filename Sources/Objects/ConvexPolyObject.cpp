@@ -1,6 +1,8 @@
 #include "ConvexPolyObject.h"
 #include "Ray.h"
 
+#include <glm/gtx/transform.hpp>
+
 // PUBLIC
 ConvexPolyObject::ConvexPolyObject(const glm::vec3& position, const glm::mat4& rotation, const float scale, const int sides, const bool twoSided)
 {

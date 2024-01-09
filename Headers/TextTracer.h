@@ -12,6 +12,7 @@ public:
 
     void Update(const int worldClock);
     void Draw();
+    bool IsKeyDown(const char key);
 
     const float FOV = 3.141f / 4; // 45 Degrees
     const float MIN_TIMESTEP = 0.05f;

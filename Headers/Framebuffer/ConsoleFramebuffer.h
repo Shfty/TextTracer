@@ -14,6 +14,7 @@ public:
     void Clear();
     void PaintCell(const int x, const int y, const glm::vec4& colour);
     void Draw();
+    bool IsKeyDown(const char Key) const;
 
 private:
     void setColour(const glm::vec4& colour);

@@ -2,6 +2,8 @@
 #include "DiscGeometry.h"
 #include "Ray.h"
 
+#include <glm/gtx/transform.hpp>
+
 // PUBLIC
 DiscObject::DiscObject(const glm::vec3& position, const glm::mat4& rotation, float scale, bool twoSided)
 {

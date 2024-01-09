@@ -27,10 +27,11 @@ Disabled: All objects will be rendered at full brightness
 Enabled: All objects will be smoothly lit with hard shadows
 */
 
+#define REALTIME
+
 #include <ctime>
 
 #include "TextTracer.h"
-#include "Keyboard.h"
 
 const int RENDER_FPS = 60;
 const int UPDATE_FPS = 60;
@@ -64,7 +65,7 @@ int main()
         if(update)
         {
             // Quit
-            if(Keyboard::IsKeyDown(0x1B)) // Esc
+            if(textTracer.IsKeyDown(0x1B)) // Esc
             {
                 quit = true;
             }

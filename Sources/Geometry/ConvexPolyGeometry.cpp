@@ -1,6 +1,6 @@
 #include "ConvexPolyGeometry.h"
 
-#include <glm/ext.hpp>
+#include <glm/gtx/euler_angles.hpp>
 
 #include "Ray.h"
 
@@ -80,14 +80,14 @@ void ConvexPolyGeometry::genObjectVertices()
     int clampSides = glm::max(m_sides, 3);
 
     //Create radius and rotate so bottom edge is perpendicular to 1, 0, 0
-    glm::vec3 vertex(0, 1, 0);
-    vertex = glm::rotateZ(vertex, 180.0f / (float)clampSides);
+    glm::vec4 vertex(0, 1, 0, 0);
+    vertex = glm::eulerAngleZ(3.14159 / (float)clampSides) * vertex;
 
     //For each side, add a vertex and rotate
     for(int i = 0; i < clampSides; i++)
     {
-        m_objectVertices.push_back(vertex);
-        vertex = glm::rotateZ(vertex, 360.0f / (float)clampSides);
+        m_objectVertices.push_back(glm::vec3(vertex.x, vertex.y, vertex.z));
+        vertex = glm::eulerAngleZ((3.14159 * 2.0) / (float)clampSides) * vertex;
     }
 }
 

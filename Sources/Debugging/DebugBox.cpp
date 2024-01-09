@@ -23,6 +23,8 @@ void DebugBox::WriteMessage(const int screenHeight, const int line)
     std::cout << Message.str();
     SetConsoleCursorPosition(hConsole, prevCursorPosition);
     SetConsoleTextAttribute(hConsole, prevTextColour);
+#else
+    std::cout << Message.str() << "\n";
 #endif // _WIN32
 
     //Clear the stringstream in prep for the next message

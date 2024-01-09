@@ -2,6 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
 
 #include "Raytracer.h"
 #include "Ray.h"
@@ -18,6 +19,11 @@ Raytracer::~Raytracer()
 
 void Raytracer::Trace(const std::vector<WorldObject*>& worldObjects)
 {
+    auto position = m_camera->GetPosition();
+
+
+    auto rotation = m_camera->GetRotation();
+
     for(int x = 0; x < m_camera->Width; x += CELL_SIZE_X)
     {
         for(int y = 0; y < m_camera->Height; y += CELL_SIZE_Y)
@@ -28,7 +34,8 @@ void Raytracer::Trace(const std::vector<WorldObject*>& worldObjects)
                 {
                     float xMag = ((((float)(x + cx) * 2.0f) - (float)m_camera->Width) / (float)m_camera->Width) * tan(m_camera->FOV.x);
                     float yMag = ((((float)(y + cy) * 2.0f) - (float)m_camera->Height) / (float)m_camera->Height) * tan(m_camera->FOV.y);
-                    glm::vec3 direction = glm::vec3(m_camera->GetRotation() * glm::vec4(glm::normalize(glm::vec3(xMag, yMag, -1.0f)), 0.0f));
+
+                    glm::vec3 direction = glm::vec3(rotation * glm::vec4(glm::normalize(glm::vec3(xMag, yMag, -1.0f)), 0.0f));
 
                     Ray ray(m_camera->GetPosition(), direction, NEAR_PLANE, FAR_PLANE, m_camera);
                     m_framebuffer->PaintCell(x + cx, y + cy, traceViewRay(ray, worldObjects, MAX_BOUNCES));
@@ -36,6 +43,7 @@ void Raytracer::Trace(const std::vector<WorldObject*>& worldObjects)
             }
         }
     }
+
 }
 
 glm::vec4 Raytracer::traceViewRay(Ray& ray, const std::vector<WorldObject*>& worldObjects, const int maxRecursion)

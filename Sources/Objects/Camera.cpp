@@ -1,9 +1,10 @@
 #include "Camera.h"
 
 #include <sstream>
+#include <glm/gtx/euler_angles.hpp>
+#include <glm/gtx/transform.hpp>
 
 #include "DebugBox.h"
-#include "Keyboard.h"
 #include "Ray.h"
 
 Camera::Camera(const int width, const int height, const glm::vec3& position, const glm::mat4& rotation, const float fov)
@@ -14,7 +15,7 @@ Camera::Camera(const int width, const int height, const glm::vec3& position, con
     FOV.y = ((float)Height / (float)Width) * FOV.x;
 }
 
-void Camera::Update(const std::vector<WorldObject*>& worldObjects, const float deltaTime)
+void Camera::Update(const Framebuffer* framebuffer, const std::vector<WorldObject*>& worldObjects, const float deltaTime)
 {
     prevPos = GetPosition();
     glm::vec3 newPos = prevPos;
@@ -22,21 +23,21 @@ void Camera::Update(const std::vector<WorldObject*>& worldObjects, const float d
     // Movement
     float positionChange = TRANS_UNITS_PER_SEC * deltaTime;
 
-    if(Keyboard::IsKeyDown('A'))
+    if(framebuffer->IsKeyDown('A'))
     {
         newPos += glm::vec3(xRotMat * yRotMat * glm::vec4(-positionChange, 0, 0, 1.0f));
     }
 
-    if(Keyboard::IsKeyDown('D'))
+    if(framebuffer->IsKeyDown('D'))
     {
         newPos += glm::vec3(xRotMat * yRotMat * glm::vec4(positionChange, 0, 0, 1.0f));
     }
-    if(Keyboard::IsKeyDown('W'))
+    if(framebuffer->IsKeyDown('W'))
     {
         newPos += glm::vec3(xRotMat * yRotMat * glm::vec4(0, 0, -positionChange, 1.0f));
     }
 
-    if(Keyboard::IsKeyDown('S'))
+    if(framebuffer->IsKeyDown('S'))
     {
         newPos += glm::vec3(xRotMat * yRotMat * glm::vec4(0, 0, positionChange, 1.0f));
     }
@@ -46,24 +47,24 @@ void Camera::Update(const std::vector<WorldObject*>& worldObjects, const float d
     // Rotation
     float rotationChange = ROT_UNITS_PER_SEC * deltaTime;
 
-    if(Keyboard::IsKeyDown('J'))
+    if(framebuffer->IsKeyDown('J'))
     {
-        xRotMat *= glm::rotate(glm::mat4(), rotationChange, glm::vec3(0, 1, 0));
+        xRotMat *= glm::eulerAngleY(rotationChange);
     }
 
-    if(Keyboard::IsKeyDown('L'))
+    if(framebuffer->IsKeyDown('L'))
     {
-        xRotMat *= glm::rotate(glm::mat4(), -rotationChange, glm::vec3(0, 1, 0));
+        xRotMat *= glm::eulerAngleY(-rotationChange);
     }
 
-    if(Keyboard::IsKeyDown('I'))
+    if(framebuffer->IsKeyDown('I'))
     {
-        yRotMat *= glm::rotate(glm::mat4(), -rotationChange, glm::vec3(1, 0, 0));
+        yRotMat *= glm::eulerAngleX(-rotationChange);
     }
 
-    if(Keyboard::IsKeyDown('K'))
+    if(framebuffer->IsKeyDown('K'))
     {
-        yRotMat *= glm::rotate(glm::mat4(), rotationChange, glm::vec3(1, 0, 0));
+        yRotMat *= glm::eulerAngleX(rotationChange);
     }
 
     // WorldObject Intersection

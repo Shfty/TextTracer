@@ -36,9 +36,9 @@ protected:
     virtual bool intersectsPortal(const Ray& ray, IsectData* isectData, const Camera* camera) = 0;
 
     AABB m_bounds = AABB(glm::vec3(), glm::vec3(), glm::vec3());
-    glm::vec3 m_position;
-    glm::mat4 m_rotation;
-    glm::vec4 m_colour;
+    glm::vec3 m_position = glm::vec3(0.0);
+    glm::mat4 m_rotation = glm::mat4(1.0);
+    glm::vec4 m_colour = glm::vec4(1.0);
     bool m_useBBox;
 
     Geometry* m_csgSubtract = NULL;

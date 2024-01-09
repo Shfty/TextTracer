@@ -23,7 +23,7 @@ TextTracer::TextTracer()
 {
     // Instantiate Main Objects
     m_framebuffer = new GLFWFramebuffer(WIDTH, HEIGHT);
-    m_camera = new Camera(m_framebuffer->Width(), m_framebuffer->Height(), glm::vec3(0, 0, 0), glm::mat4(), FOV);
+    m_camera = new Camera(m_framebuffer->Width(), m_framebuffer->Height(), glm::vec3(0, 0, 0), glm::mat4(1.0), FOV);
     m_raytracer = new Raytracer(m_camera, m_framebuffer);
 
     // Add scenes to world vector
@@ -69,11 +69,11 @@ void TextTracer::Update(const int worldClock)
     }
 
     // Controls
-    m_camera->Update(worldObjects, m_deltaTime);
+    m_camera->Update(m_framebuffer, worldObjects, m_deltaTime);
 
     // Day/Night Cycle
     float lerpFactor = (-testScene->SunNormal.y + 1.0f) / 2.0f;
-    m_raytracer->SkyColour = glm::lerp(m_dayColour, m_nightColour, lerpFactor);
+    m_raytracer->SkyColour = glm::mix(m_dayColour, m_nightColour, lerpFactor);
     m_raytracer->SkyLightDirection = testScene->SunNormal;
 
     // DEBUG: kD Tree nearest neighbour
@@ -106,4 +106,9 @@ void TextTracer::Draw()
         frames = 0;
         frameTime = 0;
     }
+}
+
+bool TextTracer::IsKeyDown(const char key)
+{
+    return m_framebuffer->IsKeyDown(key);
 }

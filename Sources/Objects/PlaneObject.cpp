@@ -1,6 +1,8 @@
 #include "PlaneObject.h"
 #include "PlaneGeometry.h"
 
+#include <glm/gtx/transform.hpp>
+
 // PUBLIC
 PlaneObject::PlaneObject(const glm::vec3& position, const glm::mat4& rotation, const bool twoSided)
 {

@@ -3,7 +3,9 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#ifdef _WIN32
 #include <windows.h>
+#endif
 
 #include "TextTracer.h"
 
@@ -136,4 +138,13 @@ float ConsoleFramebuffer::colourDistance(const glm::vec4& c0, const glm::vec4& c
     {
         return distance / 3;
     }
+}
+
+bool ConsoleFramebuffer::IsKeyDown(const char key) const
+{
+#ifdef _WIN32
+    return GetAsyncKeyState(key);
+#else
+    return false;
+#endif
 }

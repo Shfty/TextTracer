@@ -16,6 +16,7 @@ public:
     virtual void Clear() = 0;
     virtual void PaintCell(const int x, const int y, const glm::vec4& colour) = 0;
     virtual void Draw() = 0;
+    virtual bool IsKeyDown(const char key) const = 0;
 
 protected:
     int m_width;
