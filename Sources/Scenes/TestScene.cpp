@@ -9,7 +9,7 @@
 #include "AABBObject.h"
 #include "KdTree.h"
 
-const float SUN_ROTATION_PER_SEC = glm::radians(5.0f);
+const float SUN_ROTATION_PER_SEC = glm::radians(1.0f);
 
 SphereObject* sunSphere;
 SphereObject* moonSphere;
